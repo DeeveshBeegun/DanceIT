@@ -22,8 +22,6 @@ public class LibraryModel {
                 ObjectOutputStream objectOutput = new ObjectOutputStream(fileOut);
                 objectOutput.writeObject(videoList.indexOf(i));
                 objectOutput.close();
-                fileOuput.close();
-                System.out.println("The Object  was succesfully written to a file");
             }
             videoList.clear();
 
