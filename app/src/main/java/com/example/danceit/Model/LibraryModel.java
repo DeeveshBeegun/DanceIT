@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 
 public class LibraryModel {
 
@@ -10,6 +12,25 @@ public class LibraryModel {
 
     public void addVideo(Video video) {
         videoList.add(video);
+    }
+
+    public void saveVideo() {
+        String filename = "URL_storage.txt";
+        try {
+            for(int i = 0; i < videoList.size(); i++) {
+                FileOutputStream fileOutput = new FileOutputStream(filename, true);
+                ObjectOutputStream objectOutput = new ObjectOutputStream(fileOut);
+                objectOutput.writeObject(videoList.indexOf(i));
+                objectOutput.close();
+                fileOuput.close();
+                System.out.println("The Object  was succesfully written to a file");
+            }
+            videoList.clear();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
     }
 
 
