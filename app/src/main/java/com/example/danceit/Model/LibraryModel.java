@@ -43,6 +43,16 @@ public class LibraryModel {
         }
     }
 
+    public void findVideo(String search_input) throws Exception {
+        ArrayList<Video> videoList = readFileObj(storage_filename);
+        for(Video video : videoList) {
+            if(search_input.equals(video.getTag())) {
+                System.out.println(video.getTag());
+            }
+        }
+        //	System.out.println((Arrays.toString(readFileObj(storage_filename).toArray())));
+    }
+
     public ArrayList<Video> readFileObj(String storage_filename) throws Exception {
         FileInputStream fileInput = new FileInputStream(storage_filename);
         ObjectInputStream objectInput = new ObjectInputStream(fileInput);
