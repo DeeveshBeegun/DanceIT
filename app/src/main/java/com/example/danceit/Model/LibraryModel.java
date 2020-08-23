@@ -8,41 +8,63 @@ import java.io.Serializable;
 import java.io.File;
 import java.util.Scanner;
 
+/**
+ * This class represents the model for the Library.The Library class
+ * add, save, and search for videos; it saves videos to a text file
+ * where it also searches for the video.
+ *
+ * @author Deevesh Beegun (BGNDEE001)
+ * @date: 23/08/2020
+ * @version: 0.0 (prototype)
+ */
 public class LibraryModel {
 
-   private ArrayList<Video> videoList;
-   private String storage_filename;
+   private ArrayList<Video> videoList; // container storing video objects
+   private String storage_filename; // file to store dance video URLs
 
     public LibraryModel() {
         videoList = new ArrayList<Video>();
-        storage_filename = "URL_storage.txt";
+        storage_filename = "URL_storage.txt"; // hardcoded text file
     }
 
+    /**
+     * This method adds a video to an arrayList when a user presses
+     * add button on the gui.
+     * @param video object
+     */
     public void addVideo(Video video) {
         videoList.add(video);
     }
 
+    /**
+     * This method saves a video to a text file when a user presses save on the gui.
+     */
     public void saveVideo() {
         try {
 
             File file = new File(storage_filename);
 
             if(!file.exists() || file.length() == 0)
-                writeFileObj(videoList);
+                writeFileObj(videoList); // creates a file and adds an arraylist of video object the the file.
 
             else {
                 ArrayList<Video> videoObjs = readFileObj(storage_filename);
                 for(Video videoObj : videoList)
                     videoObjs.add(videoObj);
-                writeFileObj(videoObjs);
+                writeFileObj(videoObjs); // writes a video to a file which already contains an arraylist
             }
-            videoList.clear();
+            videoList.clear(); // clears the initial arraylist to reduce memory usage on phone
 
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
+    /**
+     * This method searches for a video input by a user.
+     * @param search_input tags or country of origin
+     * @throws Exception
+     */
     public void findVideo(String search_input) throws Exception {
         ArrayList<Video> videoList = readFileObj(storage_filename);
         for(Video video : videoList) {
@@ -53,17 +75,28 @@ public class LibraryModel {
         //	System.out.println((Arrays.toString(readFileObj(storage_filename).toArray())));
     }
 
+    /**
+     * This method reads an arraylist containing video objects from a file.
+     * @param storage_filename name of file storing the video objects.
+     * @return arraylist of video objects.
+     * @throws Exception
+     */
     public ArrayList<Video> readFileObj(String storage_filename) throws Exception {
         FileInputStream fileInput = new FileInputStream(storage_filename);
         ObjectInputStream objectInput = new ObjectInputStream(fileInput);
         @SuppressWarnings({"unchecked"})
-        ArrayList<Video> videoObjs = (ArrayList<Video>)objectInput.readObject();
+        ArrayList<Video> videoObjs = (ArrayList<Video>)objectInput.readObject(); // read object from file
         objectInput.close();
 
         return videoObjs;
 
     }
 
+    /**
+     * This method writes an arraylist containing video objects to a file.
+     * @param videoList arraylist containing video objects.
+     * @throws Exception
+     */
     public void writeFileObj(ArrayList<Video> videoList) throws Exception {
         FileOutputStream fileOutput = new FileOutputStream(storage_filename);
         ObjectOutputStream objectOutput = new ObjectOutputStream(fileOutput);
