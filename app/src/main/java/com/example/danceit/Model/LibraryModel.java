@@ -1,6 +1,12 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+import java.io.File;
+import java.util.Scanner;
 
 public class LibraryModel {
 
@@ -35,6 +41,17 @@ public class LibraryModel {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    public ArrayList<Video> readFileObj(String storage_filename) throws Exception {
+        FileInputStream fileInput = new FileInputStream(storage_filename);
+        ObjectInputStream objectInput = new ObjectInputStream(fileInput);
+        @SuppressWarnings({"unchecked"})
+        ArrayList<Video> videoObjs = (ArrayList<Video>)objectInput.readObject();
+        objectInput.close();
+
+        return videoObjs;
+
     }
 
 
