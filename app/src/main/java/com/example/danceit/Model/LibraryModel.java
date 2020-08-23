@@ -54,6 +54,15 @@ public class LibraryModel {
 
     }
 
+    public void writeFileObj(ArrayList<Video> videoList) throws Exception {
+        FileOutputStream fileOutput = new FileOutputStream(storage_filename);
+        ObjectOutputStream objectOutput = new ObjectOutputStream(fileOutput);
+        objectOutput.writeObject(videoList);
+
+    }
+
+
+
 
 
 
