@@ -1,11 +1,13 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
-import java.io.FileInputStream;
-import java.io.ObjectInputStream;
+package com.example.danceit.Model;
+
 import java.io.File;
-import java.util.Scanner;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+
 
 /**
  * This class represents the model for the Library.The Library class
@@ -16,7 +18,7 @@ import java.util.Scanner;
  * @date: 23/08/2020
  * @version: 0.0 (prototype)
  */
-package com.example.danceit.Model;
+
 public class Library {
 
    private ArrayList<Video> videoList; // container storing video objects
@@ -27,21 +29,21 @@ public class Library {
         storage_filename = "URL_storage.txt"; // hardcoded text file
     }
 
-    /**
-     * This method adds a video to an arrayList when a user presses
-     * add button on the gui.
-     * @param video object
-     */
-    public void addVideo(Video video) {
-        videoList.add(video);
-    }
+//    /**
+//     * This method adds a video to an arrayList when a user presses
+//     * add button on the gui.
+//     * @param video object
+//     */
+//    public void addVideo(Video video) {
+//        videoList.add(video);
+//    }
 
     /**
      * This method saves a video to a text file when a user presses save on the gui.
      */
-    public void saveVideo() {
-        try {
+    public void saveVideo(Video video) throws IOException {
 
+            videoList.add(video);
             File file = new File(storage_filename);
 
             if(!file.exists() || file.length() == 0)
@@ -55,9 +57,6 @@ public class Library {
             }
             videoList.clear(); // clears the initial arraylist to reduce memory usage on phone
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
     }
 
     /**
@@ -85,15 +84,13 @@ public class Library {
      * @return arraylist of video objects.
      * @throws Exception
      */
-    public ArrayList<Video> readFileObj(String storage_filename) throws Exception {
-        FileInputStream fileInput = new FileInputStream(storage_filename);
-        ObjectInputStream objectInput = new ObjectInputStream(fileInput);
-        @SuppressWarnings({"unchecked"})
-        ArrayList<Video> videoObjs = (ArrayList<Video>)objectInput.readObject(); // read object from file
-        objectInput.close();
-
-        return videoObjs;
-
+    public ArrayList<Video> readFileObj(String storage_filename) throws IOException {
+            FileInputStream fileInput = new FileInputStream(storage_filename);
+            ObjectInputStream objectInput = new ObjectInputStream(fileInput);
+            @SuppressWarnings({"unchecked"})
+            ArrayList<Video> videoObjs = (ArrayList<Video>) objectInput.readObject(); // read object from file
+            objectInput.close();
+            return videoObjs;
     }
 
     /**
@@ -101,16 +98,12 @@ public class Library {
      * @param videoList arraylist containing video objects.
      * @throws Exception
      */
-    public void writeFileObj(ArrayList<Video> videoList) throws Exception {
-        FileOutputStream fileOutput = new FileOutputStream(storage_filename);
-        ObjectOutputStream objectOutput = new ObjectOutputStream(fileOutput);
-        objectOutput.writeObject(videoList);
+    public void writeFileObj(ArrayList<Video> videoList) throws IOException{
+            FileOutputStream fileOutput = new FileOutputStream(storage_filename);
+            ObjectOutputStream objectOutput = new ObjectOutputStream(fileOutput);
+            objectOutput.writeObject(videoList);
+            objectOutput.close();
 
     }
-
-
-
-
-
 
 }
