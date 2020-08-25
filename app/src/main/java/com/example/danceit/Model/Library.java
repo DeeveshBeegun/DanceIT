@@ -68,7 +68,7 @@ public class Library {
         boolean tag_found = false;
         ArrayList<Video> videoList = readFileObj(storage_filename);
         for(Video video : videoList) {
-            if(search_input.equals(video.findTag(search_input)))
+            if(search_input.equalsIgnoreCase(video.findTag(search_input)))
                 tag_found = true;
                // System.out.println(video.findTag(search_input));
             else 
