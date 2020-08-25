@@ -14,8 +14,7 @@ public class AddVideoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_video);
 
         //Get editText widgets
-        final EditText editTextTag=(EditText) findViewById(R.id.editTextTags);
-        final  EditText editTextURL=(EditText) findViewById(R.id.editTextURL);
+
 
         //Get save button
         final Button saveButton=(Button) findViewById(R.id.saveButton);
@@ -24,8 +23,7 @@ public class AddVideoActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 // Get user in put from the edit text
-                String tagFromUser =editTextTag.getText().toString();
-                String urlFromUser=editTextURL.getText().toString();
+
                 //TODO add private and public
 
             }
