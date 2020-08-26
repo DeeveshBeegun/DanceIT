@@ -12,6 +12,6 @@
     <string name="hintTextURL">Enter URL</string>
     <string name="hintTextTags">Enter TAGS</string>
     <string name="hintTextTagex">gwarara #joburg</string>
-    <string name="privateHint">PRIVATE</string>
-    <string name="publicHint">PUBLIC</string>
+    <string name="privateHint">Your Library</string>
+    <string name="publicHint">DANCEIT</string>
 </resources>

@@ -28,9 +28,8 @@
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="194dp"
+                android:layout_height="100dp"
                 android:layout_marginBottom="10dp"
-                android:contentDescription="@string/privateHint"
                 android:scaleType="centerInside"
                 app:srcCompat="@android:drawable/ic_media_play"></ImageView>
 
@@ -39,6 +38,8 @@
                 android:id="@+id/chipGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+
+
 
             <TextView
                 android:id="@+id/text_recycler"
@@ -50,11 +51,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <android.support.design.button.MaterialButton
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="@string/privateHint"
-                />
 
         </LinearLayout>
 

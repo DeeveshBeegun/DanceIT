@@ -26,6 +26,7 @@ public class AddVideoActivity extends AppCompatActivity {
 
                 //TODO add private and public
 
+
             }
         });
     }
