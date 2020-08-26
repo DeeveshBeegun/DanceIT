@@ -23,25 +23,17 @@ public class Library {
 
    private ArrayList<Video> videoList; // container storing video objects
    private String storage_filename; // file to store dance video URLs
+    private ArrayList<Video> search_video; // store search result
 
     public Library() {
         videoList = new ArrayList<Video>();
         storage_filename = "URL_storage.txt"; // hardcoded text file
     }
 
-//    /**
-//     * This method adds a video to an arrayList when a user presses
-//     * add button on the gui.
-//     * @param video object
-//     */
-//    public void addVideo(Video video) {
-//        videoList.add(video);
-//    }
-
     /**
      * This method saves a video to a text file when a user presses save on the gui.
      */
-    public void saveVideo(Video video) throws IOException {
+    public void saveVideo(Video video) throws IOException, ClassNotFoundException {
 
             videoList.add(video);
             File file = new File(storage_filename);
@@ -64,18 +56,14 @@ public class Library {
      * @param search_input tags or country of origin
      * @throws Exception
      */
-    public boolean findVideo(String search_input) throws Exception {
+    public ArrayList<Video> findVideo(String search_input) throws Exception {
         boolean tag_found = false;
         ArrayList<Video> videoList = readFileObj(storage_filename);
         for(Video video : videoList) {
-            if(search_input.equalsIgnoreCase(video.findTag(search_input)))
-                tag_found = true;
-               // System.out.println(video.findTag(search_input));
-            else 
-                tag_found = false;
+            if(video.findTag(search_input))
+                search_video.add(video);
         }
-        return tag_found;
-        //	System.out.println((Arrays.toString(readFileObj(storage_filename).toArray())));
+        return search_video;
     }
 
     /**
@@ -84,7 +72,7 @@ public class Library {
      * @return arraylist of video objects.
      * @throws Exception
      */
-    public ArrayList<Video> readFileObj(String storage_filename) throws IOException {
+    public ArrayList<Video> readFileObj(String storage_filename) throws IOException, ClassNotFoundException {
             FileInputStream fileInput = new FileInputStream(storage_filename);
             ObjectInputStream objectInput = new ObjectInputStream(fileInput);
             @SuppressWarnings({"unchecked"})
