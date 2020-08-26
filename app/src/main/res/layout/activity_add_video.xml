@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddVideoActivity">
+
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+        <android.support.design.widget.TextInputLayout
+            android:hint="@string/hintTextURL"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_margin="30dp">
+            <android.support.design.widget.TextInputEditText
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:hint="@string/hintTextTags"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_margin="30dp">
+            <android.support.design.widget.TextInputEditText
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"></android.support.design.widget.TextInputEditText>
+
+        </android.support.design.widget.TextInputLayout>
+
+
+
+
+        <RadioGroup
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_margin="30dp"
+            android:tooltipText="@string/publicHint">
+
+              <RadioButton
+            android:text="@string/privateHint"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_margin="5dp"/>
+
+            <RadioButton
+                android:text="@string/publicHint"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_margin="5dp"/>
+
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="30dp"
+            android:text="SAVE" />
+
+
+    </LinearLayout>
+
+
+</android.support.constraint.ConstraintLayout>
