@@ -10,15 +10,13 @@ import java.util.ArrayList;
 
 public class User {
     private String name;
-    private Library libray;
     private String passWord;
     private ArrayList<String> contactDetails;
 
 
     //constructor
-    public User(String name, Library libray, String passWord, ArrayList<String> contactDetails) {
+    public User(String name, String passWord, ArrayList<String> contactDetails) {
         this.name = name;
-        this.libray = libray;
         this.passWord = passWord;
         this.contactDetails = contactDetails;
     }
@@ -48,14 +46,6 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Library getLibray() {
-        return libray;
-    }
-
-    public void setLibray(Library libray) {
-        this.libray = libray;
     }
 
     public String getPassWord() {
