@@ -61,10 +61,10 @@ public class Video implements Serializable {
     /**
      * This method adds a Tag to the Video object.
      * If a tag is in the list, false is returned to indicate no addition happened.
-     * @param Tags arraylist containing Tag objects.
+     * @param tag arraylist containing Tag objects.
      */
      public boolean addTag(String tag) {
-         Tag tag1 = new Tag(this.videoUploader, tag, this, false); // Creating new Tag
+         Tag tag1 = new Tag(this.videoUploader, tag, false); // Creating new Tag
          if ( Tags.contains(tag1) ){
             return false; // Shows tag description already exists 
          }
@@ -78,14 +78,14 @@ public class Video implements Serializable {
      /**
      * This method finds if the Video object has a certain tag description.
      * returns false if a video does not have tags 
-     * @param Tags arraylist containing Tag objects.
+     * @param tag arraylist containing Tag objects.
      */
      
      public boolean findTag(String tag) { 
          if( Tags.isEmpty() ){
             return false;
          }
-         return Tags.contains(new Tag(this.videoUploader, tag, this, false));
+         return Tags.contains(new Tag(this.videoUploader, tag, false));
      }
   
 }

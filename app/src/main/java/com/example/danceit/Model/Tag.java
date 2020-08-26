@@ -8,9 +8,10 @@
 
 package com.example.danceit.Model;
  
-import java.util.ArrayList; 
+import java.util.ArrayList;
+import java.io.Serializable;
 
-public class Tag {
+public class Tag implements Serializable {
     private User owner;
     private String description;
     private boolean hasComplaint;

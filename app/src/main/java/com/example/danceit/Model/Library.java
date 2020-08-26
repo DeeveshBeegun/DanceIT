@@ -24,9 +24,11 @@ public class Library {
    private ArrayList<Video> videoList; // container storing video objects
    private String storage_filename; // file to store dance video URLs
     private ArrayList<Video> search_video; // store search result
+    private User user;
 
     public Library() {
         videoList = new ArrayList<Video>();
+        search_video = new ArrayList<Video>();
         storage_filename = "URL_storage.txt"; // hardcoded text file
     }
 
