@@ -64,7 +64,7 @@ public class Tag {
            
         Tag tag = (Tag) object; 
           
-        return tag.description.equals(this.description) ; 
+        return tag.description.equalsIgnoreCase(this.description) ; 
     }
 
     /*Overriding hashCode method to allow correct Tag object comparison*/
