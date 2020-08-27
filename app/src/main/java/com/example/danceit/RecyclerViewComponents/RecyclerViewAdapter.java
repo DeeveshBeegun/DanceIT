@@ -10,12 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.danceit.Model.Video;
 import com.example.danceit.R;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
-    private ArrayList<String> mDataset;
+    private List<Video> dataset;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -36,8 +37,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     // Provide a suitable constructor (depends on the kind of dataset)
     // add  arraylist of videos
-    public RecyclerViewAdapter(ArrayList<String> myDataset) {
-        mDataset = myDataset;
+    public RecyclerViewAdapter(List<Video> myDataset) {
+        dataset = myDataset;
     }
 
 
@@ -54,26 +55,22 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
-        myViewHolder.textView.setText(mDataset.get(i));
+        myViewHolder.textView.setText((CharSequence) dataset.get(i).getUrl());
         myViewHolder.chipGroup.animate();
 
-        //loop add all the tags chipGroup
-       /* for (int j = 0; j <video.tags.size() ; j++) {
+       for (int j = 0; j <dataset.get(i).getTag_list().size() ; j++) {
             Chip temp=new Chip(myViewHolder.context);
-            temp.setText(video.tags.get(j).toString());
+            temp.setText(dataset.get(i).getTag_list().get(j).getDescription());
             myViewHolder.chipGroup.addView(temp);
 
-        }*/
-        Chip temp=new Chip(myViewHolder.context);
-        temp.setText("Dance");
-        myViewHolder.chipGroup.addView(temp);
+        }
 
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return mDataset.size();
+        return dataset.size();
     }
 
 }
