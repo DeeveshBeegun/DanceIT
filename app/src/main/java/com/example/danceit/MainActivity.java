@@ -11,6 +11,11 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.danceit.Database.Video_database;
+import com.example.danceit.Model.Tag;
+import com.example.danceit.Model.User;
+import com.example.danceit.Model.Video;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -28,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
     }
 
     @Override

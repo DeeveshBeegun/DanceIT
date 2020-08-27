@@ -7,20 +7,25 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import com.example.danceit.Model.Video;
+
 import java.util.List;
 
 @Dao
 public interface Video_Dao {
     @Insert
-    void insert_video(Video_entity video_entity);
+    void insert_video(Video video);
 
     @Update
-    void update(Video_entity video_entity);
+    void update(Video video);
 
     @Delete
-    void delete(Video_entity video_entity);
+    void delete(Video video);
 
     @Query("SELECT * FROM video_table")
-    LiveData<List<Video_entity>> selectAllVideos(Video_entity video_entity);
+   List<Video> getAll();
+
+    @Query("SELECT COUNT(*) FROM video_table")
+    int countItems();
 
 }

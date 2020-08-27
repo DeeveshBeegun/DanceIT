@@ -3,37 +3,61 @@ package com.example.danceit;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.widget.TextView;
 
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.example.danceit.Database.Video_database;
+import com.example.danceit.Model.Tag;
+import com.example.danceit.Model.User;
+import com.example.danceit.Model.Video;
 import com.example.danceit.RecyclerViewComponents.RecyclerViewAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class FirstFragment extends Fragment {
+
+    List<Video> video_list;
+    private Video_database database;
+    private TextView empty_text;
 
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
-        // Inflate the layout for this fragment
-        View root= inflater.inflate(R.layout.fragment_first, container, false);
+        database = Video_database.getInstance(getContext());
+        User user = new User("username", "password");
+        Tag tag = new Tag(user, "gwara-gwara", false);
+        Video video = new Video(user, "www.youtube.com", new ArrayList<Tag>(), false);
+        database.video_dao().insert_video(video);
 
-        //Recyclerview adapter creation and adding a layout and adaptor
-        RecyclerViewAdapter mAdapter = new RecyclerViewAdapter(Dummy());
-        RecyclerView recyclerView=(RecyclerView) root.findViewById(R.id.recyclerView);
-        recyclerView.setAdapter(mAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(root.getContext()));
+        View root = null;
+        try {
+            // Inflate the layout for this fragment
+            root = inflater.inflate(R.layout.fragment_first, container, false);
 
+            //Recyclerview adapter creation and adding a layout and adaptor
+
+            video_list = database.video_dao().getAll();
+            RecyclerViewAdapter mAdapter = new RecyclerViewAdapter(video_list);
+            RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.recyclerView);
+            recyclerView.setAdapter(mAdapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(root.getContext()));
+
+        } catch(Exception e) {
+            empty_text.setVisibility(View.VISIBLE);
+        }
         return root;
-    }
+        }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -41,13 +65,4 @@ public class FirstFragment extends Fragment {
 
     }
 
-    public ArrayList<String> Dummy(){
-        ArrayList<String> arrayList=new ArrayList<>();
-
-        for (int i = 0; i <20 ; i++) {
-            arrayList.add("https://www.youtube.com/watch?v=FSol3_QZaaI");
-
-        }
-        return arrayList;
-    }
 }
