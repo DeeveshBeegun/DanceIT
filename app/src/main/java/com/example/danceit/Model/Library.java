@@ -59,7 +59,6 @@ public class Library {
      * @throws Exception
      */
     public ArrayList<Video> findVideo(String search_input) throws Exception {
-        boolean tag_found = false;
         ArrayList<Video> videoList = readFileObj(storage_filename);
         for(Video video : videoList) {
             if(video.findTag(search_input))
