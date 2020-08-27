@@ -35,7 +35,17 @@ public class Video implements Serializable {
         this.privacy = privacy;
     }
 
+    public Video(User videoUploader, String url, boolean privacy) {
+        this.videoUploader = videoUploader;
+        this.url = url;
+        this.privacy = privacy;
+    }
+
     /*Get and Set Methods*/
+    public int getVideoId() { return videoId; }
+
+    public void setVideoId(int id) { this.videoId = id; }
+
     public User getVideoUploader() {
         return videoUploader;
     }
@@ -44,11 +54,11 @@ public class Video implements Serializable {
         this.videoUploader = videoUploader;
     }
 
-    public String getURL() {
+    public String getUrl() {
         return url;
     }
 
-    public void setURL(String URL) {
+    public void setUrl(String url) {
         this.url = url;
     }
 
@@ -60,11 +70,11 @@ public class Video implements Serializable {
         this.tag_list = tag_list;
     }
 
-    public boolean getPrivate() {
+    public boolean getPrivacy() {
         return privacy;
     }
 
-    public void setPrivate(boolean Private) {
+    public void setPrivacy(boolean Private) {
         this.privacy = privacy;
     }
     
