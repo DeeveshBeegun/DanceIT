@@ -7,22 +7,32 @@
  
 package com.example.danceit.Model;
  
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
+@Entity(tableName="video_table")
 public class Video implements Serializable {
+
+    @PrimaryKey(autoGenerate = true)
+    private int videoId;
     private User videoUploader;
-    private String URL;
-    private ArrayList<Tag> Tags;
-    private boolean Private;
+    private String url;
+    @Ignore
+    private ArrayList<Tag> tag_list;
+    private boolean privacy;
 
 
     /*Constructor*/
-    public Video(User videoUploader, String URL, ArrayList<Tag> Tags, boolean Private) {
+    @Ignore
+    public Video(User videoUploader, String url, ArrayList<Tag> tag_list, boolean privacy) {
         this.videoUploader = videoUploader;
-        this.URL = URL;
-        this.Tags = Tags;
-        this.Private = Private;
+        this.url = url;
+        this.tag_list = tag_list;
+        this.privacy = privacy;
     }
 
     /*Get and Set Methods*/
@@ -35,57 +45,28 @@ public class Video implements Serializable {
     }
 
     public String getURL() {
-        return URL;
+        return url;
     }
 
     public void setURL(String URL) {
-        this.URL = URL;
+        this.url = url;
     }
 
     public ArrayList<Tag> getTagList() {
-        return Tags;
+        return tag_list;
     }
 
-    public void setTagList(ArrayList<Tag> Tags) {
-        this.Tags = Tags;
+    public void setTagList(ArrayList<Tag> tag_list) {
+        this.tag_list = tag_list;
     }
 
     public boolean getPrivate() {
-        return Private;
+        return privacy;
     }
 
     public void setPrivate(boolean Private) {
-        this.Private = Private;
+        this.privacy = privacy;
     }
     
-    /**
-     * This method adds a Tag to the Video object.
-     * If a tag is in the list, false is returned to indicate no addition happened.
-     * @param tag arraylist containing Tag objects.
-     */
-     public boolean addTag(String tag) {
-         Tag tag1 = new Tag(this.videoUploader, tag, false); // Creating new Tag
-         if ( Tags.contains(tag1) ){
-            return false; // Shows tag description already exists 
-         }
-         else{
-            Tags.add(tag1);
-            return true;
-         }
-        
-     }
-     
-     /**
-     * This method finds if the Video object has a certain tag description.
-     * returns false if a video does not have tags 
-     * @param tag arraylist containing Tag objects.
-     */
-     
-     public boolean findTag(String tag) { 
-         if( Tags.isEmpty() ){
-            return false;
-         }
-         return Tags.contains(new Tag(this.videoUploader, tag, false));
-     }
-  
+
 }
