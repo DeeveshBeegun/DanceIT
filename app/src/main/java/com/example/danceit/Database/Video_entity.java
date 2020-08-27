@@ -7,14 +7,14 @@ import com.example.danceit.Model.User;
 import com.example.danceit.Model.Video;
 
 @Entity(tableName = "video_table")
-public class Video_table {
+public class Video_entity {
 
     @PrimaryKey(autoGenerate = true)
     private int videoId;
     private User user;
     private Video video;
 
-    public Video_table(User user, Video video) {
+    public Video_entity(User user, Video video) {
         this.user = user;
         this.video = video;
     }
