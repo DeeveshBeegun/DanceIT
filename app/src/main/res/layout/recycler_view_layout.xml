@@ -10,11 +10,11 @@
         android:id="@+id/materialCardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:theme="@style/Widget.MaterialComponents.CardView"
+        android:layout_margin="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-
-        style="@style/CardView.Dark">
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:id="@+id/linearLayout2"
@@ -26,18 +26,35 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
+            <android.support.v7.widget.AppCompatImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="250dp"
+                android:src="@android:drawable/ic_menu_share"
+
+                />
+
+            <android.support.design.button.MaterialButton
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                />
+
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_height="80dp"
+                android:layout_marginHorizontal="20dp"
                 android:layout_marginBottom="10dp"
                 android:scaleType="centerInside"
+                android:background="@color/colorAccent"
                 app:srcCompat="@android:drawable/ic_media_play"></ImageView>
 
 
             <android.support.design.chip.ChipGroup
                 android:id="@+id/chipGroup"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="20dp"
+                android:theme="@style/Widget.MaterialComponents.ChipGroup"/>
 
 
 
