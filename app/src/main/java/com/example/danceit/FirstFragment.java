@@ -27,7 +27,6 @@ public class FirstFragment extends Fragment {
 
     List<Video> video_list;
     private Video_database database;
-    private TextView empty_text;
 
     @Override
     public View onCreateView(
@@ -35,17 +34,11 @@ public class FirstFragment extends Fragment {
             Bundle savedInstanceState
     ) {
         database = Video_database.getInstance(getContext());
-        User user = new User("username", "password");
-        Tag tag = new Tag(user, "gwara-gwara", false);
-        Video video = new Video(user, "www.youtube.com", new ArrayList<Tag>(), false);
-        database.video_dao().insert_video(video);
 
-        View root = null;
-        try {
-            // Inflate the layout for this fragment
-            root = inflater.inflate(R.layout.fragment_first, container, false);
+        // Inflate the layout for this fragment
+        View root = inflater.inflate(R.layout.fragment_first, container, false);
 
-            //Recyclerview adapter creation and adding a layout and adaptor
+        //Recyclerview adapter creation and adding a layout and adaptor
 
             video_list = database.video_dao().getAll();
             RecyclerViewAdapter mAdapter = new RecyclerViewAdapter(video_list);
@@ -53,11 +46,8 @@ public class FirstFragment extends Fragment {
             recyclerView.setAdapter(mAdapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(root.getContext()));
 
-        } catch(Exception e) {
-            empty_text.setVisibility(View.VISIBLE);
-        }
         return root;
-        }
+    }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
