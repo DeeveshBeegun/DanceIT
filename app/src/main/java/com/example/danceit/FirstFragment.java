@@ -1,8 +1,10 @@
 package com.example.danceit;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,8 @@ import java.util.ArrayList;
 
 public class FirstFragment extends Fragment {
 
+    RecyclerView recyclerView;
+
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
@@ -31,6 +35,27 @@ public class FirstFragment extends Fragment {
         RecyclerView recyclerView=(RecyclerView) root.findViewById(R.id.recyclerView);
         recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(root.getContext()));
+
+        //SearchView  to get search input by the user
+       /* SearchView  searchView=(SearchView) root.findViewById(R.id.searchview);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });*/
+
+
+
+        //Get tab layout and have relavent processes...Tab is
+        TabLayout tabLayout=(TabLayout) root.findViewById(R.id.tabLayout);
+
+
 
         return root;
     }

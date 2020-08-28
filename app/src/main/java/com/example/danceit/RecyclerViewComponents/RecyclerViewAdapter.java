@@ -55,18 +55,20 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
         myViewHolder.textView.setText(mDataset.get(i));
-        myViewHolder.chipGroup.animate();
-
+        myViewHolder.chipGroup.removeAllViews();
         //loop add all the tags chipGroup
-       /* for (int j = 0; j <video.tags.size() ; j++) {
+        for (int j = 0; j <5 ; j++) {
             Chip temp=new Chip(myViewHolder.context);
-            temp.setText(video.tags.get(j).toString());
+            temp.setText("Dance");
             myViewHolder.chipGroup.addView(temp);
 
-        }*/
+        }
+       /*myViewHolder.chipGroup.removeAllViews();
         Chip temp=new Chip(myViewHolder.context);
         temp.setText("Dance");
-        myViewHolder.chipGroup.addView(temp);
+        myViewHolder.chipGroup.addView(temp);*/
+
+
 
     }
 
