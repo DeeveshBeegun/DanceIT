@@ -36,13 +36,10 @@ public class FirstFragment extends Fragment {
     ) {
         database = Video_database.getInstance(getContext());
 
-
-
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_first, container, false);
 
         //Recyclerview adapter creation and adding a layout and adaptor
-
             video_list = database.video_dao().getAll();
             mAdapter = new RecyclerViewAdapter(video_list);
             RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.recyclerView);
@@ -61,4 +58,5 @@ public class FirstFragment extends Fragment {
         super.onResume();
         mAdapter.updateDataset(database.video_dao().getRecentVideo());
     }
+
 }

@@ -72,6 +72,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         notifyDataSetChanged();
     }
 
+    public void deleteDataset(List<Video> videos) {
+        dataset.clear();
+        notifyDataSetChanged();
+    }
+
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
