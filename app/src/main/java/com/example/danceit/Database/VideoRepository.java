@@ -9,11 +9,11 @@ import com.example.danceit.Model.Video;
 
 import java.util.List;
 
-public class VideoRepositoty {
+public class VideoRepository {
     private Video_Dao video_dao;
     private LiveData<List<Video>> videos;
 
-    public VideoRepositoty(Application application) {
+    public VideoRepository(Application application) {
         Video_database video_database = Video_database.getInstance(application);
         video_dao = video_database.video_dao();
         videos = video_dao.getAll();
