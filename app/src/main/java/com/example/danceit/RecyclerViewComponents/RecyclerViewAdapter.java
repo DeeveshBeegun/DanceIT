@@ -40,7 +40,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public RecyclerViewAdapter(List<Video> myDataset) {
         dataset = myDataset;
     }
-    
+
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -56,15 +56,22 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
         myViewHolder.textView.setText((CharSequence) dataset.get(i).getUrl());
         myViewHolder.chipGroup.animate();
+        myViewHolder.chipGroup.removeAllViews();
 
        for (int j = 0; j <dataset.get(i).getTag_list().size() ; j++) {
-            Chip temp=new Chip(myViewHolder.context);
+           Chip temp=new Chip(myViewHolder.context);
             temp.setText(dataset.get(i).getTag_list().get(j).getDescription());
             myViewHolder.chipGroup.addView(temp);
 
         }
 
     }
+
+    public void updateDataset(List<Video> videos) {
+        dataset.addAll(videos);
+        notifyDataSetChanged();
+    }
+
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
