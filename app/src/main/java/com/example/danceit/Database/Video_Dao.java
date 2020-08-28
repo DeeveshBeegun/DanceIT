@@ -23,9 +23,9 @@ public interface Video_Dao {
     void delete(Video video);
 
     @Query("SELECT * FROM video_table")
-   List<Video> getAll();
+    List<Video> getAll();
 
-    @Query("SELECT COUNT(*) FROM video_table")
-    int countItems();
+    @Query("DELETE FROM video_table")
+    void deleteAll();
 
 }
