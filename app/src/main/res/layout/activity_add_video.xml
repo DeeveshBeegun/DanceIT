@@ -27,7 +27,8 @@
             <android.support.design.widget.TextInputEditText
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:inputType="text" />
+                android:inputType="text"
+                android:visibility="visible"/>
 
         </android.support.design.widget.TextInputLayout>
 
@@ -36,12 +37,14 @@
             android:hint="@string/enter_tags_e_g_kizomba"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_margin="16dp">
+            android:layout_margin="16dp"
+            android:visibility="visible">
 
             <android.support.design.widget.TextInputEditText
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:inputType="text"
+                android:visibility="visible"
                 />
 
         </android.support.design.widget.TextInputLayout>
