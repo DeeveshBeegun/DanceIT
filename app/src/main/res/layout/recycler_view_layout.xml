@@ -11,9 +11,8 @@
         android:id="@+id/materialCardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/Widget.MaterialComponents.CardView"
+        android:theme="@style/CardView.Dark"
         android:layout_margin="10dp"
-        android:background="@color/cardview_shadow_start_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -32,14 +31,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="250dp"
-                android:src="@android:drawable/ic_menu_share"
+                android:theme="@style/Widget.MaterialComponents.Button.OutlinedButton"
 
-                />
+                android:src="@drawable/ic_action_name" />
 
-            <android.support.design.button.MaterialButton
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                />
 
             <ImageView
                 android:layout_width="match_parent"
@@ -48,7 +43,7 @@
                 android:layout_marginBottom="10dp"
                 android:scaleType="centerInside"
                 android:background="@color/colorAccent"
-                app:srcCompat="@android:drawable/ic_media_play"></ImageView>
+                app:srcCompat="@android:drawable/ic_media_play"/>
 
 
             <android.support.design.chip.ChipGroup
@@ -65,6 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
+                android:singleLine="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
