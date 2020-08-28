@@ -14,4 +14,9 @@
     <string name="hintTextTagex">gwarara #joburg</string>
     <string name="privateHint">Your Library</string>
     <string name="publicHint">DANCEIT</string>
+    <string name="enter_a_url">Enter a url.</string>
+    <string name="enter_tags_e_g_kizomba">Enter tags e.g. #kizomba</string>
+    <string name="public_video">Public</string>
+    <string name="private_video">Private</string>
+    <string name="save">SAVE</string>
 </resources>

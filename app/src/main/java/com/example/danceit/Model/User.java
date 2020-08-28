@@ -12,14 +12,12 @@ import java.io.Serializable;
 public class User implements Serializable {
     private String name;
     private String passWord;
-    private ArrayList<String> contactDetails;
 
 
     //constructor
-    public User(String name, String passWord, ArrayList<String> contactDetails) {
+    public User(String name, String passWord) {
         this.name = name;
         this.passWord = passWord;
-        this.contactDetails = contactDetails;
     }
 
     //allows the user to sign-in
@@ -57,11 +55,4 @@ public class User implements Serializable {
         this.passWord = passWord;
     }
 
-    public ArrayList<String> getContactDetails() {
-        return contactDetails;
-    }
-
-    public void setContactDetails(ArrayList<String> contactDetails) {
-        this.contactDetails = contactDetails;
-    }
 }

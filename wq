@@ -1,0 +1,53 @@
+[33mcommit 4dae2d7b3f2282e43a2f195c583c21885ac6e81b[m[33m ([m[1;36mHEAD -> [m[1;32mdeevesh-branch[m[33m)[m
+Author: BGNDEE001 <BGNDEE001@myuct.ac.za>
+Date:   Sun Aug 23 19:18:00 2020 +0200
+
+    Add writeFileObj to write objects to file.
+
+[33mcommit e0c3d1100512e4343701b2f077798a8f2706198f[m[33m ([m[1;31morigin/deevesh-branch[m[33m)[m
+Author: BGNDEE001 <BGNDEE001@myuct.ac.za>
+Date:   Sun Aug 23 19:13:32 2020 +0200
+
+    Add readFileObj method to read objects in file.
+
+[33mcommit 235d011a278a635c5fc56714e1acc40ef84c9e51[m
+Author: BGNDEE001 <BGNDEE001@myuct.ac.za>
+Date:   Sun Aug 23 19:01:20 2020 +0200
+
+    Change saveVideo method to include other methods.
+
+[33mcommit 14f69af2b560a1084f04bb0956c9e9e3fd6043bf[m
+Author: BGNDEE001 <BGNDEE001@myuct.ac.za>
+Date:   Sun Aug 23 07:50:05 2020 +0200
+
+    Remove print statement from saveVideo method.
+
+[33mcommit abfe7ccb122ae3a2adf20f2009d130b0f0a053c1[m
+Author: BGNDEE001 <BGNDEE001@myuct.ac.za>
+Date:   Sun Aug 23 07:44:26 2020 +0200
+
+    Add saveVideo method.
+
+[33mcommit 26df7e98315212a7b57f1404f519bcc71eee5bc4[m
+Author: BGNDEE001 <BGNDEE001@myuct.ac.za>
+Date:   Sat Aug 22 23:48:49 2020 +0200
+
+    Add addVideo method
+
+[33mcommit 9786de4182b5762ea9e360caa2e40b0b4a4eae4b[m
+Author: BGNDEE001 <BGNDEE001@myuct.ac.za>
+Date:   Sat Aug 22 22:52:06 2020 +0200
+
+    Add Library Model.
+
+[33mcommit d47d3310c10d3fc6cd68e09aa360a12aae606e73[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m
+Author: “Claudious <nhmcla003@myuct.ac.za>
+Date:   Sat Aug 22 20:19:44 2020 +0200
+
+    initial commit
+
+[33mcommit d060f8b7cadccd85c87e26f0e907c9a87e10e600[m
+Author: Claudious Nhemwa <nhmcla003@myuct.ac.za>
+Date:   Sat Aug 22 16:46:52 2020 +0000
+
+    Initial commit
