@@ -55,7 +55,7 @@ public class FirstFragment extends Fragment  {
 
         //Recyclerview adapter creation and adding a layout and adaptor
            // video_list = database.video_dao().getAll();
-            mAdapter = new RecyclerViewAdapter((List<Video>) video_list);
+            mAdapter = new RecyclerViewAdapter(video_list);
             RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.recyclerView);
             recyclerView.setAdapter(mAdapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(root.getContext()));

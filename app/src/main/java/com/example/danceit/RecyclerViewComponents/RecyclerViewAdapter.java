@@ -4,6 +4,8 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+
+import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
-    private List<Video> dataset = new ArrayList<Video>();
+    private List<Video> dataset;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -39,8 +41,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     // Provide a suitable constructor (depends on the kind of dataset)
     // add  arraylist of videos
-    public RecyclerViewAdapter(List<Video> myDataset) {
-        dataset = myDataset;
+    public RecyclerViewAdapter(LiveData<List<Video>> myDataset) {
+        dataset = (List<Video>) myDataset;
     }
 
     @NonNull
@@ -79,7 +81,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return dataset.size();
+        return null!=dataset?dataset.size():0;
     }
 
 }
