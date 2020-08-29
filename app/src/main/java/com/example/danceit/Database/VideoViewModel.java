@@ -20,7 +20,7 @@ public class VideoViewModel extends AndroidViewModel {
         videos = videoRepository.getAll();
     }
 
-    public void insert(Video video) {
+    public void insert_video(Video video) {
         videoRepository.insert_video(video);
     }
 
