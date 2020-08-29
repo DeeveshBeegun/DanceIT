@@ -3,14 +3,17 @@ package com.example.danceit.RecyclerViewComponents;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+
+import androidx.annotation.NonNull;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
+
+import androidx.appcompat.widget.AppCompatImageButton;
+import androidx.lifecycle.LiveData;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.content.Intent;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.design.chip.Chip;
-import android.support.design.chip.ChipGroup;
-import android.support.design.widget.Snackbar;
-import android.support.v7.widget.AppCompatImageButton;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +23,9 @@ import android.widget.Toast;
 
 import com.example.danceit.Model.Video;
 import com.example.danceit.R;
+import com.google.android.material.snackbar.Snackbar;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
@@ -29,7 +34,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
-    public static class MyViewHolder extends RecyclerView.ViewHolder{
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         public TextView textView;
         public ChipGroup chipGroup;
@@ -43,12 +48,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
 
         }
+
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
     // add  arraylist of videos
-    public RecyclerViewAdapter(List<Video> myDataset) {
-        dataset = myDataset;
+    public RecyclerViewAdapter(LiveData<List<Video>> myDataset) {
+        dataset = (List<Video>) myDataset;
     }
 
     @NonNull
@@ -128,12 +134,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     public void updateDataset(List<Video> videos) {
-        dataset.addAll(videos);
-        notifyDataSetChanged();
-    }
-
-    public void deleteDataset(List<Video> videos) {
-        dataset.clear();
+        this.dataset = videos;
         notifyDataSetChanged();
     }
 
@@ -141,7 +142,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return dataset.size();
+        return null!=dataset?dataset.size():0;
     }
 
 }
