@@ -3,6 +3,8 @@ package com.example.danceit.RecyclerViewComponents;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.chip.Chip;
 import android.support.design.chip.ChipGroup;
@@ -12,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,6 +57,29 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         // create a new view
         View v = (View) LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.recycler_view_layout, viewGroup, false);
+
+        ImageView imageView=(ImageView) v.findViewById(R.id.image_view);
+        imageView.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                System.out.print(i +dataset.get(i).getUrl().toString());
+                Intent viewIntent =
+                        new Intent("android.intent.action.VIEW",
+                                Uri.parse("https://www.youtube.com/watch?v=QkoCpVyXAmo"));
+
+                try{
+                v.getContext().startActivity(viewIntent);
+                }catch (Exception e){
+
+                    Snackbar snackbar = Snackbar
+                            .make(viewGroup.getRootView(),"Invalid URL "+ String.valueOf(i)+ " "+   dataset.get(i).getUrl().trim(), Snackbar.LENGTH_LONG);
+                    snackbar.show();
+                }
+
+            }
+        });
+
         //feature on click for share button
         AppCompatImageButton appCompatImageButton= v.findViewById(R.id.shareButton);
         appCompatImageButton.setOnClickListener(new View.OnClickListener() {
@@ -89,6 +115,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         myViewHolder.textView.setText((CharSequence) dataset.get(i).getUrl());
         myViewHolder.chipGroup.animate();
         myViewHolder.chipGroup.removeAllViews();
+
+
 
        for (int j = 0; j <dataset.get(i).getTag_list().size() ; j++) {
            Chip temp=new Chip(myViewHolder.context);

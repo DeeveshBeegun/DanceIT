@@ -51,6 +51,8 @@ public class FirstFragment extends Fragment  {
 
 
 
+
+
         //SearchView  to get search input by the user
        /* SearchView  searchView=(SearchView) root.findViewById(R.id.searchview);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
