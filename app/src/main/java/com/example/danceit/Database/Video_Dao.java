@@ -23,7 +23,7 @@ public interface Video_Dao {
     void delete(Video video);
 
     @Query("SELECT * FROM video_table")
-    List<Video> getAll();
+    LiveData<List<Video>> getAll();
 
     @Query("DELETE FROM video_table")
     void deleteAll();
