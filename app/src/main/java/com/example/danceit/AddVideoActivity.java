@@ -1,5 +1,6 @@
 package com.example.danceit;
 
+import com.example.danceit.Database.VideoViewModel;
 import com.google.android.material.textfield.TextInputLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,9 +18,8 @@ import java.util.ArrayList;
 
 public class AddVideoActivity extends AppCompatActivity {
 
-    private Video_database database;
     private boolean privacy = true;
-
+    private VideoViewModel videoViewModel;
 
     RadioButton radiobutton_private;
 
@@ -33,7 +33,8 @@ public class AddVideoActivity extends AppCompatActivity {
     }
 
     public void saveInput() {
-        database = Video_database.getInstance(this);
+
+        videoViewModel = new VideoViewModel(getApplication());
 
         final TextInputLayout textInputUrl = findViewById(R.id.textInput_url);
         final TextInputLayout textInputTags = findViewById(R.id.textInput_tag);
@@ -49,7 +50,7 @@ public class AddVideoActivity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                database.video_dao().insert_video(new Video(new User("username", "password"),
+                videoViewModel.insert_video(new Video(new User("username", "password"),
                         textInputUrl.getEditText().getText().toString().trim(), tagInput(textInputTags.getEditText()
                         .getText().toString()), privacy));
                 Toast toast = Toast.makeText(getApplicationContext(), "Url saved.", Toast.LENGTH_SHORT);
