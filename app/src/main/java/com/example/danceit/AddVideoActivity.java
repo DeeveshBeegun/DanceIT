@@ -63,9 +63,9 @@ public class AddVideoActivity extends AppCompatActivity {
         ArrayList<Tag> tag_lists = new ArrayList<Tag>();
         String[] description = textInputTags.split("#");
 
-        for (int i = 0; i < description.length; i++) {
-            Tag tag = new Tag(new User("username", "password"), description[i], false);
-            tag_lists.add(tag);
+        for (int i = 1; i < description.length; i++) {
+                Tag tag = new Tag(new User("username", "password"), description[i], false);
+                tag_lists.add(tag);
         }
         return tag_lists;
     }
