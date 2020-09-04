@@ -4,6 +4,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageButton;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -80,6 +82,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         }
 
+
+
+
+
         //feature on click for share button
         AppCompatImageButton appCompatImageButton= myViewHolder.textView.getRootView().findViewById(R.id.shareButton);
         appCompatImageButton.setOnClickListener(new View.OnClickListener() {
@@ -110,19 +116,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 System.out.print(i +dataset.get(i).getUrl().toString());
                 Intent viewIntent =
                         new Intent("android.intent.action.VIEW",
-                                Uri.parse("https://www.youtube.com/watch?v=QkoCpVyXAmo"));
+                                Uri.parse(dataset.get(i).getUrl().trim()));
 
                 try{
                     v.getContext().startActivity(viewIntent);
                 }catch (Exception e){
 
                     Snackbar snackbar = Snackbar
-                            .make(myViewHolder.itemView.getRootView(),"Invalid URL "+ String.valueOf(i)+ " "+   dataset.get(i).getUrl().trim(), Snackbar.LENGTH_LONG);
+                            .make(myViewHolder.itemView.getRootView(),"Invalid URL  "+   dataset.get(i).getUrl().trim(), Snackbar.LENGTH_LONG);
                     snackbar.show();
                 }
-
             }
         });
+
 
     }
 
