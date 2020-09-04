@@ -19,4 +19,7 @@
     <string name="public_video">Public</string>
     <string name="private_video">Private</string>
     <string name="save">SAVE</string>
+    <string name="add_a_tag">Add a tag</string>
+    <string name="cancel">Cancel</string>
+    <string name="add">Add</string>
 </resources>

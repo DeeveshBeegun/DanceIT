@@ -1,6 +1,7 @@
 package com.example.danceit;
 
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -9,6 +10,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
@@ -60,31 +64,12 @@ public class FirstFragment extends Fragment  {
             recyclerView.setAdapter(mAdapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(root.getContext()));
 
-
-        //SearchView  to get search input by the user
-       /* SearchView  searchView=(SearchView) root.findViewById(R.id.searchview);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                return false;
-            }
-        });*/
-
-
-
-        //Get tab layout and have relavent processes...Tab is
-       // TabLayout tabLayout=(TabLayout) root.findViewById(R.id.tabLayout);
-
         return root;
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
     }
 
 
