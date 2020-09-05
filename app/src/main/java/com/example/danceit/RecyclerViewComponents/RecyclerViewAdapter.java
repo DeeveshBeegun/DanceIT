@@ -6,11 +6,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageButton;
@@ -18,6 +21,7 @@ import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.danceit.AddTagActivity;
+import com.example.danceit.MainActivity;
 import com.example.danceit.Model.Video;
 import com.example.danceit.R;
 import com.google.android.material.chip.Chip;
@@ -74,13 +78,37 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         myViewHolder.chipGroup.removeAllViews();
 
 
-
        for (int j = 0; j <dataset.get(i).getTag_list().size() ; j++) {
-           Chip temp=new Chip(myViewHolder.context);
-            temp.setText(dataset.get(i).getTag_list().get(j).getDescription());
-            myViewHolder.chipGroup.addView(temp);
+            Chip chip=new Chip(myViewHolder.context);
+            chip.setText(dataset.get(i).getTag_list().get(j).getDescription());
+            chip.setClickable(true);
+            myViewHolder.chipGroup.addView(chip);
+
+            chip.setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View view) {
+                   //Toast.makeText(myViewHolder.context, "Hello", Toast.LENGTH_SHORT).show();
+                   PopupMenu popupMenu = new PopupMenu(myViewHolder.context, view);
+                   popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
+                   popupMenu.show();
+                   popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                       @Override
+                       public boolean onMenuItemClick(MenuItem menuItem) {
+                           Toast.makeText(myViewHolder.context, "Hello", Toast.LENGTH_SHORT).show();
+                           return true;
+                       }
+                   });
+
+
+               }
+           });
+
 
         }
+
+
+
+
 
 
         //feature on click for share button
@@ -136,6 +164,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 view.getContext().startActivity(intent);
             }
         });
+
+
+
 
 
 
