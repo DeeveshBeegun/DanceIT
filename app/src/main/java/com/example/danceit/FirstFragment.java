@@ -2,6 +2,7 @@ package com.example.danceit;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,13 +26,14 @@ import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.example.danceit.Database.VideoViewModel;
 import com.example.danceit.Database.Video_database;
+import com.example.danceit.Model.User;
 import com.example.danceit.Model.Video;
 
 import com.example.danceit.RecyclerViewComponents.RecyclerViewAdapter;
 
 import java.util.List;
 
-public class FirstFragment extends Fragment  {
+public class FirstFragment extends Fragment {
 
     LiveData<List<Video>> video_list;
     private Video_database database;
@@ -58,17 +60,18 @@ public class FirstFragment extends Fragment  {
         View root = inflater.inflate(R.layout.fragment_first, container, false);
 
         //Recyclerview adapter creation and adding a layout and adaptor
-           // video_list = database.video_dao().getAll();
             mAdapter = new RecyclerViewAdapter(video_list);
             RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.recyclerView);
             recyclerView.setAdapter(mAdapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(root.getContext()));
 
+            
         return root;
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
 
     }
 

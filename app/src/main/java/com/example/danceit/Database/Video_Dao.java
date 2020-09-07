@@ -25,9 +25,6 @@ public interface Video_Dao {
     @Query("SELECT * FROM video_table")
     LiveData<List<Video>> getAll();
 
-    @Query("DELETE FROM video_table")
-    void deleteAll();
-
     @Query("SELECT * FROM video_table ORDER BY videoId DESC LIMIT 1")
     List<Video> getRecentVideo();
 

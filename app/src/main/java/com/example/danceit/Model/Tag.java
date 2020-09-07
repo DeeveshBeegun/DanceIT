@@ -8,10 +8,13 @@
 
 package com.example.danceit.Model;
  
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 import java.io.Serializable;
 
-public class Tag implements Serializable {
+public class Tag implements Parcelable {
     private User owner;
     private String description;
     private boolean hasComplaint;
@@ -23,6 +26,23 @@ public class Tag implements Serializable {
         this.description = description;
         this.hasComplaint = hasComplaint;
     }
+
+    protected Tag(Parcel in) {
+        description = in.readString();
+        hasComplaint = in.readByte() != 0;
+    }
+
+    public static final Creator<Tag> CREATOR = new Creator<Tag>() {
+        @Override
+        public Tag createFromParcel(Parcel in) {
+            return new Tag(in);
+        }
+
+        @Override
+        public Tag[] newArray(int size) {
+            return new Tag[size];
+        }
+    };
 
     /*Get and Set Methods*/
     public User getOwner() {
@@ -73,7 +93,17 @@ public class Tag implements Serializable {
     public int hashCode() 
     {  
         return this.description.hashCode(); 
-    }  
-      
-     
+    }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(description);
+        parcel.writeByte((byte) (hasComplaint ? 1 : 0));
+    }
 }

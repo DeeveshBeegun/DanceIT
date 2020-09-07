@@ -6,16 +6,22 @@
  */
  
 package com.example.danceit.Model;
- 
+
+import android.os.Build;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.RequiresApi;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity(tableName="video_table")
-public class Video implements Serializable {
+public class Video implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
     private int videoId;
@@ -38,6 +44,29 @@ public class Video implements Serializable {
 //        this.url = url;
 //        this.privacy = privacy;
 //    }
+
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    protected Video(Parcel in) {
+        videoUploader = in.readTypedObject(User.CREATOR);
+        videoId = in.readInt();
+        url = in.readString();
+        tag_list = in.createTypedArrayList(Tag.CREATOR);
+        privacy = in.readByte() != 0;
+    }
+
+
+    public static final Creator<Video> CREATOR = new Creator<Video>() {
+        @RequiresApi(api = Build.VERSION_CODES.Q)
+        @Override
+        public Video createFromParcel(Parcel in) {
+            return new Video(in);
+        }
+
+        @Override
+        public Video[] newArray(int size) {
+            return new Video[size];
+        }
+    };
 
     /*Get and Set Methods*/
     public int getVideoId() { return videoId; }
@@ -64,7 +93,7 @@ public class Video implements Serializable {
         return tag_list;
     }
 
-    public void getTag_list(ArrayList<Tag> tag_list) {
+    public void setTag_list(ArrayList<Tag> tag_list) {
         this.tag_list = tag_list;
     }
 
@@ -75,6 +104,24 @@ public class Video implements Serializable {
     public void setPrivacy(boolean Private) {
         this.privacy = privacy;
     }
-    
 
+    @Override
+    public String toString() {
+        return url;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeTypedObject(videoUploader, 1);
+        parcel.writeInt(videoId);
+        parcel.writeString(url);
+        parcel.writeTypedList(tag_list);
+        parcel.writeByte((byte) (privacy ? 1 : 0));
+    }
 }

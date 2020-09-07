@@ -24,6 +24,8 @@ public class VideoRepository {
         new InsertAsync(video_dao).execute(video);
     }
 
+    public void update(Video video) { new UpdateAsync(video_dao).execute(video); }
+
     public LiveData<List<Video>> getAll() {
         return videos;
     }
@@ -38,6 +40,20 @@ public class VideoRepository {
         @Override
         protected Void doInBackground(Video... videos) {
            video_dao.insert_video(videos[0]);
+            return null;
+        }
+    }
+
+    private static class UpdateAsync extends AsyncTask<Video, Void, Void> {
+        private Video_Dao video_dao;
+
+        private UpdateAsync(Video_Dao video_dao) {
+            this.video_dao = video_dao;
+        }
+
+        @Override
+        protected Void doInBackground(Video... videos) {
+            video_dao.update(videos[0]);
             return null;
         }
     }

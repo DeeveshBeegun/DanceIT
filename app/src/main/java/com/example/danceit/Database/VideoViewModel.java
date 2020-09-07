@@ -24,6 +24,8 @@ public class VideoViewModel extends AndroidViewModel {
         videoRepository.insert_video(video);
     }
 
+    public void update(Video video) { videoRepository.update(video); }
+
     public LiveData<List<Video>> getAll() {
         return videos;
     }

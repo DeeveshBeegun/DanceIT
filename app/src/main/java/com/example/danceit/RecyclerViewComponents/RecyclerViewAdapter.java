@@ -5,6 +5,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,7 +22,7 @@ import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.danceit.AddTagActivity;
-import com.example.danceit.MainActivity;
+import com.example.danceit.Database.VideoViewModel;
 import com.example.danceit.Model.Video;
 import com.example.danceit.R;
 import com.google.android.material.chip.Chip;
@@ -32,6 +33,7 @@ import java.util.List;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
     private List<Video> dataset;
+    VideoViewModel videoViewModel;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -106,11 +108,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         }
 
-
-
-
-
-
         //feature on click for share button
         AppCompatImageButton appCompatImageButton= myViewHolder.textView.getRootView().findViewById(R.id.shareButton);
         appCompatImageButton.setOnClickListener(new View.OnClickListener() {
@@ -154,19 +151,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             }
         });
 
-
         Button addButton = (Button) myViewHolder.itemView.getRootView().findViewById(R.id.addTag);
         addButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
                 Intent intent=new Intent(view.getContext(), AddTagActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("video_obj", dataset.get(i));
+                intent.putExtras(bundle);
                 view.getContext().startActivity(intent);
             }
         });
-
-
-
 
 
 
@@ -185,3 +181,4 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
 }
+

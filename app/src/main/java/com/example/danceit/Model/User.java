@@ -6,10 +6,13 @@
  */
 package com.example.danceit.Model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 import java.io.Serializable;
 
-public class User implements Serializable {
+public class User implements Parcelable {
     private String name;
     private String passWord;
 
@@ -19,6 +22,23 @@ public class User implements Serializable {
         this.name = name;
         this.passWord = passWord;
     }
+
+    protected User(Parcel in) {
+        name = in.readString();
+        passWord = in.readString();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     //allows the user to sign-in
     public boolean signIn(String password){
@@ -55,4 +75,14 @@ public class User implements Serializable {
         this.passWord = passWord;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(name);
+        parcel.writeString(passWord);
+    }
 }
