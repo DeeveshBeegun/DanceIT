@@ -30,4 +30,7 @@ public class VideoViewModel extends AndroidViewModel {
         return videos;
     }
 
+    public void delete_video(Video video) {
+        videoRepository.delete_video(video);
+    }
 }

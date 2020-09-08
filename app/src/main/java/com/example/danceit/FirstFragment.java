@@ -60,14 +60,16 @@ public class FirstFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_first, container, false);
 
         //Recyclerview adapter creation and adding a layout and adaptor
-            mAdapter = new RecyclerViewAdapter(video_list);
+            mAdapter = new RecyclerViewAdapter(video_list, getActivity());
             RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.recyclerView);
             recyclerView.setAdapter(mAdapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(root.getContext()));
 
+
             
         return root;
     }
+
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

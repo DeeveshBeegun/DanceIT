@@ -1,5 +1,7 @@
 package com.example.danceit.RecyclerViewComponents;
 
+import android.app.Activity;
+import android.app.Application;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -14,7 +16,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageButton;
@@ -23,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.danceit.AddTagActivity;
 import com.example.danceit.Database.VideoViewModel;
+import com.example.danceit.FirstFragment;
 import com.example.danceit.Model.Video;
 import com.example.danceit.R;
 import com.google.android.material.chip.Chip;
@@ -34,6 +36,7 @@ import java.util.List;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
     private List<Video> dataset;
     VideoViewModel videoViewModel;
+    public  Activity activity;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -57,8 +60,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     // Provide a suitable constructor (depends on the kind of dataset)
     // add  arraylist of videos
-    public RecyclerViewAdapter(LiveData<List<Video>> myDataset) {
+    public RecyclerViewAdapter(LiveData<List<Video>> myDataset, Activity activity) {
         dataset = (List<Video>) myDataset;
+        this.activity = activity;
+        videoViewModel = new VideoViewModel(activity.getApplication());
     }
 
     @NonNull
@@ -88,7 +93,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
             chip.setOnClickListener(new View.OnClickListener() {
                @Override
-               public void onClick(View view) {
+               public void onClick(final View view) {
                    //Toast.makeText(myViewHolder.context, "Hello", Toast.LENGTH_SHORT).show();
                    PopupMenu popupMenu = new PopupMenu(myViewHolder.context, view);
                    popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
@@ -96,7 +101,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                        @Override
                        public boolean onMenuItemClick(MenuItem menuItem) {
-                           Toast.makeText(myViewHolder.context, "Hello", Toast.LENGTH_SHORT).show();
+                           switch (menuItem.getItemId()) {
+                               case R.id.delete_tag:
+                                   videoViewModel.delete_video(dataset.get(i));
+                           }
+
                            return true;
                        }
                    });
