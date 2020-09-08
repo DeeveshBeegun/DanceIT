@@ -91,7 +91,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             chip.setClickable(true);
             myViewHolder.chipGroup.addView(chip);
 
-            chip.setOnClickListener(new View.OnClickListener() {
+           final int finalJ = j;
+           chip.setOnClickListener(new View.OnClickListener() {
                @Override
                public void onClick(final View view) {
                    //Toast.makeText(myViewHolder.context, "Hello", Toast.LENGTH_SHORT).show();
@@ -103,7 +104,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                        public boolean onMenuItemClick(MenuItem menuItem) {
                            switch (menuItem.getItemId()) {
                                case R.id.delete_tag:
-                                   videoViewModel.delete_video(dataset.get(i));
+                                   dataset.get(i).getTag_list().remove(finalJ);
+                                   videoViewModel.update(dataset.get(i));
                            }
 
                            return true;
