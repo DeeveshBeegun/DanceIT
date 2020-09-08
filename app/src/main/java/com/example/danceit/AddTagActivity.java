@@ -13,6 +13,7 @@ import com.example.danceit.Model.Video;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class AddTagActivity extends AppCompatActivity {
     VideoViewModel videoViewModel;
@@ -29,7 +30,7 @@ public class AddTagActivity extends AppCompatActivity {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Tag tag = new Tag(new User("username", "password"),addTag_textInput.getEditText().getText().toString(),false);
+                Tag tag = new Tag(new User("username", "password"), Objects.requireNonNull(addTag_textInput.getEditText()).getText().toString(),false);
                 Bundle bundle = getIntent().getExtras();
                 assert bundle != null;
                 Video video = bundle.getParcelable("video_obj");
