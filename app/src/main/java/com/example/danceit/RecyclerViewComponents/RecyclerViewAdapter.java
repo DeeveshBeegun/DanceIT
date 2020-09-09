@@ -1,7 +1,6 @@
 package com.example.danceit.RecyclerViewComponents;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -24,9 +23,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.danceit.AddTagActivity;
 import com.example.danceit.Database.VideoViewModel;
-import com.example.danceit.FirstFragment;
 import com.example.danceit.Model.Video;
 import com.example.danceit.R;
+import com.example.danceit.UpdateTagActivity;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.snackbar.Snackbar;
@@ -106,6 +105,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                case R.id.delete_tag:
                                    dataset.get(i).getTag_list().remove(finalJ);
                                    videoViewModel.update(dataset.get(i));
+                                   break;
+                               case R.id.update_tag:
+                                   Intent intent = new Intent(view.getContext(), UpdateTagActivity.class);
+                                   Bundle bundle = new Bundle();
+                                   bundle.putParcelable("video_update", dataset.get(i));
+                                   bundle.putInt("tag_index", finalJ);
+                                  // bundle.putString("tag_descp", dataset.get(i).getTag_list().get(finalJ).toString());
+                                   intent.putExtras(bundle);
+                                   view.getContext().startActivity(intent);
+                                   break;
+
                            }
 
                            return true;
