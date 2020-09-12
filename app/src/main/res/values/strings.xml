@@ -25,4 +25,5 @@
     <string name="delete">Delete</string>
     <string name="update">Update</string>
     <string name="update_tag">Update</string>
+    <string name="enter_tags">Enter tags e.g. Kizomba</string>
 </resources>
