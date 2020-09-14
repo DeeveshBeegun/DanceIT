@@ -3,6 +3,8 @@ package com.example.danceit;
 import com.example.danceit.Database.VideoViewModel;
 import com.google.android.material.textfield.TextInputLayout;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -50,11 +52,23 @@ public class AddVideoActivity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                videoViewModel.insert_video(new Video(new User("username", "password"),
-                        textInputUrl.getEditText().getText().toString().trim(), tagInput(textInputTags.getEditText()
-                        .getText().toString()), privacy));
-                Toast toast = Toast.makeText(getApplicationContext(), "Url saved.", Toast.LENGTH_SHORT);
-                toast.show();
+                Uri uri=Uri.parse(textInputUrl.getEditText().getText().toString().trim());
+                //uri=uri.normalizeScheme();
+
+
+                if(uri.isHierarchical()  ) {
+
+                    videoViewModel.insert_video(new Video(new User("username", "password"),
+                            textInputUrl.getEditText().getText().toString().trim(), tagInput(textInputTags.getEditText()
+                            .getText().toString()), privacy));
+                    Toast toast = Toast.makeText(getApplicationContext(), "Url saved.", Toast.LENGTH_SHORT);
+                    toast.show();
+                }else {
+
+                    Toast toast = Toast.makeText(getApplicationContext(), "Url not valid", Toast.LENGTH_SHORT);
+                    toast.show();
+
+                }
             }
         });
     }

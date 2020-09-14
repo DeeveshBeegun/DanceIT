@@ -4,14 +4,24 @@ import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.example.danceit.ui.login.LoginActivity;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class StartUP extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_start_u_p);
 
-        Intent intent=new Intent(this,MainActivity.class);
+        final Intent intent=new Intent(this,
+                MainActivity.class);
+
+
+
         startActivity(intent);
+
+
     }
 }
