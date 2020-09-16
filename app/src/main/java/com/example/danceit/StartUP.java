@@ -16,7 +16,7 @@ public class StartUP extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         final Intent intent=new Intent(this,
-                MainActivity.class);
+                LoginActivity.class);
 
 
 
