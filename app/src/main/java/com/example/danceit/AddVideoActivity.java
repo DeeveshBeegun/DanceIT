@@ -13,12 +13,14 @@ import com.example.danceit.Database.Video_database;
 import com.example.danceit.Model.Tag;
 import com.example.danceit.Model.User;
 import com.example.danceit.Model.Video;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
 public class AddVideoActivity extends AppCompatActivity {
 
-    private boolean privacy = true;
+    private boolean privacy = false; // privacy is public
     private VideoViewModel videoViewModel;
 
     RadioButton radiobutton_private;
@@ -42,7 +44,7 @@ public class AddVideoActivity extends AppCompatActivity {
         radiobutton_private = findViewById(R.id.radioButton_private);
 
         if (radiobutton_private.isChecked()) {
-            privacy = false;
+            privacy = true; // privacy is private
         }
 
         //Get save button
@@ -50,11 +52,20 @@ public class AddVideoActivity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                videoViewModel.insert_video(new Video(new User("username", "password"),
-                        textInputUrl.getEditText().getText().toString().trim(), tagInput(textInputTags.getEditText()
-                        .getText().toString()), privacy));
-                Toast toast = Toast.makeText(getApplicationContext(), "Url saved.", Toast.LENGTH_SHORT);
-                toast.show();
+                if (privacy == false) {
+                    videoViewModel.insert_video(new Video(new User("username", "password"),
+                            textInputUrl.getEditText().getText().toString().trim(), tagInput(textInputTags.getEditText()
+                            .getText().toString()), privacy));
+                    Toast toast = Toast.makeText(getApplicationContext(), "Url saved.", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+                else {
+                    // Write a message to the database
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference myRef = database.getReference("message");
+
+                    myRef.setValue("Hello, World!");
+                }
             }
         });
     }
