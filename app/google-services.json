@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "548723785416",
+    "firebase_url": "https://danceit-9b09d.firebaseio.com",
+    "project_id": "danceit-9b09d",
+    "storage_bucket": "danceit-9b09d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:548723785416:android:1c266ac79653795c592ffd",
+        "android_client_info": {
+          "package_name": "com.example.danceit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "548723785416-gmda0p6ba6q92n56sbnk9oqslema1sp9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRnXxyYxdrh7LjJONoEoJRWdGmas1xksM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "548723785416-gmda0p6ba6q92n56sbnk9oqslema1sp9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
