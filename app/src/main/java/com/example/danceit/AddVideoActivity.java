@@ -6,10 +6,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.example.danceit.Database.Video_database;
 import com.example.danceit.Model.Tag;
 import com.example.danceit.Model.User;
 import com.example.danceit.Model.Video;
@@ -17,13 +18,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class AddVideoActivity extends AppCompatActivity {
 
-    private boolean privacy = false; // privacy is public
+    private boolean isPrivate = false; // privacy is public
     private VideoViewModel videoViewModel;
-
-    RadioButton radiobutton_private;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,33 +40,38 @@ public class AddVideoActivity extends AppCompatActivity {
 
         final TextInputLayout textInputUrl = findViewById(R.id.textInput_url);
         final TextInputLayout textInputTags = findViewById(R.id.textInput_tag);
-
-        radiobutton_private = findViewById(R.id.radioButton_private);
-
-        if (radiobutton_private.isChecked()) {
-            privacy = true; // privacy is private
-        }
-
+        checkPrivacy();
         //Get save button
         final Button saveButton = (Button) findViewById(R.id.saveButton);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (privacy == false) {
+                if(isPrivate) {
                     videoViewModel.insert_video(new Video(new User("username", "password"),
-                            textInputUrl.getEditText().getText().toString().trim(), tagInput(textInputTags.getEditText()
-                            .getText().toString()), privacy));
-                    Toast toast = Toast.makeText(getApplicationContext(), "Url saved.", Toast.LENGTH_SHORT);
+                            Objects.requireNonNull(textInputUrl.getEditText()).getText().toString().trim(), tagInput(Objects.requireNonNull(textInputTags.getEditText())
+                            .getText().toString()), isPrivate));
+                    Toast toast = Toast.makeText(getApplicationContext(), "Url saved as private.", Toast.LENGTH_SHORT);
                     toast.show();
                 }
                 else {
-                    // Write a message to the database
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference myRef = database.getReference("message");
+                    DatabaseReference reference = database.getReference("Video URLs database");
 
-                    myRef.setValue("Hello, World!");
+                    Video video = new Video(new User("username", "password"),
+                            Objects.requireNonNull(textInputUrl.getEditText()).getText().toString().trim(), tagInput(Objects.requireNonNull(textInputTags.getEditText())
+                            .getText().toString()), isPrivate);
+
+                    String videoId = reference.push().getKey();
+
+                    assert videoId != null;
+                    reference.child(videoId).setValue(video);
+
+                    Toast toast = Toast.makeText(getApplicationContext(), "Url saved as public.", Toast.LENGTH_SHORT);
+                    toast.show();
                 }
-            }
+
+                }
+
         });
     }
 
@@ -80,6 +85,19 @@ public class AddVideoActivity extends AppCompatActivity {
         }
         return tag_lists;
     }
+
+    public void checkPrivacy() {
+        RadioButton radiobutton_private;
+        radiobutton_private = findViewById(R.id.radioButton_private);
+        radiobutton_private.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                isPrivate = b;
+            }
+        });
+
+    }
+
 
 
 }
