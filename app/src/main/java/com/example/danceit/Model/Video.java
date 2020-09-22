@@ -36,6 +36,8 @@ public class Video implements Parcelable {
         this.privacy = privacy;
     }
 
+    public Video() {}
+
 //    public Video(User videoUploader, String url, boolean privacy) {
 //        this.videoUploader = videoUploader;
 //        this.url = url;

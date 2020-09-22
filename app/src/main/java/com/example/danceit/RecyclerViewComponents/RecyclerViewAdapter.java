@@ -65,6 +65,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         videoViewModel = new VideoViewModel(activity.getApplication());
     }
 
+    public RecyclerViewAdapter(List<Video> myDataset, Activity activity) {
+        dataset = myDataset;
+        this.activity = activity;
+        videoViewModel = new VideoViewModel(activity.getApplication());
+    }
+
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull final ViewGroup viewGroup, final int i) {
