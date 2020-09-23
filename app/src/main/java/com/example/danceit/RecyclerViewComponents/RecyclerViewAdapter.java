@@ -29,6 +29,11 @@ import com.example.danceit.UpdateTagActivity;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubeStandalonePlayer;
+import com.google.android.youtube.player.YouTubeThumbnailLoader;
+import com.google.android.youtube.player.YouTubeThumbnailView;
+import com.google.api.services.youtube.YouTube;
 
 import java.util.List;
 
@@ -36,6 +41,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private List<Video> dataset;
     VideoViewModel videoViewModel;
     public  Activity activity;
+
+    private String YOUTUBEAPI="AIzaSyAfKidnnKiL3B0yRHR_FRqgMKXg6Z8lT-8";
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -150,8 +157,72 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             }
         });
 
+        //Get video id from the url
+        final String videoID;
+        String url=dataset.get(i).getUrl();
+        if(url.contains("youtube")){
+            videoID=url.split("v=")[1];
+        }else
+        {
+            videoID=url.split("be/")[1];
+        }
+
+
+
+        //implementing thumbnail on click to listen for clicks and play video
+        YouTubeThumbnailView thumbnailView=(YouTubeThumbnailView) myViewHolder.itemView.getRootView().findViewById(R.id.thumbnail);
+        thumbnailView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /*Intent viewIntent =
+                        new Intent("android.intent.action.VIEW",
+                                Uri.parse(dataset.get(i).getUrl().trim()));*/
+
+
+                //Internal play of the appthe by starting an youtube API
+                Intent intent = YouTubeStandalonePlayer.createVideoIntent(activity ,YOUTUBEAPI,videoID );
+                activity.startActivity(intent);
+
+                try{
+                    activity.startActivity(intent);
+                    //v.getContext().startActivity(viewIntent);
+                }catch (Exception e){
+
+                    Snackbar snackbar = Snackbar
+                            .make(myViewHolder.itemView.getRootView(),"Invalid URL  "+   dataset.get(i).getUrl().trim(), Snackbar.LENGTH_LONG);
+                    snackbar.show();
+                }
+
+            }
+        });
+
+
+        // Add the youtube thumbnail to the app
+
+        thumbnailView.initialize(YOUTUBEAPI, new YouTubeThumbnailView.OnInitializedListener() {
+            @Override
+            public void onInitializationSuccess(YouTubeThumbnailView youTubeThumbnailView, final YouTubeThumbnailLoader youTubeThumbnailLoader) {
+
+                        youTubeThumbnailLoader.setVideo(videoID);//set video id
+
+                //youTubeThumbnailView.animate();
+
+            }
+
+            @Override
+            public void onInitializationFailure(YouTubeThumbnailView youTubeThumbnailView, YouTubeInitializationResult youTubeInitializationResult) {
+
+            }
+        });
+
+
+
+
+        /*
 
         ImageView imageView=(ImageView) myViewHolder.itemView.getRootView().findViewById(R.id.image_view);
+
+
         imageView.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -170,7 +241,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     snackbar.show();
                 }
             }
-        });
+        });*/
 
         Button addButton = (Button) myViewHolder.itemView.getRootView().findViewById(R.id.addTag);
         addButton.setOnClickListener(new View.OnClickListener() {

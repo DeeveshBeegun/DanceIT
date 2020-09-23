@@ -16,9 +16,11 @@ public class StartUP extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        final Intent intent=new Intent(this,
+                MainActivity.class);
 
         //calling  the activity login
-        final Intent intent=new Intent(this,
+        /*final Intent intent=new Intent(this,
                 LoginActivity.class);
 
         // Testing if the Youtube API is working
