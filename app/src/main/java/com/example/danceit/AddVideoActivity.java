@@ -19,6 +19,8 @@ import com.example.danceit.Model.Video;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -51,7 +53,7 @@ public class AddVideoActivity extends AppCompatActivity {
                 Uri uri=Uri.parse(textInputUrl.getEditText().getText().toString().trim());
 
                 if(isPrivate) {
-                    if(uri.isHierarchical()) {
+                    if(isURL(textInputUrl.getEditText().getText().toString().trim())) {
                         videoViewModel.insert_video(new Video(new User("username", "password"),
                                 Objects.requireNonNull(textInputUrl.getEditText()).getText().toString().trim(), tagInput(Objects.requireNonNull(textInputTags.getEditText())
                                 .getText().toString()), isPrivate));
@@ -84,6 +86,14 @@ public class AddVideoActivity extends AppCompatActivity {
                 }
 
         });
+    }
+
+    public boolean isURL(String url) {
+       if(url.contains("http")&& (url.contains("youtu.be")||url.contains("youtu.be"))){
+           return true;
+       }else {
+           return false;
+       }
     }
 
     public ArrayList<Tag> tagInput(String textInputTags) {
