@@ -128,12 +128,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                            return true;
                        }
                    });
-
-
                }
            });
-
-
         }
 
         //feature on click for share button
@@ -141,19 +137,43 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         appCompatImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //get all video data
-                String dataOut=dataset.get(i).getUrl().toString();
-                dataOut+="\nTags\n";
-                for (int j = 0; j <dataset.get(i).getTag_list().size() ; j++) {
-                    dataOut+=dataset.get(i).getTag_list().get(j).getDescription()+" ";
-                }
-                //copy video data to clip board
-                ClipboardManager clipboardManager=(ClipboardManager) myViewHolder.context.getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clipData=ClipData.newPlainText("video data",dataOut);
-                clipboardManager.setPrimaryClip(clipData);
-                Snackbar snackbar = Snackbar
-                        .make(myViewHolder.textView.getRootView(),"Data saved to clipboard!!!", Snackbar.LENGTH_LONG);
-                snackbar.show();
+
+                //create a  pop menu for options for a video
+                final PopupMenu popupMenu=new PopupMenu(myViewHolder.context,v);
+                popupMenu.getMenuInflater().inflate(R.menu.video_popoptions,popupMenu.getMenu());
+                popupMenu.show();
+
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+
+                        switch(item.getItemId()){
+                            case R.id.share_info:
+
+                                //get all video data
+                                String dataOut=dataset.get(i).getUrl().toString();
+                                dataOut+="\nTags\n";
+                                for (int j = 0; j <dataset.get(i).getTag_list().size() ; j++) {
+                                    dataOut+=dataset.get(i).getTag_list().get(j).getDescription()+" ";
+                                }
+
+                                Intent sendIntent = new Intent();
+                                sendIntent.setAction(Intent.ACTION_SEND);
+                                sendIntent.putExtra(Intent.EXTRA_TEXT, dataOut);
+                                sendIntent.setType("text/plain");
+
+                                Intent shareIntent = Intent.createChooser(sendIntent, null);
+                                myViewHolder.context.startActivity(shareIntent);
+
+                                break;
+                            case R.id.delete_video:
+
+                                break;
+
+                        }
+                        return false;
+                    }
+                });
             }
         });
 

@@ -37,4 +37,5 @@
     <string name="action_sign_up">SIGN UP</string>
     <string name="prompt_username">Username</string>
     <string name="enter_tags">Enter tags</string>
+    <string name="share">share</string>
 </resources>
