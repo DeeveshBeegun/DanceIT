@@ -4,10 +4,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+
+import com.example.danceit.Model.Video;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.LiveData;
+
+import android.os.Parcelable;
 import android.view.View;
 
 import android.view.Menu;
@@ -16,7 +21,11 @@ import android.widget.Button;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
+    List<Video> allVideos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +56,15 @@ public class MainActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                Intent intent = new Intent(getApplicationContext(), LibrarySearchActivity.class);
-                intent.putExtra("Search Keyword", s);
+                Intent intent = new Intent(MainActivity.this, LibrarySearchActivity.class);
+                Bundle bundle = new Bundle();
+                String[] searchKeywords = s.split(" ");
+                bundle.putStringArray("Search Keywords", searchKeywords);
+                intent.putExtras(bundle);
+
+                Bundle bundle1 = new Bundle();
+                bundle1.putParcelableArrayList("Videos", (ArrayList<? extends Parcelable>) allVideos);
+                intent.putExtras(bundle1);
                 startActivity(intent);
                 return false;
             }
@@ -74,5 +90,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void setAllVideos(List<Video> allVideos) {
+        this.allVideos = allVideos;
     }
 }
