@@ -105,6 +105,35 @@ public class Video implements Parcelable {
         this.privacy = privacy;
     }
 
+    /*Overriding equals method to allow correct Video object comparison*/
+    @Override
+    public boolean equals(Object object)
+    {
+
+        if(this == object){
+            return true;
+        }
+
+        if(object == null || object.getClass()!= this.getClass()) {
+            return false;
+        }
+
+        Video video = (Video) object;
+
+        if(video.videoId == this.videoId && video.url.equals(this.url) && video.videoUploader.getName().equals(this.videoUploader.getName()) && video.privacy == this.privacy){
+            return true;
+        }
+
+        return false;
+    }
+
+    /*Overriding hashCode method to allow correct Video object comparison*/
+    @Override
+    public int hashCode()
+    {
+        return this.url.hashCode() * this.videoUploader.getName().hashCode() * this.videoId * 19;
+    }
+
     @Override
     public String toString() {
         return url;
