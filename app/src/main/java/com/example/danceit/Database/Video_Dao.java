@@ -25,6 +25,9 @@ public interface Video_Dao {
     @Query("SELECT * FROM video_table")
     LiveData<List<Video>> getAll();
 
+    @Query("SELECT * FROM video_table")
+    List<Video> getAllVideos();
+
     @Query("SELECT * FROM video_table ORDER BY videoId DESC LIMIT 1")
     List<Video> getRecentVideo();
 

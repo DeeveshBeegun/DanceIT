@@ -13,11 +13,13 @@ import java.util.List;
 public class VideoViewModel extends AndroidViewModel {
     private VideoRepository videoRepository;
     private LiveData<List<Video>> videos;
+    private List<Video> allVideos;
 
     public VideoViewModel(@NonNull Application application) {
         super(application);
         videoRepository = new VideoRepository(application);
         videos = videoRepository.getAll();
+        allVideos = videoRepository.getAllVideos();
     }
 
     public void insert_video(Video video) {
@@ -28,6 +30,10 @@ public class VideoViewModel extends AndroidViewModel {
 
     public LiveData<List<Video>> getAll() {
         return videos;
+    }
+
+    public List<Video> getAllVideos() {
+        return allVideos;
     }
 
 }

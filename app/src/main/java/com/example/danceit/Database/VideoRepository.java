@@ -12,12 +12,13 @@ import java.util.List;
 public class VideoRepository {
     private Video_Dao video_dao;
     private LiveData<List<Video>> videos;
+    private List<Video> allVideos;
 
     public VideoRepository(Application application) {
         Video_database video_database = Video_database.getInstance(application);
         video_dao = video_database.video_dao();
         videos = video_dao.getAll();
-
+        allVideos = video_dao.getAllVideos();
     }
 
     public void insert_video(Video video) {
@@ -28,6 +29,10 @@ public class VideoRepository {
 
     public LiveData<List<Video>> getAll() {
         return videos;
+    }
+
+    public List<Video> getAllVideos() {
+        return allVideos;
     }
 
     private static class InsertAsync extends AsyncTask<Video, Void, Void> {
