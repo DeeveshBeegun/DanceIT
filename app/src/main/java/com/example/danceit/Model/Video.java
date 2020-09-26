@@ -13,9 +13,12 @@ import android.os.Parcelable;
 
 import androidx.annotation.RequiresApi;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 @Entity(tableName="video_table")
 public class Video implements Parcelable {
@@ -25,6 +28,8 @@ public class Video implements Parcelable {
     private User videoUploader;
     private String url;
     private ArrayList<Tag> tag_list;
+    @Ignore
+    private List<String> tags;
     private boolean privacy;
 
 
@@ -36,11 +41,16 @@ public class Video implements Parcelable {
         this.privacy = privacy;
     }
 
-//    public Video(User videoUploader, String url, boolean privacy) {
-//        this.videoUploader = videoUploader;
-//        this.url = url;
-//        this.privacy = privacy;
-//    }
+    public Video(User videoUploader, String url, List<String> tags, boolean privacy) {
+        this.videoUploader = videoUploader;
+        this.url = url;
+        this.tags = tags;
+        this.privacy = privacy;
+    }
+
+
+    public Video() {}
+
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
     protected Video(Parcel in) {
@@ -64,6 +74,7 @@ public class Video implements Parcelable {
             return new Video[size];
         }
     };
+
 
     /*Get and Set Methods*/
     public int getVideoId() { return videoId; }
@@ -92,6 +103,14 @@ public class Video implements Parcelable {
 
     public void setTag_list(ArrayList<Tag> tag_list) {
         this.tag_list = tag_list;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 
     public boolean getPrivacy() {
