@@ -43,6 +43,8 @@ public class DanceIT_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video,
         holder.chipGroup.animate();
         holder.chipGroup.removeAllViews();
 
+
+
         for (int j = 0; j <model.getTags().size() ; j++) {
             Chip chip = new Chip (holder.context);
             chip.setText(model.getTags().get(j));
@@ -60,7 +62,6 @@ public class DanceIT_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video,
                         @Override
                         public boolean onMenuItemClick(MenuItem menuItem) {
                             switch (menuItem.getItemId()) {
-
                                 case R.id.delete_tag:
                                     reference = database.collection("video_urls").document(getSnapshots().getSnapshot(position).getReference().getId());
                                     reference.update("tags", FieldValue.arrayRemove(model.getTags().get(finalJ)));
@@ -74,7 +75,7 @@ public class DanceIT_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video,
                                     bundle.putString("tag_descp", model.getTags().get(finalJ));
                                     intent.putExtras(bundle);
                                     view.getContext().startActivity(intent);
-                                 break;
+                                    break;
                             }
 
                             return true;
@@ -87,9 +88,7 @@ public class DanceIT_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video,
 
     }
 
-
-        Button addButton = (Button) holder.itemView.getRootView().findViewById(R.id.addTag);
-        addButton.setOnClickListener(new View.OnClickListener() {
+        holder.addButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
@@ -119,12 +118,14 @@ public class DanceIT_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video,
         public TextView textView;
         public ChipGroup chipGroup;
         public Context context;
+        public Button addButton;
 
         public videoHolder(@NonNull View itemView) {
             super(itemView);
             textView = (TextView) itemView.findViewById(R.id.text_recycler);
             chipGroup = (ChipGroup) itemView.findViewById(R.id.chipGroup);
             context = itemView.getContext();
+            addButton = itemView.getRootView().findViewById(R.id.addTag);
         }
     }
 }
