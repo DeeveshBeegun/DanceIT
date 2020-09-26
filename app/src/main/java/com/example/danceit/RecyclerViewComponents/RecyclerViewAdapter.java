@@ -61,6 +61,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         dataset = (List<Video>) myDataset;
     }
 
+    public RecyclerViewAdapter(List<Video> myDataset) {
+        dataset = myDataset;
+    }
+
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull final ViewGroup viewGroup, final int i) {
