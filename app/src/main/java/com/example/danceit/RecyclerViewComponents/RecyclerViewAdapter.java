@@ -65,12 +65,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         videoViewModel = new VideoViewModel(activity.getApplication());
     }
 
-    public RecyclerViewAdapter(List<Video> myDataset, Activity activity) {
-        dataset = myDataset;
-        this.activity = activity;
-        videoViewModel = new VideoViewModel(activity.getApplication());
-    }
-
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull final ViewGroup viewGroup, final int i) {
@@ -88,7 +82,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         myViewHolder.textView.setText((CharSequence) dataset.get(i).getUrl());
         myViewHolder.chipGroup.animate();
         myViewHolder.chipGroup.removeAllViews();
-
 
        for (int j = 0; j <dataset.get(i).getTag_list().size() ; j++) {
             Chip chip=new Chip(myViewHolder.context);
@@ -116,8 +109,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                    Intent intent = new Intent(view.getContext(), UpdateTagActivity.class);
                                    Bundle bundle = new Bundle();
                                    bundle.putParcelable("video_update", dataset.get(i));
+                                   bundle.putBoolean("video_privacy", true);
                                    bundle.putInt("tag_index", finalJ);
-                                  // bundle.putString("tag_descp", dataset.get(i).getTag_list().get(finalJ).toString());
                                    intent.putExtras(bundle);
                                    view.getContext().startActivity(intent);
                                    break;
@@ -188,10 +181,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 bundle.putParcelable("video_obj", dataset.get(i));
                 intent.putExtras(bundle);
                 view.getContext().startActivity(intent);
+
             }
         });
-
-
 
     }
 

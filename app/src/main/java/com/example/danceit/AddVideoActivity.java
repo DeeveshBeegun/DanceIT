@@ -1,6 +1,7 @@
 package com.example.danceit;
 
 import com.example.danceit.Database.VideoViewModel;
+import com.firebase.ui.firestore.paging.FirestoreDataSource;
 import com.google.android.material.textfield.TextInputLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,8 +19,12 @@ import com.example.danceit.Model.User;
 import com.example.danceit.Model.Video;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 public class AddVideoActivity extends AppCompatActivity {
@@ -50,11 +55,11 @@ public class AddVideoActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Uri uri=Uri.parse(textInputUrl.getEditText().getText().toString().trim());
 
-                if(isPrivate) {
+               if(isPrivate) {
                     if(uri.isHierarchical()) {
                         videoViewModel.insert_video(new Video(new User("username", "password"),
                                 Objects.requireNonNull(textInputUrl.getEditText()).getText().toString().trim(), tagInput(Objects.requireNonNull(textInputTags.getEditText())
-                                .getText().toString()), isPrivate));
+                                .getText().toString()), isPrivate=true));
                         Toast toast = Toast.makeText(getApplicationContext(), "Url saved as private.", Toast.LENGTH_SHORT);
                         toast.show();
                     }else {
@@ -64,26 +69,20 @@ public class AddVideoActivity extends AppCompatActivity {
 
                     }
                 }
+
                 else {
-                    FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference reference = database.getReference("Video URLs database");
-
-                    Video video = new Video(new User("username", "password"),
-                            Objects.requireNonNull(textInputUrl.getEditText()).getText().toString().trim(), tagInput(Objects.requireNonNull(textInputTags.getEditText())
-                            .getText().toString()), isPrivate);
-
-                    String videoId = reference.push().getKey();
-
-                    assert videoId != null;
-                    reference.child(videoId).setValue(video);
+                    CollectionReference reference = FirebaseFirestore.getInstance().collection("video_urls");
+                    reference.add(new Video(new User("username", "password"),
+                            Objects.requireNonNull(textInputUrl.getEditText()).getText().toString().trim(), tagInput_string((textInputTags.getEditText())
+                            .getText().toString()), isPrivate=false));
 
                     Toast toast = Toast.makeText(getApplicationContext(), "Url saved as public.", Toast.LENGTH_SHORT);
-                    toast.show();
+                        toast.show();
                 }
-
-                }
+            }
 
         });
+
     }
 
     public ArrayList<Tag> tagInput(String textInputTags) {
@@ -93,6 +92,16 @@ public class AddVideoActivity extends AppCompatActivity {
         for (int i = 0; i < description.length; i++) {
                 Tag tag = new Tag(new User("username", "password"), description[i], false);
                 tag_lists.add(tag);
+        }
+        return tag_lists;
+    }
+
+    public ArrayList<String> tagInput_string(String textInputTags) {
+        ArrayList<String> tag_lists = new ArrayList<String>();
+        String[] description = textInputTags.split(" ");
+
+        for (int i = 0; i < description.length; i++) {
+            tag_lists.add(description[i]);
         }
         return tag_lists;
     }
