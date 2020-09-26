@@ -73,8 +73,8 @@ public class Tag implements Parcelable {
     /*Overriding equals method to allow correct Tag object comparison*/
     @Override
     public boolean equals(Object object) 
-    { 
-          
+    {
+
         if(this == object){
            return true;  
         } 
@@ -83,7 +83,7 @@ public class Tag implements Parcelable {
             return false;
         }    
            
-        Tag tag = (Tag) object; 
+        Tag tag = (Tag) object;
           
         return tag.description.equalsIgnoreCase(this.description) ; 
     }
