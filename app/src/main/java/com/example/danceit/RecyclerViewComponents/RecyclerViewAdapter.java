@@ -190,7 +190,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
 
         //implementing thumbnail on click to listen for clicks and play video
-        YouTubeThumbnailView thumbnailView=(YouTubeThumbnailView) myViewHolder.itemView.getRootView().findViewById(R.id.thumbnail);
+        YouTubeThumbnailView thumbnailView = (YouTubeThumbnailView) myViewHolder.itemView.getRootView().findViewById(R.id.thumbnail);
         thumbnailView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
