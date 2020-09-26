@@ -179,6 +179,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 Intent intent=new Intent(view.getContext(), AddTagActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("video_obj", dataset.get(i));
+                bundle.putBoolean("video_privacy", true);
                 intent.putExtras(bundle);
                 view.getContext().startActivity(intent);
 

@@ -7,12 +7,14 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.danceit.AddTagActivity;
 import com.example.danceit.Model.Video;
 import com.example.danceit.R;
 import com.example.danceit.UpdateTagActivity;
@@ -64,7 +66,6 @@ public class DanceIT_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video,
                                     reference.update("tags", FieldValue.arrayRemove(model.getTags().get(finalJ)));
                                     break;
                                 case R.id.update_tag:
-
                                     Intent intent = new Intent(view.getContext(), UpdateTagActivity.class);
                                     Bundle bundle = new Bundle();
                                     bundle.putParcelable("video_update", model);
@@ -85,6 +86,22 @@ public class DanceIT_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video,
             });
 
     }
+
+
+        Button addButton = (Button) holder.itemView.getRootView().findViewById(R.id.addTag);
+        addButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(view.getContext(), AddTagActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("video_privacy", false);
+                bundle.putString("video_id", getSnapshots().getSnapshot(position).getReference().getId());
+                intent.putExtras(bundle);
+                view.getContext().startActivity(intent);
+
+            }
+        });
 
 
     }

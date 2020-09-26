@@ -12,6 +12,9 @@ import com.example.danceit.Model.Tag;
 import com.example.danceit.Model.User;
 import com.example.danceit.Model.Video;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -31,17 +34,30 @@ public class AddTagActivity extends AppCompatActivity {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Tag tag = new Tag(new User("username", "password"), Objects.requireNonNull(addTag_textInput.getEditText()).getText().toString(),false);
-                Bundle bundle = getIntent().getExtras();
-                assert bundle != null;
-                Video video = bundle.getParcelable("video_obj");
-                assert video != null;
-                ArrayList<Tag> tag_lists = video.getTag_list();
-                tag_lists.add(tag);
-                video.setTag_list(tag_lists);
 
-                videoViewModel.update(video);
-                finish();
+                Bundle bundle = getIntent().getExtras();
+                boolean isPrivate = bundle.getBoolean("video_privacy");
+
+                if (isPrivate) {
+                    Tag tag = new Tag(new User("username", "password"), Objects.requireNonNull(addTag_textInput.getEditText()).getText().toString(), false);
+                    assert bundle != null;
+                    Video video = bundle.getParcelable("video_obj");
+                    assert video != null;
+                    ArrayList<Tag> tag_lists = video.getTag_list();
+                    tag_lists.add(tag);
+                    video.setTag_list(tag_lists);
+
+                    videoViewModel.update(video);
+                    finish();
+                }
+                else {
+                    String video_id = bundle.getString("video_id");
+                    FirebaseFirestore database = FirebaseFirestore.getInstance();
+                    DocumentReference reference = database.collection("video_urls")
+                            .document(video_id);
+                    reference.update("tags", FieldValue.arrayUnion((addTag_textInput.getEditText()).getText().toString()));
+                    finish();
+                }
             }
         });
 
