@@ -27,6 +27,8 @@ public class Tag implements Parcelable {
         this.hasComplaint = hasComplaint;
     }
 
+    public Tag() {}
+
     protected Tag(Parcel in) {
         description = in.readString();
         hasComplaint = in.readByte() != 0;

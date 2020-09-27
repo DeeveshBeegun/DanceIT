@@ -23,6 +23,8 @@ public class User implements Parcelable {
         this.passWord = passWord;
     }
 
+    public User() {}
+
     protected User(Parcel in) {
         name = in.readString();
         passWord = in.readString();
