@@ -5,6 +5,7 @@ import com.firebase.ui.firestore.paging.FirestoreDataSource;
 import com.google.android.material.textfield.TextInputLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -46,6 +47,7 @@ public class AddVideoActivity extends AppCompatActivity {
     public void saveInput() {
 
         videoViewModel = new VideoViewModel(getApplication());
+        final Intent intent=new Intent(this,MainActivity.class);
 
         final TextInputLayout textInputUrl = findViewById(R.id.textInput_url);
         final TextInputLayout textInputTags = findViewById(R.id.textInput_tag);
@@ -64,6 +66,7 @@ public class AddVideoActivity extends AppCompatActivity {
                                 .getText().toString()), isPrivate = true));
                         Toast toast = Toast.makeText(getApplicationContext(), "Url saved as private.", Toast.LENGTH_SHORT);
                         toast.show();
+
                     }
                     else {
                         CollectionReference reference = FirebaseFirestore.getInstance().collection("video_urls");
@@ -74,6 +77,8 @@ public class AddVideoActivity extends AppCompatActivity {
                         Toast toast = Toast.makeText(getApplicationContext(), "Url saved as public.", Toast.LENGTH_SHORT);
                             toast.show();
                     }
+
+                    startActivity(intent);
             }else {
 
                     Toast toast = Toast.makeText(getApplicationContext(), "Url not valid", Toast.LENGTH_SHORT);
