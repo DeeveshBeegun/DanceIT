@@ -56,40 +56,37 @@ public class AddVideoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Uri uri=Uri.parse(textInputUrl.getEditText().getText().toString().trim());
-
-                if(isPrivate) {
-                    if(isURL(textInputUrl.getEditText().getText().toString().trim())) {
+                if(isURL(textInputUrl.getEditText().getText().toString().trim())) {
+                    if (isPrivate) {
 
                         videoViewModel.insert_video(new Video(new User("username", "password"),
                                 Objects.requireNonNull(textInputUrl.getEditText()).getText().toString().trim(), tagInput(Objects.requireNonNull(textInputTags.getEditText())
-                                .getText().toString()), isPrivate=true));
+                                .getText().toString()), isPrivate = true));
                         Toast toast = Toast.makeText(getApplicationContext(), "Url saved as private.", Toast.LENGTH_SHORT);
                         toast.show();
-                    }else {
-
-                        Toast toast = Toast.makeText(getApplicationContext(), "Url not valid", Toast.LENGTH_SHORT);
-                        toast.show();
-
                     }
-                }
+                    else {
+                        CollectionReference reference = FirebaseFirestore.getInstance().collection("video_urls");
+                        reference.add(new Video(new User("username", "password"),
+                                Objects.requireNonNull(textInputUrl.getEditText()).getText().toString().trim(), tagInput_string((textInputTags.getEditText())
+                                .getText().toString()), isPrivate=false));
 
-                else {
-                    CollectionReference reference = FirebaseFirestore.getInstance().collection("video_urls");
-                    reference.add(new Video(new User("username", "password"),
-                            Objects.requireNonNull(textInputUrl.getEditText()).getText().toString().trim(), tagInput_string((textInputTags.getEditText())
-                            .getText().toString()), isPrivate=false));
+                        Toast toast = Toast.makeText(getApplicationContext(), "Url saved as public.", Toast.LENGTH_SHORT);
+                            toast.show();
+                    }
+            }else {
 
-                    Toast toast = Toast.makeText(getApplicationContext(), "Url saved as public.", Toast.LENGTH_SHORT);
-                        toast.show();
+                    Toast toast = Toast.makeText(getApplicationContext(), "Url not valid", Toast.LENGTH_SHORT);
+                    toast.show();
                 }
-            }
+        }
 
         });
 
     }
 
     public boolean isURL(String url) {
-       if(url.contains("http")&& (url.contains("youtu.be")||url.contains("youtu.be"))){
+       if(url.contains("http")&& (url.contains("youtube")||url.contains("youtu.be"))){
            return true;
        }else {
            return false;
