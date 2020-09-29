@@ -170,6 +170,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                                 break;
                             case R.id.delete_video:
+                                videoViewModel.delete_video(dataset.get(i));
 
                                 break;
 
