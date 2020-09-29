@@ -1,5 +1,5 @@
 /**
- * This class handles the search queries
+ * This activity handles the library search queries
  *
  * @author Bohlale Motsieloa (MTSBOH002)
  * @date: 29/09/2020

@@ -54,6 +54,10 @@ public class FirstFragment extends Fragment {
             @Override
             public void onChanged(List<Video> videos) {
                 mAdapter.updateDataset(videos);
+                ((MainActivity) getActivity()).setAllVideos(videos); /* This updates allVideos in the
+                Main Activity to make sure all search-related activities have access to the updated
+                library video database*/
+
             }
         });
 
@@ -63,10 +67,10 @@ public class FirstFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_first, container, false);
 
         //Recyclerview adapter creation and adding a layout and adaptor
-            mAdapter = new RecyclerViewAdapter(video_list, getActivity());
-            RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.recyclerView);
-            recyclerView.setAdapter(mAdapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(root.getContext()));
+        mAdapter = new RecyclerViewAdapter(video_list, getActivity());
+        RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.recyclerView);
+        recyclerView.setAdapter(mAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(root.getContext()));
 
         ((MainActivity) getActivity()).setAllVideos(videoViewModel.getAllVideos());
 
