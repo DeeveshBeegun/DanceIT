@@ -1,3 +1,10 @@
+/**
+ * This class handles the search queries
+ *
+ * @author Bohlale Motsieloa (MTSBOH002)
+ * @date: 29/09/2020
+ * @version: 1.0
+ */
 package com.example.danceit;
 
 import android.content.Intent;
@@ -27,11 +34,7 @@ import java.util.List;
 
 public class LibrarySearchActivity extends AppCompatActivity {
 
-    ListView listView;
-    List searchResults = new ArrayList<String>();
-    ArrayAdapter adapter;
     RecyclerViewAdapter mAdapter;
-    VideoViewModel videoViewModel;
     Tag [] searchTags;
 
     @Override
@@ -41,9 +44,12 @@ public class LibrarySearchActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // Getting intent, user search query and all the videos in the user's library from the Main Activity
         Intent intent = getIntent();
         String[] searchKeywords = intent.getExtras().getStringArray("Search Keywords");
+        List<Video> allVideos = intent.getExtras().getParcelableArrayList("Videos");
 
+        //Creating temporary tags from the user's search query words
         searchTags = new Tag[searchKeywords.length];
 
         for (int i=0; i<searchKeywords.length; i++ ){
@@ -52,34 +58,13 @@ public class LibrarySearchActivity extends AppCompatActivity {
             searchTags[i]=newTag;
         }
 
-        List<Video> allVideos = intent.getExtras().getParcelableArrayList("Videos");
-
-        //listView = (ListView)findViewById(R.id.list_view);
-
+        //Create Search object to get search results and set the adapter
         Search search = new Search (searchTags, allVideos);
         ArrayList<Video> searchResults = search.searchResults();
-
-        //ArrayList<String> searchResults1 = new ArrayList<>() ;
-        //searchResults1.add("Tes");
-
-        /*if(searchResults.size()!=0){
-            for(int i=0; i<searchResults.size(); i++){
-                //System.out.println(searchResults.get(i).toString());
-                searchResults1.add(searchResults.get(i).toString());
-            }
-        }
-        else{
-            searchResults1.add("No results found");
-        }*/
 
         mAdapter = new RecyclerViewAdapter(searchResults);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-
-        //add videos
-        //adapter = new ArrayAdapter(LibrarySearchActivity.this, android.R.layout.simple_list_item_1, searchResults1);
-        //listView.setAdapter(adapter);
-
     }
 }
