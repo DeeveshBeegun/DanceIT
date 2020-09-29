@@ -64,8 +64,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     }
 
-    // Provide a suitable constructor (depends on the kind of dataset)
-    // add  arraylist of videos
+    /*Two constructors for different datatypes*/
     public RecyclerViewAdapter(LiveData<List<Video>> myDataset, Activity activity) {
         dataset = (List<Video>) myDataset;
         this.activity = activity;
@@ -220,8 +219,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         });
 
 
-        // Add the youtube thumbnail to the app
-
+        // Add the YouTube thumbnail to the app
         thumbnailView.initialize(YOUTUBEAPI, new YouTubeThumbnailView.OnInitializedListener() {
             @Override
             public void onInitializationSuccess(YouTubeThumbnailView youTubeThumbnailView, final YouTubeThumbnailLoader youTubeThumbnailLoader) {

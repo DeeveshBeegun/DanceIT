@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    List<Video> allVideos;
+    List<Video> allVideos; // List that stores all the videos in a user's library
     MaterialSearchView searchView;
     Toolbar toolbar;
 
@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -59,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                //select the tab selected
+                //Select the tab selected
                 if(tab.getPosition()==0){
                     //from second fragment to the first fragment
                     NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
@@ -102,17 +101,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
+    /*This method initiates the LibrarySearchActivity and handles the receiving of search queries
+      from the user. The search string and the list of all a user's videos are sent with an intent.*/
     private void searchViewCode(){
         String [] yes = {"dog", "johnwick", "german", "germany", "nolan", "batman", "robert"};
         searchView=(MaterialSearchView) findViewById(R.id.search_view);
-        searchView.setSuggestions(yes);//
+        searchView.setSuggestions(yes); // Pre-saved autocompletion words and phrases for searching
         searchView.setEllipsize(true);
 
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                //Toast.makeText(getApplicationContext(), query, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MainActivity.this, LibrarySearchActivity.class);
                 Bundle bundle = new Bundle();
                 String[] searchKeywords = s.split(" ");
@@ -151,30 +150,6 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         MenuItem search = menu.findItem(R.id.search);
         searchView.setMenuItem(search);
-
-        /*SearchView searchView = (SearchView) search.getActionView();
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                Intent intent = new Intent(MainActivity.this, LibrarySearchActivity.class);
-                Bundle bundle = new Bundle();
-                String[] searchKeywords = s.split(" ");
-                bundle.putStringArray("Search Keywords", searchKeywords);
-                intent.putExtras(bundle);
-
-                Bundle bundle1 = new Bundle();
-                bundle1.putParcelableArrayList("Videos", (ArrayList<? extends Parcelable>) allVideos);
-                intent.putExtras(bundle1);
-                startActivity(intent);
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                return false;
-            }
-        });*/
         return true;
     }
 
@@ -196,6 +171,8 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /*This method allows related fragments and activities to set the copy of the videos
+      list/database that the Main Activity has of a user's library */
     public void setAllVideos(List<Video> allVideos) {
         this.allVideos = allVideos;
     }

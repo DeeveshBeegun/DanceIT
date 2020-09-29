@@ -72,6 +72,7 @@ public class FirstFragment extends Fragment {
         recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(root.getContext()));
 
+        //Passing the Main Activity a copy of the library database
         ((MainActivity) getActivity()).setAllVideos(videoViewModel.getAllVideos());
 
         return root;
