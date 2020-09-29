@@ -18,6 +18,10 @@
         <activity
             android:name=".ui.login.LoginActivity"
             android:label="@string/title_activity_login" />
+        <activity
+            android:name=".LibrarySearchActivity"
+            android:label="@string/title_activity_library_search"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".AddVideoActivity" />
         <activity
             android:name=".AddTagActivity"

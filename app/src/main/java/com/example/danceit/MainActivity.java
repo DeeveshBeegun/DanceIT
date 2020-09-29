@@ -1,13 +1,20 @@
 package com.example.danceit;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+
+import com.example.danceit.Model.Video;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.LiveData;
+
+import android.os.Parcelable;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -15,16 +22,25 @@ import android.view.View;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.SearchView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
+    List<Video> allVideos;
+    MaterialSearchView searchView;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        //Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
 
@@ -36,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        searchViewCode();
 
         TabLayout tabLayout=(TabLayout) findViewById(R.id.tabLayout);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -73,13 +91,90 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        if(searchView.isSearchOpen()){
+            searchView.closeSearch();
+        }
+        else{
+            super.onBackPressed();
+        }
         moveTaskToBack(true);
+
+    }
+
+
+
+    private void searchViewCode(){
+        String [] yes = {"dog", "johnwick", "german", "germany", "nolan", "batman", "robert"};
+        searchView=(MaterialSearchView) findViewById(R.id.search_view);
+        searchView.setSuggestions(yes);//
+        searchView.setEllipsize(true);
+
+        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                //Toast.makeText(getApplicationContext(), query, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this, LibrarySearchActivity.class);
+                Bundle bundle = new Bundle();
+                String[] searchKeywords = s.split(" ");
+                bundle.putStringArray("Search Keywords", searchKeywords);
+                intent.putExtras(bundle);
+
+                Bundle bundle1 = new Bundle();
+                bundle1.putParcelableArrayList("Videos", (ArrayList<? extends Parcelable>) allVideos);
+                intent.putExtras(bundle1);
+                startActivity(intent);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+            @Override
+            public void onSearchViewShown() {
+
+            }
+
+            @Override
+            public void onSearchViewClosed() {
+
+            }
+        });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        MenuItem search = menu.findItem(R.id.search);
+        searchView.setMenuItem(search);
+
+        /*SearchView searchView = (SearchView) search.getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                Intent intent = new Intent(MainActivity.this, LibrarySearchActivity.class);
+                Bundle bundle = new Bundle();
+                String[] searchKeywords = s.split(" ");
+                bundle.putStringArray("Search Keywords", searchKeywords);
+                intent.putExtras(bundle);
+
+                Bundle bundle1 = new Bundle();
+                bundle1.putParcelableArrayList("Videos", (ArrayList<? extends Parcelable>) allVideos);
+                intent.putExtras(bundle1);
+                startActivity(intent);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });*/
         return true;
     }
 
@@ -94,7 +189,14 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+        else if (id == R.id.search){
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void setAllVideos(List<Video> allVideos) {
+        this.allVideos = allVideos;
     }
 }

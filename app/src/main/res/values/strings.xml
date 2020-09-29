@@ -38,4 +38,7 @@
     <string name="prompt_username">Username</string>
     <string name="enter_tags">Enter tags</string>
     <string name="share">share</string>
+    <string name="title_activity_library_search">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>
