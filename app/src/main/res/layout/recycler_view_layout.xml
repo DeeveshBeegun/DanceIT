@@ -64,16 +64,6 @@
 
         />
 
-<!--                <Button-->
-<!--                    android:id="@+id/addTag"-->
-<!--                    android:layout_width="37dp"-->
-<!--                    android:drawableEnd="@drawable/ic_action_plus"-->
-<!--                    android:background="@drawable/round_button"-->
-<!--                    android:layout_height="35dp"-->
-<!--                    android:layout_centerVertical="true"-->
-<!--                    android:layout_toEndOf="@id/chipGroup"-->
-<!--                    tools:ignore="RtlSymmetry" />-->
-
 
     </RelativeLayout>
             <TextView

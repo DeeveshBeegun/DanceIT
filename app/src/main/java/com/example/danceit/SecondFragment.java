@@ -1,5 +1,6 @@
 package com.example.danceit;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ public class SecondFragment extends Fragment {
     ObservableSnapshotArray<Video> videoList;
     RecyclerView recyclerView;
     DanceIT_RecyclerViewAdapter adapter;
+    ProgressDialog dialog;
 
     FirebaseFirestore database = FirebaseFirestore.getInstance();
     CollectionReference reference = database.collection("video_urls");
@@ -32,6 +34,7 @@ public class SecondFragment extends Fragment {
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
+
         View root = inflater.inflate(R.layout.fragment_second, container, false);
         //videoList = new ArrayList<>();
         recyclerView = (RecyclerView) root.findViewById(R.id.recyclerViewDance);
@@ -52,7 +55,15 @@ public class SecondFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+
+        ProgressDialog dialog=new ProgressDialog(getContext());
+        dialog.setMessage("Loading...");
+        dialog.setCancelable(false);
+        dialog.setInverseBackgroundForced(false);
+        dialog.show();
+
         adapter.startListening();
+        dialog.hide();
 
    }
 
