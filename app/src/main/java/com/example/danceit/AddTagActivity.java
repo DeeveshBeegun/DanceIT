@@ -63,6 +63,14 @@ public class AddTagActivity extends AppCompatActivity {
             }
         });
 
+        Button cancelButton = (Button)findViewById(R.id.cancel_button);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
 
     }
 
