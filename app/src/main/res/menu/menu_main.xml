@@ -8,7 +8,7 @@
         android:id="@+id/search"
         android:icon="@drawable/ic_search"
         android:orderInCategory="100"
-        android:title="Search"
+        android:title="@string/search"
 
         app:showAsAction="ifRoom|collapseActionView" />
 
@@ -17,5 +17,10 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/create_folder"
+        android:title="@string/create_folder" />
+
 
 </menu>

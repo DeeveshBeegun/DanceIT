@@ -12,6 +12,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.danceit.AddTagActivity;
@@ -25,6 +26,8 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.Objects;
 
 
 public class DanceIT_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video, DanceIT_RecyclerViewAdapter.videoHolder> {
@@ -88,21 +91,30 @@ public class DanceIT_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video,
 
     }
 
-        holder.addButton.setOnClickListener(new View.OnClickListener() {
+        Chip add_chip = new Chip(holder.context);
+        add_chip.setClickable(true);
+        add_chip.setText("Add Tag");
+        add_chip.setChipIcon(Objects.requireNonNull(ContextCompat.getDrawable(holder.context, R.drawable.ic_action_plus)));
 
+        add_chip.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(view.getContext(), AddTagActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putBoolean("video_privacy", false);
-                bundle.putString("video_id", getSnapshots().getSnapshot(position).getReference().getId());
-                intent.putExtras(bundle);
-                view.getContext().startActivity(intent);
-
+            public void onClick(View v) {
+                addTag(v, position);
             }
         });
 
+        holder.chipGroup.addView(add_chip);
 
+
+    }
+
+    public void addTag(View view, int position) {
+        Intent intent=new Intent(view.getContext(), AddTagActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("video_privacy", false);
+        bundle.putString("video_id", getSnapshots().getSnapshot(position).getReference().getId());
+        intent.putExtras(bundle);
+        view.getContext().startActivity(intent);
     }
 
     @NonNull
@@ -125,7 +137,7 @@ public class DanceIT_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video,
             textView = (TextView) itemView.findViewById(R.id.text_recycler);
             chipGroup = (ChipGroup) itemView.findViewById(R.id.chipGroup);
             context = itemView.getContext();
-            addButton = itemView.getRootView().findViewById(R.id.addTag);
+//            addButton = itemView.getRootView().findViewById(R.id.addTag);
         }
     }
 }

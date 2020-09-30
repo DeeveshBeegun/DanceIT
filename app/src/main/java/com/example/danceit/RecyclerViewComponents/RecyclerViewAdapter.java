@@ -1,10 +1,12 @@
 package com.example.danceit.RecyclerViewComponents;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,12 +14,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageButton;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,6 +32,7 @@ import com.example.danceit.Model.Video;
 import com.example.danceit.R;
 import com.example.danceit.UpdateTagActivity;
 import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -36,6 +42,7 @@ import com.google.android.youtube.player.YouTubeThumbnailView;
 import com.google.api.services.youtube.YouTube;
 
 import java.util.List;
+import java.util.Objects;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
     private List<Video> dataset;
@@ -58,6 +65,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             textView = (TextView) v.findViewById(R.id.text_recycler);
             chipGroup=(ChipGroup) v.findViewById(R.id.chipGroup);
             context=v.getContext();
+
 
 
         }
@@ -267,22 +275,33 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             }
         });*/
 
-        Button addButton = (Button) myViewHolder.itemView.getRootView().findViewById(R.id.addTag);
-        addButton.setOnClickListener(new View.OnClickListener() {
+        Chip add_chip = new Chip(myViewHolder.context);
+       add_chip.setClickable(true);
+       add_chip.setText("Add Tag");
+       add_chip.setChipIcon(Objects.requireNonNull(ContextCompat.getDrawable(myViewHolder.context, R.drawable.ic_action_plus)));
 
+       add_chip.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(view.getContext(), AddTagActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("video_obj", dataset.get(i));
-                bundle.putBoolean("video_privacy", true);
-                intent.putExtras(bundle);
-                view.getContext().startActivity(intent);
-
+            public void onClick(View v) {
+                addTag(v, i);
             }
         });
 
+       myViewHolder.chipGroup.addView(add_chip);
+
+
     }
+
+    public void addTag(View view, int i) {
+
+        Intent intent=new Intent(view.getContext(), AddTagActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("video_obj", dataset.get(i));
+        bundle.putBoolean("video_privacy", true);
+        intent.putExtras(bundle);
+        view.getContext().startActivity(intent);
+    }
+
 
     public void updateDataset(List<Video> videos) {
         this.dataset = videos;
