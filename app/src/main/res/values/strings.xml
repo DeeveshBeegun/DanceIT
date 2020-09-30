@@ -43,4 +43,5 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="create_folder">Create Folder</string>
     <string name="search">Search</string>
+    <string name="update_tag_hint">Update tag</string>
 </resources>

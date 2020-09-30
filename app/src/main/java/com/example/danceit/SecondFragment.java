@@ -7,25 +7,16 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.danceit.Model.Tag;
 import com.example.danceit.Model.Video;
 import com.example.danceit.RecyclerViewComponents.DanceIT_RecyclerViewAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.firebase.ui.firestore.ObservableSnapshotArray;
-import com.firebase.ui.firestore.paging.FirestoreDataSource;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class SecondFragment extends Fragment {
     ObservableSnapshotArray<Video> videoList;
