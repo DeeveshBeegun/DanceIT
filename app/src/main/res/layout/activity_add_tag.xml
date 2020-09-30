@@ -11,15 +11,16 @@
         android:id="@+id/textInput_tag"
         android:hint="@string/add_a_tag"
         android:layout_height="wrap_content"
-        android:layout_width="450dp"
+        android:layout_width="match_parent"
         android:layout_margin="16dp"
         android:paddingBottom="20dp"
         android:visibility="visible">
+
         <com.google.android.material.textfield.TextInputEditText
-            android:layout_height="match_parent"
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:inputType="text"
-            android:visibility="visible"/>
+            android:visibility="visible" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

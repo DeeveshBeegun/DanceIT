@@ -41,4 +41,9 @@
     <string name="title_activity_library_search">FullscreenActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="create_folder">Create Folder</string>
+    <string name="search">Search</string>
+    <string name="update_tag_hint">Update tag</string>
+    <string name="make_public">Make public</string>
+    <string name="share_cap">Share</string>
 </resources>

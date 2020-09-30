@@ -69,6 +69,11 @@ public class AddVideoActivity extends AppCompatActivity {
 
                     }
                     else {
+
+                        videoViewModel.insert_video(new Video(new User("username", "password"),
+                                Objects.requireNonNull(textInputUrl.getEditText()).getText().toString().trim(), tagInput(Objects.requireNonNull(textInputTags.getEditText())
+                                .getText().toString()), isPrivate = true));
+
                         CollectionReference reference = FirebaseFirestore.getInstance().collection("video_urls");
                         reference.add(new Video(new User("username", "password"),
                                 Objects.requireNonNull(textInputUrl.getEditText()).getText().toString().trim(), tagInput_string((textInputTags.getEditText())
