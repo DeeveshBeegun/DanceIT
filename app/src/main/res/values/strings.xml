@@ -46,4 +46,5 @@
     <string name="update_tag_hint">Update tag</string>
     <string name="make_public">Make public</string>
     <string name="share_cap">Share</string>
+    <string name="logout_text">Logout</string>
 </resources>

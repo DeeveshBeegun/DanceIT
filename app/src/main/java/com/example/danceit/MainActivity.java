@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.danceit.Model.Video;
+import com.example.danceit.ui.login.LoginActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.google.android.material.tabs.TabLayout;
 
@@ -31,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    private FirebaseAuth mAuth;
     List<Video> allVideos; // List that stores all the videos in a user's library
     MaterialSearchView searchView;
     Toolbar toolbar;
@@ -41,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // Initialize Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
 
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -165,6 +171,11 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         else if (id == R.id.search){
+            return true;
+        }else if(id==R.id.logout){
+            mAuth.signOut();
+            Intent intent=new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
             return true;
         }
 
