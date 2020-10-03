@@ -30,6 +30,11 @@ import com.google.android.youtube.player.YouTubeStandalonePlayer;
 import com.google.android.youtube.player.YouTubeThumbnailLoader;
 import com.google.android.youtube.player.YouTubeThumbnailView;
 
+import org.apache.commons.io.IOUtils;
+import org.json.JSONObject;
+
+
+import java.net.URL;
 import java.util.List;
 import java.util.Objects;
 
@@ -52,7 +57,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
      * This class initialise the different views in the xml file.
      */
     public static class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView textView; // displays the url of the videos in the recyclerview cardview
+        public TextView textView; // displays the title of the videos in the recyclerview cardview
         public ChipGroup chipGroup; // contains all chips which is displayed in each recyclerview cardview
         public Context context;
 
@@ -93,7 +98,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder myViewHolder, final int i) {
 
-        myViewHolder.textView.setText((CharSequence) dataset.get(i).getUrl()); // sets url to textview
+       // myViewHolder.textView.setText((CharSequence) dataset.get(i).getUrl()); // sets url to textview
         myViewHolder.chipGroup.animate();
         myViewHolder.chipGroup.removeAllViews();
 
@@ -219,10 +224,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         thumbnailView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*Intent viewIntent =
-                        new Intent("android.intent.action.VIEW",
-                                Uri.parse(dataset.get(i).getUrl().trim()));*/
-
 
                 //Internal play of the appthe by starting an youtube API
                 Intent intent = YouTubeStandalonePlayer.createVideoIntent(activity ,YOUTUBEAPI,videoID );
@@ -246,9 +247,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             @Override
             public void onInitializationSuccess(YouTubeThumbnailView youTubeThumbnailView, final YouTubeThumbnailLoader youTubeThumbnailLoader) {
 
-                youTubeThumbnailLoader.setVideo(videoID);//set video id
+                youTubeThumbnailLoader.setVideo(videoID); //set video id
 
-                //youTubeThumbnailView.animate();
+                myViewHolder.textView.setText(setYouTubeTitle(dataset.get(i).getUrl()));
+
 
             }
 
@@ -258,6 +260,22 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             }
         });
 
+    }
+
+    public static String setYouTubeTitle(String youtubeUrl) {
+        try {
+            if (youtubeUrl != null) {
+                URL embededURL = new URL(
+                        youtubeUrl + "&format=json"
+                );
+
+                return new JSONObject(IOUtils.toString(embededURL)).getString("title");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return youtubeUrl;
     }
 
     /**
