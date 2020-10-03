@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -23,8 +22,6 @@ import com.example.danceit.Database.VideoViewModel;
 import com.example.danceit.Model.Video;
 import com.example.danceit.R;
 import com.example.danceit.UpdateTagActivity;
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.snackbar.Snackbar;
@@ -32,12 +29,16 @@ import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubeStandalonePlayer;
 import com.google.android.youtube.player.YouTubeThumbnailLoader;
 import com.google.android.youtube.player.YouTubeThumbnailView;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FieldValue;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 import java.util.Objects;
+
+/**
+ * This class is used to update the recyclerview for the "Your Library" fragment.
+ * It contains a List which is observed by the videoViewModel which is an abstraction of
+ * the room database operations. Any changes made to the dataset List will be reflected to the
+ * recyclerview in "Your Library" fragment.
+ */
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
 
@@ -47,13 +48,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private String YOUTUBEAPI="AIzaSyAfKidnnKiL3B0yRHR_FRqgMKXg6Z8lT-8";
 
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
+    /**
+     * This class initialise the different views in the xml file.
+     */
     public static class MyViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
-        public TextView textView;
-        public ChipGroup chipGroup;
+        public TextView textView; // displays the url of the videos in the recyclerview cardview
+        public ChipGroup chipGroup; // contains all chips which is displayed in each recyclerview cardview
         public Context context;
 
         public MyViewHolder(View v) {
@@ -66,6 +66,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     }
 
+    /**
+     * Constructor of the recyclerview adapter
+     * @param myDataset List containing Video objects
+     * @param activity
+     */
     public RecyclerViewAdapter(LiveData<List<Video>> myDataset, Activity activity) {
         dataset = (List<Video>) myDataset;
         this.activity = activity;
@@ -79,17 +84,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull final ViewGroup viewGroup, final int i) {
-        View v = (View) LayoutInflater.from(viewGroup.getContext())
+        View view = (View) LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.recycler_view_layout, viewGroup, false);  // create a new view
 
-        MyViewHolder viewHolder = new MyViewHolder(v);
-        return viewHolder;
+        return new MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder myViewHolder, final int i) {
 
-        myViewHolder.textView.setText((CharSequence) dataset.get(i).getUrl());
+        myViewHolder.textView.setText((CharSequence) dataset.get(i).getUrl()); // sets url to textview
         myViewHolder.chipGroup.animate();
         myViewHolder.chipGroup.removeAllViews();
 
@@ -100,10 +104,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     }
 
+    /**
+     * This method creates chip objects and sets their text as different tags in the video object.
+     * It also defines how the chips should behave when they are clicked.
+     * @param myViewHolder
+     * @param i is the position of the video in the recyclerview
+     */
+
     public void initialise_chip(final MyViewHolder myViewHolder, final int i) {
         for (int j = 0; j <dataset.get(i).getTag_list().size() ; j++) {
             Chip chip=new Chip(myViewHolder.context);
-            chip.setText(dataset.get(i).getTag_list().get(j).getDescription());
+            chip.setText(dataset.get(i).getTag_list().get(j).getDescription()); // set text as video tags
             chip.setClickable(true);
             myViewHolder.chipGroup.addView(chip);
 
@@ -111,7 +122,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             chip.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View view) {
-                    //Toast.makeText(myViewHolder.context, "Hello", Toast.LENGTH_SHORT).show();
                     PopupMenu popupMenu = new PopupMenu(myViewHolder.context, view);
                     popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
                     popupMenu.show();
@@ -120,7 +130,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         public boolean onMenuItemClick(MenuItem menuItem) {
                             switch (menuItem.getItemId()) {
                                 case R.id.delete_tag:
-                                    dataset.get(i).getTag_list().remove(finalJ);
+                                    dataset.get(i).getTag_list().remove(finalJ); // remove tag from database
                                     videoViewModel.update(dataset.get(i));
                                     break;
                                 case R.id.update_tag:
@@ -129,7 +139,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                     bundle.putParcelable("video_update", dataset.get(i));
                                     bundle.putBoolean("video_privacy", true);
                                     bundle.putInt("tag_index", finalJ);
-                                    intent.putExtras(bundle);
+                                    intent.putExtras(bundle); // send information about video object to UpdateTagActivity
                                     view.getContext().startActivity(intent);
                                     break;
 
@@ -144,6 +154,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     }
 
+    /**
+     * This method creates menu buttons on the different videos on the recyclerview.
+     * @param myViewHolder
+     * @param i is the position of the video in the recyclerview
+     */
     public void createMenuButton(final MyViewHolder myViewHolder, final int i) {
         //feature on click for share button
         AppCompatImageButton appCompatImageButton= myViewHolder.textView.getRootView().findViewById(R.id.shareButton);
@@ -161,8 +176,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     public boolean onMenuItemClick(MenuItem item) {
 
                         switch(item.getItemId()){
-                            case R.id.share_info:
-
+                            case R.id.share_info: // share video to third party apps
                                 //get all video data
                                 String dataOut=dataset.get(i).getUrl().toString();
                                 dataOut+="\nTags\n";
@@ -180,7 +194,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                                 break;
                             case R.id.delete_video:
-                                videoViewModel.delete_video(dataset.get(i));
+                                videoViewModel.delete_video(dataset.get(i)); // delete video on the room database (local database)
 
                                 break;
 
@@ -192,6 +206,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         });
     }
 
+    /**
+     * This method sets YouTube thumbnail on the different videos on the recyclerview
+     * @param myViewHolder
+     * @param videoID videoId created by the url
+     * @param i is the position of the different videos on the recyclerview
+     */
     public void setVideoThumbnail(final MyViewHolder myViewHolder, final String videoID, final int i) {
 
         //implementing thumbnail on click to listen for clicks and play video
@@ -240,6 +260,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     }
 
+    /**
+     * This method creates videoId from the different videos using their urls
+     * @param i is the position of the video in the recyclerview
+     * @return videoId
+     */
     public String createVideoIdFromUrl(final int i) {
         //Get video id from the url
         final String videoID;
@@ -255,6 +280,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     }
 
+    /**
+     * This method creates the addTag button on the recyclerview
+     * @param myViewHolder
+     * @param i is the position of the different videos on the recyclerview
+     */
     private void createChipAddTagBtn(MyViewHolder myViewHolder, final int i) {
         Chip add_chip = new Chip(myViewHolder.context);
         add_chip.setClickable(true);

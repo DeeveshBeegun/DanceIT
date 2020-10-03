@@ -13,6 +13,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -36,14 +37,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.Objects;
 
 
-public class DanceIT_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video, DanceIT_RecyclerViewAdapter.MyViewHolder> {
+public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video, Firebase_RecyclerViewAdapter.MyViewHolder> {
     FirebaseFirestore database = FirebaseFirestore.getInstance();
     DocumentReference  reference;
     Activity activity;
 
     private String YOUTUBEAPI="AIzaSyAfKidnnKiL3B0yRHR_FRqgMKXg6Z8lT-8";
 
-    public DanceIT_RecyclerViewAdapter(@NonNull FirestoreRecyclerOptions<Video> options, Activity activity) {
+    public Firebase_RecyclerViewAdapter(@NonNull FirestoreRecyclerOptions<Video> options, Activity activity) {
         super(options);
         this.activity = activity;
     }
@@ -57,6 +58,7 @@ public class DanceIT_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video,
         initialise_chip(holder, position, model);
         createChipAddTagBtn(holder, position);
         setVideoThumbnail(holder, createVideoIdFromUrl(model), model);
+        createMenuButton(holder, model);
 
     }
 
@@ -187,6 +189,51 @@ public class DanceIT_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video,
 
         return videoID;
 
+    }
+
+    public void createMenuButton(final MyViewHolder myViewHolder, final Video model) {
+        //feature on click for share button
+        AppCompatImageButton appCompatImageButton= myViewHolder.textView.getRootView().findViewById(R.id.shareButton);
+        appCompatImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //create a  pop menu for options for a video
+                final PopupMenu popupMenu=new PopupMenu(myViewHolder.context,v);
+                popupMenu.getMenuInflater().inflate(R.menu.video_popoptions,popupMenu.getMenu());
+                popupMenu.show();
+
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch(item.getItemId()){
+                            case R.id.share_info: // share video url to third party apps
+                                //get all video data
+                                String dataOut = model.getUrl();
+                                dataOut += "\nTags\n";
+                                for (int j = 0; j <model.getTags().size() ; j++) {
+                                    dataOut += model.getTags().get(j) + " ";
+                                }
+
+                                Intent sendIntent = new Intent();
+                                sendIntent.setAction(Intent.ACTION_SEND);
+                                sendIntent.putExtra(Intent.EXTRA_TEXT, dataOut);
+                                sendIntent.setType("text/plain");
+
+                                Intent shareIntent = Intent.createChooser(sendIntent, null);
+                                myViewHolder.context.startActivity(shareIntent);
+
+                                break;
+                            case R.id.delete_video:
+
+                                break;
+
+                        }
+                        return false;
+                    }
+                });
+            }
+        });
     }
 
     @NonNull

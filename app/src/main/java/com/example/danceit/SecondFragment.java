@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.danceit.Model.Video;
-import com.example.danceit.RecyclerViewComponents.DanceIT_RecyclerViewAdapter;
+import com.example.danceit.RecyclerViewComponents.Firebase_RecyclerViewAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.firebase.ui.firestore.ObservableSnapshotArray;
 import com.google.firebase.firestore.CollectionReference;
@@ -22,7 +22,7 @@ import com.google.firebase.firestore.Query;
 public class SecondFragment extends Fragment {
     ObservableSnapshotArray<Video> videoList;
     RecyclerView recyclerView;
-    DanceIT_RecyclerViewAdapter adapter;
+    Firebase_RecyclerViewAdapter adapter;
     ProgressDialog dialog;
 
     FirebaseFirestore database = FirebaseFirestore.getInstance();
@@ -44,7 +44,7 @@ public class SecondFragment extends Fragment {
         FirestoreRecyclerOptions<Video> options = new FirestoreRecyclerOptions.Builder<Video>()
                 .setQuery(query, Video.class)
                 .build();
-        adapter = new DanceIT_RecyclerViewAdapter(options, getActivity());
+        adapter = new Firebase_RecyclerViewAdapter(options, getActivity());
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
