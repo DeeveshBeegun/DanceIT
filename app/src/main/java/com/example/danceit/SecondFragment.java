@@ -44,7 +44,7 @@ public class SecondFragment extends Fragment {
         FirestoreRecyclerOptions<Video> options = new FirestoreRecyclerOptions.Builder<Video>()
                 .setQuery(query, Video.class)
                 .build();
-        adapter = new DanceIT_RecyclerViewAdapter(options);
+        adapter = new DanceIT_RecyclerViewAdapter(options, getActivity());
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

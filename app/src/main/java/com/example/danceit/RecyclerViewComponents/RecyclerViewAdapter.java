@@ -1,25 +1,17 @@
 package com.example.danceit.RecyclerViewComponents;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.core.content.ContextCompat;
@@ -31,22 +23,26 @@ import com.example.danceit.Database.VideoViewModel;
 import com.example.danceit.Model.Video;
 import com.example.danceit.R;
 import com.example.danceit.UpdateTagActivity;
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.chip.Chip;
-import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubeStandalonePlayer;
 import com.google.android.youtube.player.YouTubeThumbnailLoader;
 import com.google.android.youtube.player.YouTubeThumbnailView;
-import com.google.api.services.youtube.YouTube;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 import java.util.Objects;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
-    private List<Video> dataset;
-    VideoViewModel videoViewModel;
+
+    private List<Video> dataset; // store video objects; access by the recyclerview
+    VideoViewModel videoViewModel; // create instance of a view model to abstract database operations
     public  Activity activity;
 
     private String YOUTUBEAPI="AIzaSyAfKidnnKiL3B0yRHR_FRqgMKXg6Z8lT-8";
@@ -66,13 +62,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             chipGroup=(ChipGroup) v.findViewById(R.id.chipGroup);
             context=v.getContext();
 
-
-
         }
 
     }
 
-    /*Two constructors for different datatypes*/
     public RecyclerViewAdapter(LiveData<List<Video>> myDataset, Activity activity) {
         dataset = (List<Video>) myDataset;
         this.activity = activity;
@@ -86,12 +79,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull final ViewGroup viewGroup, final int i) {
-        // create a new view
         View v = (View) LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.recycler_view_layout, viewGroup, false);
+                .inflate(R.layout.recycler_view_layout, viewGroup, false);  // create a new view
 
-        MyViewHolder vh = new MyViewHolder(v);
-        return vh;
+        MyViewHolder viewHolder = new MyViewHolder(v);
+        return viewHolder;
     }
 
     @Override
@@ -101,47 +93,58 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         myViewHolder.chipGroup.animate();
         myViewHolder.chipGroup.removeAllViews();
 
-       for (int j = 0; j <dataset.get(i).getTag_list().size() ; j++) {
+        initialise_chip(myViewHolder, i); // create chip and set text and clickable
+        createMenuButton(myViewHolder, i); // create menu button and functionality in menu
+        setVideoThumbnail(myViewHolder, createVideoIdFromUrl(i), i);
+        createChipAddTagBtn(myViewHolder, i);
+
+    }
+
+    public void initialise_chip(final MyViewHolder myViewHolder, final int i) {
+        for (int j = 0; j <dataset.get(i).getTag_list().size() ; j++) {
             Chip chip=new Chip(myViewHolder.context);
             chip.setText(dataset.get(i).getTag_list().get(j).getDescription());
             chip.setClickable(true);
             myViewHolder.chipGroup.addView(chip);
 
-           final int finalJ = j;
-           chip.setOnClickListener(new View.OnClickListener() {
-               @Override
-               public void onClick(final View view) {
-                   //Toast.makeText(myViewHolder.context, "Hello", Toast.LENGTH_SHORT).show();
-                   PopupMenu popupMenu = new PopupMenu(myViewHolder.context, view);
-                   popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
-                   popupMenu.show();
-                   popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                       @Override
-                       public boolean onMenuItemClick(MenuItem menuItem) {
-                           switch (menuItem.getItemId()) {
-                               case R.id.delete_tag:
-                                   dataset.get(i).getTag_list().remove(finalJ);
-                                   videoViewModel.update(dataset.get(i));
-                                   break;
-                               case R.id.update_tag:
-                                   Intent intent = new Intent(view.getContext(), UpdateTagActivity.class);
-                                   Bundle bundle = new Bundle();
-                                   bundle.putParcelable("video_update", dataset.get(i));
-                                   bundle.putBoolean("video_privacy", true);
-                                   bundle.putInt("tag_index", finalJ);
-                                   intent.putExtras(bundle);
-                                   view.getContext().startActivity(intent);
-                                   break;
+            final int finalJ = j;
+            chip.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+                    //Toast.makeText(myViewHolder.context, "Hello", Toast.LENGTH_SHORT).show();
+                    PopupMenu popupMenu = new PopupMenu(myViewHolder.context, view);
+                    popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
+                    popupMenu.show();
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem menuItem) {
+                            switch (menuItem.getItemId()) {
+                                case R.id.delete_tag:
+                                    dataset.get(i).getTag_list().remove(finalJ);
+                                    videoViewModel.update(dataset.get(i));
+                                    break;
+                                case R.id.update_tag:
+                                    Intent intent = new Intent(view.getContext(), UpdateTagActivity.class);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putParcelable("video_update", dataset.get(i));
+                                    bundle.putBoolean("video_privacy", true);
+                                    bundle.putInt("tag_index", finalJ);
+                                    intent.putExtras(bundle);
+                                    view.getContext().startActivity(intent);
+                                    break;
 
-                           }
+                            }
 
-                           return true;
-                       }
-                   });
-               }
-           });
+                            return true;
+                        }
+                    });
+                }
+            });
         }
 
+    }
+
+    public void createMenuButton(final MyViewHolder myViewHolder, final int i) {
         //feature on click for share button
         AppCompatImageButton appCompatImageButton= myViewHolder.textView.getRootView().findViewById(R.id.shareButton);
         appCompatImageButton.setOnClickListener(new View.OnClickListener() {
@@ -187,18 +190,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 });
             }
         });
+    }
 
-        //Get video id from the url
-        final String videoID;
-        String url=dataset.get(i).getUrl();
-        if(url.contains("youtube")){
-            videoID=url.split("v=")[1];
-        }else
-        {
-            videoID=url.split("be/")[1];
-        }
-
-
+    public void setVideoThumbnail(final MyViewHolder myViewHolder, final String videoID, final int i) {
 
         //implementing thumbnail on click to listen for clicks and play video
         YouTubeThumbnailView thumbnailView = (YouTubeThumbnailView) myViewHolder.itemView.getRootView().findViewById(R.id.thumbnail);
@@ -227,13 +221,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             }
         });
 
-
         // Add the YouTube thumbnail to the app
         thumbnailView.initialize(YOUTUBEAPI, new YouTubeThumbnailView.OnInitializedListener() {
             @Override
             public void onInitializationSuccess(YouTubeThumbnailView youTubeThumbnailView, final YouTubeThumbnailLoader youTubeThumbnailLoader) {
 
-                        youTubeThumbnailLoader.setVideo(videoID);//set video id
+                youTubeThumbnailLoader.setVideo(videoID);//set video id
 
                 //youTubeThumbnailView.animate();
 
@@ -245,49 +238,37 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             }
         });
 
+    }
 
+    public String createVideoIdFromUrl(final int i) {
+        //Get video id from the url
+        final String videoID;
+        String url=dataset.get(i).getUrl();
+        if(url.contains("youtube")){
+            videoID=url.split("v=")[1];
+        }else
+        {
+            videoID=url.split("be/")[1];
+        }
 
+        return videoID;
 
-        /*
+    }
 
-        ImageView imageView=(ImageView) myViewHolder.itemView.getRootView().findViewById(R.id.image_view);
-
-
-        imageView.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                System.out.print(i +dataset.get(i).getUrl().toString());
-                Intent viewIntent =
-                        new Intent("android.intent.action.VIEW",
-                                Uri.parse(dataset.get(i).getUrl().trim()));
-
-                try{
-                    v.getContext().startActivity(viewIntent);
-                }catch (Exception e){
-
-                    Snackbar snackbar = Snackbar
-                            .make(myViewHolder.itemView.getRootView(),"Invalid URL  "+   dataset.get(i).getUrl().trim(), Snackbar.LENGTH_LONG);
-                    snackbar.show();
-                }
-            }
-        });*/
-
+    private void createChipAddTagBtn(MyViewHolder myViewHolder, final int i) {
         Chip add_chip = new Chip(myViewHolder.context);
-       add_chip.setClickable(true);
-       add_chip.setText("Add Tag");
-       add_chip.setChipIcon(Objects.requireNonNull(ContextCompat.getDrawable(myViewHolder.context, R.drawable.ic_action_plus)));
+        add_chip.setClickable(true);
+        add_chip.setText("Add Tag");
+        add_chip.setChipIcon(Objects.requireNonNull(ContextCompat.getDrawable(myViewHolder.context, R.drawable.ic_action_plus)));
 
-       add_chip.setOnClickListener(new View.OnClickListener() {
+        add_chip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addTag(v, i);
             }
         });
 
-       myViewHolder.chipGroup.addView(add_chip);
-
-
+        myViewHolder.chipGroup.addView(add_chip);
     }
 
     public void addTag(View view, int i) {
@@ -300,7 +281,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         view.getContext().startActivity(intent);
     }
 
-
     public void updateDataset(List<Video> videos) {
         this.dataset = videos;
         notifyDataSetChanged();
@@ -312,6 +292,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public int getItemCount() {
         return null!=dataset?dataset.size():0;
     }
+
+
+
+
+
 
 }
 
