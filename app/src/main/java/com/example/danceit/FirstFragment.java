@@ -26,8 +26,6 @@ public class FirstFragment extends Fragment {
         Firebase_RecyclerViewAdapter adapter;
         private FirebaseAuth mAuth;
 
-
-
     @Override
         public View onCreateView(
                 LayoutInflater inflater, ViewGroup container,

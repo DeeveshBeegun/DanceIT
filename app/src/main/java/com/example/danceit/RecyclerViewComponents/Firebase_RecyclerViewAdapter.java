@@ -31,6 +31,7 @@ import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubeStandalonePlayer;
 import com.google.android.youtube.player.YouTubeThumbnailLoader;
 import com.google.android.youtube.player.YouTubeThumbnailView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -42,6 +43,7 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
     FirebaseFirestore database = FirebaseFirestore.getInstance();
     DocumentReference  reference;
     Activity activity;
+
 
     private String YOUTUBEAPI="AIzaSyAfKidnnKiL3B0yRHR_FRqgMKXg6Z8lT-8";
 
@@ -86,8 +88,20 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                         public boolean onMenuItemClick(MenuItem menuItem) {
                             switch (menuItem.getItemId()) {
                                 case R.id.delete_tag:
-                                    reference = database.collection("video_urls").document(getSnapshots().getSnapshot(position).getReference().getId());
-                                    reference.update("tags", FieldValue.arrayRemove(model.getTags().get(finalJ)));
+                                    if(model.getPrivacy().equals("public")) {
+                                        reference = database.collection("video_urls").document(getSnapshots().getSnapshot(position).getReference().getId());
+                                        reference.update("tags", FieldValue.arrayRemove(model.getTags().get(finalJ)));
+
+                                    }
+
+                                    else {
+                                         FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                                        DocumentReference reference = database.collection("video_urls_private").document(Objects.requireNonNull(mAuth.getCurrentUser().getEmail()))
+                                                .collection("private_video")
+                                                .document(getSnapshots().getSnapshot(position).getReference().getId());
+
+                                        reference.update("tags", FieldValue.arrayRemove(model.getTags().get(finalJ)));
+                                    }
                                     break;
                                 case R.id.update_tag:
                                     Intent intent = new Intent(view.getContext(), UpdateTagActivity.class);
