@@ -1,88 +1,79 @@
 package com.example.danceit;
 
-
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.SearchView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelStoreOwner;
-
-import com.example.danceit.Database.VideoViewModel;
-import com.example.danceit.Database.Video_database;
-import com.example.danceit.Model.User;
 import com.example.danceit.Model.Video;
+import com.example.danceit.RecyclerViewComponents.Firebase_RecyclerViewAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.firebase.ui.firestore.ObservableSnapshotArray;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
-import com.example.danceit.RecyclerViewComponents.RecyclerViewAdapter;
-
-import java.util.List;
+import java.util.Objects;
 
 public class FirstFragment extends Fragment {
+        RecyclerView recyclerView;
+        Firebase_RecyclerViewAdapter adapter;
+        private FirebaseAuth mAuth;
 
-    LiveData<List<Video>> video_list;
-    private Video_database database;
-    RecyclerViewAdapter mAdapter;
-    private VideoViewModel videoViewModel;
+
 
     @Override
-    public View onCreateView(
-            LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState
-    ) {
+        public View onCreateView(
+                LayoutInflater inflater, ViewGroup container,
+                Bundle savedInstanceState
+        ) {
 
-        videoViewModel = new ViewModelProvider((ViewModelStoreOwner) this).get(VideoViewModel.class);
-        videoViewModel.getAll().observe((LifecycleOwner) this, new Observer<List<Video>>() {
-            @Override
-            public void onChanged(List<Video> videos) {
-                mAdapter.updateDataset(videos);
-                ((MainActivity) getActivity()).setAllVideos(videos); /* This updates allVideos in the
-                Main Activity to make sure all search-related activities have access to the updated
-                library video database*/
+            // Initialize Firebase Auth
+            mAuth = FirebaseAuth.getInstance();
 
-            }
-        });
+            FirebaseFirestore database = FirebaseFirestore.getInstance();
+            CollectionReference reference = database.collection("video_urls_private").
+                    document(Objects.requireNonNull(Objects.requireNonNull(mAuth.getCurrentUser()).getEmail())).
+                    collection("private_video");
 
-        database = Video_database.getInstance(getContext());
+            View root = inflater.inflate(R.layout.fragment_first, container, false);
+            //videoList = new ArrayList<>();
+            recyclerView = (RecyclerView) root.findViewById(R.id.recyclerView);
 
-        // Inflate the layout for this fragment
-        View root = inflater.inflate(R.layout.fragment_first, container, false);
+            Query query = reference.limit(100);
 
-        //Recyclerview adapter creation and adding a layout and adaptor
-        mAdapter = new RecyclerViewAdapter(video_list, getActivity());
-        RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.recyclerView);
-        recyclerView.setAdapter(mAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(root.getContext()));
+            FirestoreRecyclerOptions<Video> options = new FirestoreRecyclerOptions.Builder<Video>()
+                    .setQuery(query, Video.class)
+                    .build();
+            adapter = new Firebase_RecyclerViewAdapter(options, getActivity());
 
-        //Passing the Main Activity a copy of the library database
-        ((MainActivity) getActivity()).setAllVideos(videoViewModel.getAllVideos());
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        return root;
+            return root;
+        }
+
+        @Override
+        public void onStart() {
+            super.onStart();
+            adapter.startListening();;
+
+        }
+
+        @Override
+        public void onStop() {
+            super.onStop();
+            adapter.stopListening();
+        }
+
+        public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
+        }
     }
 
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-
-    }
-
-
-}

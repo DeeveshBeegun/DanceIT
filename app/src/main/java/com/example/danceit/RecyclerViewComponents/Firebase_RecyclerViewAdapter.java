@@ -15,6 +15,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.danceit.AddTagActivity;
@@ -56,9 +57,12 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
         holder.chipGroup.removeAllViews();
 
         initialise_chip(holder, position, model);
-        createChipAddTagBtn(holder, position);
+        createChipAddTagBtn(holder, position, model);
         setVideoThumbnail(holder, createVideoIdFromUrl(model), model);
         createMenuButton(holder, model);
+
+        System.out.println("privacy " + model.getPrivacy());
+
 
     }
 
@@ -89,7 +93,6 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                                     Intent intent = new Intent(view.getContext(), UpdateTagActivity.class);
                                     Bundle bundle = new Bundle();
                                     bundle.putParcelable("video_update", model);
-                                    bundle.putBoolean("video_privacy", false);
                                     bundle.putString("video_id", getSnapshots().getSnapshot(position).getReference().getId());
                                     bundle.putString("tag_descp", model.getTags().get(finalJ));
                                     intent.putExtras(bundle);
@@ -108,7 +111,7 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
         }
     }
 
-    private void createChipAddTagBtn(final MyViewHolder holder, final int position) {
+    private void createChipAddTagBtn(final MyViewHolder holder, final int position, final Video model) {
         Chip add_chip = new Chip(holder.context);
         add_chip.setClickable(true);
         add_chip.setText("Add Tag");
@@ -117,18 +120,18 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
         add_chip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addTag(v, position);
+                addTag(v, position, model);
             }
         });
 
         holder.chipGroup.addView(add_chip);
     }
 
-    public void addTag(View view, int position) {
+    public void addTag(View view, int position, Video model) {
         Intent intent=new Intent(view.getContext(), AddTagActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putBoolean("video_privacy", false);
         bundle.putString("video_id", getSnapshots().getSnapshot(position).getReference().getId());
+        bundle.putParcelable("video_obj", model);
         intent.putExtras(bundle);
         view.getContext().startActivity(intent);
     }

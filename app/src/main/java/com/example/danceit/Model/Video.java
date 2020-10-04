@@ -30,18 +30,18 @@ public class Video implements Parcelable {
     private ArrayList<Tag> tag_list;
     @Ignore
     private List<String> tags;
-    private boolean privacy;
+    public String privacy;
 
+//
+//    /*Constructor*/
+//    public Video(User videoUploader, String url, ArrayList<Tag> tag_list, boolean privacy) {
+//        this.videoUploader = videoUploader;
+//        this.url = url;
+//        this.tag_list = tag_list;
+//        this.privacy = privacy;
+//    }
 
-    /*Constructor*/
-    public Video(User videoUploader, String url, ArrayList<Tag> tag_list, boolean privacy) {
-        this.videoUploader = videoUploader;
-        this.url = url;
-        this.tag_list = tag_list;
-        this.privacy = privacy;
-    }
-
-    public Video(User videoUploader, String url, List<String> tags, boolean privacy) {
+    public Video(User videoUploader, String url, List<String> tags, String privacy) {
         this.videoUploader = videoUploader;
         this.url = url;
         this.tags = tags;
@@ -58,7 +58,7 @@ public class Video implements Parcelable {
         videoId = in.readInt();
         url = in.readString();
         tag_list = in.createTypedArrayList(Tag.CREATOR);
-        privacy = in.readByte() != 0;
+        privacy = in.readString();
     }
 
 
@@ -113,12 +113,8 @@ public class Video implements Parcelable {
         this.tags = tags;
     }
 
-    public boolean getPrivacy() {
+    public String getPrivacy() {
         return privacy;
-    }
-
-    public void setPrivacy(boolean Private) {
-        this.privacy = privacy;
     }
 
     /*Overriding equals method to allow correct Video object comparison*/
@@ -167,6 +163,6 @@ public class Video implements Parcelable {
         parcel.writeInt(videoId);
         parcel.writeString(url);
         parcel.writeTypedList(tag_list);
-        parcel.writeByte((byte) (privacy ? 1 : 0));
+        parcel.writeString(privacy);
     }
 }

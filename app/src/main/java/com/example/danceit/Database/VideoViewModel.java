@@ -39,4 +39,6 @@ public class VideoViewModel extends AndroidViewModel {
     public void delete_video(Video video) {
         videoRepository.delete_video(video);
     }
+
+    public void deleteAll() {videoRepository.deleteAll();}
 }

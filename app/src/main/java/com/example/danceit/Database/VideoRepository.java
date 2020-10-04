@@ -29,6 +29,8 @@ public class VideoRepository {
 
     public void delete_video(Video video) { new DeleteAsync(video_dao).execute(video); }
 
+    public void deleteAll() { new DeleteAllAsync(video_dao).execute(); }
+
     public LiveData<List<Video>> getAll() {
         return videos;
     }
@@ -76,6 +78,21 @@ public class VideoRepository {
         @Override
         protected Void doInBackground(Video... videos) {
             video_dao.delete_video(videos[0]);
+            return null;
+        }
+
+    }
+
+    private static class DeleteAllAsync extends AsyncTask<Video, Void, Void> {
+        private Video_Dao video_dao;
+
+        private DeleteAllAsync(Video_Dao video_dao) {
+            this.video_dao = video_dao;
+        }
+
+        @Override
+        protected Void doInBackground(Video... videos) {
+            video_dao.deleteAll();
             return null;
         }
 
