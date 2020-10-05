@@ -35,7 +35,7 @@ public class SharingVideoActivity extends AppCompatActivity {
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
-        reference.add("bla");
+//        reference.add("bla");
 
 
         List<String> users = new ArrayList<>();

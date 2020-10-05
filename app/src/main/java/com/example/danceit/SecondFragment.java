@@ -29,7 +29,8 @@ public class SecondFragment extends Fragment {
 
 
    FirebaseFirestore database = FirebaseFirestore.getInstance();
-    CollectionReference reference = database.collection("video_urls");
+   CollectionReference reference = database.collection("video_urls");
+
 
 
     @Override
@@ -39,7 +40,7 @@ public class SecondFragment extends Fragment {
     ) {
 
         View root = inflater.inflate(R.layout.fragment_second, container, false);
-       // videoList = new ArrayList<>();
+
         recyclerView = (RecyclerView) root.findViewById(R.id.recyclerViewDance);
 
         Query query = reference.limit(100);

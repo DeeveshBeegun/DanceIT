@@ -130,8 +130,6 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                                     view.getContext().startActivity(intent);
                                     break;
 
-
-
                             }
 
                             return true;
@@ -288,8 +286,9 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
 
                             case R.id.send_info:
                                 //allows use to send and transictions to send activity to select users
-                                Intent intent = new Intent(activity, SharingVideoActivity.class);
-                                activity.startActivity(intent);
+
+                                Intent i=new Intent(activity, SharingVideoActivity.class);
+                                activity.startActivity(i);
 
                                 break;
 
