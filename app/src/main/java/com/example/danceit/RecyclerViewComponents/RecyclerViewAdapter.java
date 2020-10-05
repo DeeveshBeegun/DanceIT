@@ -207,8 +207,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                 //allows use to send and transictions to send activity to select users
                                 Intent intent=new Intent(activity, SharingVideoActivity.class);
                                 activity.startActivity(intent);
+                                break;
                         }
-                        return false;
+                        return true;
                     }
                 });
             }

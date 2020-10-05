@@ -23,20 +23,17 @@ public class SharingVideoActivity extends AppCompatActivity {
         RecyclerView recyclerView=(RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        List<String> ls=new ArrayList<>();
-        ls.add("John");
-        ls.add("Joe");
-        ls.add("Bob");
-        ls.add("Ben");
-        ls.add("Jane");
-        ls.add("Seth");
-        ls.add("Carol");
-        ls.add("Lebron");
+        List<String> users = new ArrayList<>();
+        users.add("John");
+        users.add("Joe");
+        users.add("Bob");
+        users.add("Ben");
+        users.add("Jane");
+        users.add("Seth");
+        users.add("Carol");
+        users.add("Lebron");
 
-
-
-
-        final MyAdapter myAdapter =new MyAdapter(ls);
+        final MyAdapter myAdapter =new MyAdapter(users);
         recyclerView.setAdapter(myAdapter);
 
         SearchView searchView=(SearchView) findViewById(R.id.searchView);

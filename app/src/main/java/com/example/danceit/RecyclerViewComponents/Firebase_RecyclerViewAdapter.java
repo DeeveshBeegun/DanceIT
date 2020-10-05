@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.danceit.AddTagActivity;
 import com.example.danceit.Model.Video;
 import com.example.danceit.R;
+import com.example.danceit.Sharing.SharingVideoActivity;
 import com.example.danceit.UpdateTagActivity;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -38,7 +39,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Objects;
 
-
+/**
+ * This class is used to update the recyclerview for the "Your Library" fragment.
+ * It contains a List which is observed by the videoViewModel which is an abstraction of
+ * the room database operations. Any changes made to the dataset List will be reflected to the
+ * recyclerview in "Your Library" fragment.
+ */
 public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video, Firebase_RecyclerViewAdapter.MyViewHolder> {
     FirebaseFirestore database = FirebaseFirestore.getInstance();
     DocumentReference  reference;
@@ -47,6 +53,11 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
 
     private String YOUTUBEAPI="AIzaSyAfKidnnKiL3B0yRHR_FRqgMKXg6Z8lT-8";
 
+    /**
+     * Constructor of the recyclerview adapter
+     * @param options query options
+     * @param activity
+     */
     public Firebase_RecyclerViewAdapter(@NonNull FirestoreRecyclerOptions<Video> options, Activity activity) {
         super(options);
         this.activity = activity;
@@ -68,7 +79,13 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
 
     }
 
-
+    /**
+     * This method creates chip objects and sets their text as different tags in the video object.
+     * It also defines how the chips should behave when they are clicked.
+     * @param holder
+     * @param position is the position of the video in the recyclerview
+     * @param model video object
+     */
     private void initialise_chip(final MyViewHolder holder, final int position, final Video model) {
         for (int j = 0; j <model.getTags().size() ; j++) {
             Chip chip = new Chip (holder.context);
@@ -112,6 +129,9 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                                     intent.putExtras(bundle);
                                     view.getContext().startActivity(intent);
                                     break;
+
+
+
                             }
 
                             return true;
@@ -125,6 +145,11 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
         }
     }
 
+    /**
+     * This method creates the addTag button on the recyclerview
+     * @param holder
+     * @param position is the position of the different videos on the recyclerview
+     */
     private void createChipAddTagBtn(final MyViewHolder holder, final int position, final Video model) {
         Chip add_chip = new Chip(holder.context);
         add_chip.setClickable(true);
@@ -150,6 +175,12 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
         view.getContext().startActivity(intent);
     }
 
+    /**
+     * This method sets YouTube thumbnail on the different videos on the recyclerview
+     * @param myViewHolder
+     * @param videoID videoId created by the url
+     * @param model video object
+     */
     public void setVideoThumbnail(final MyViewHolder myViewHolder, final String videoID, final Video model) {
 
         //implementing thumbnail on click to listen for clicks and play video
@@ -193,6 +224,11 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
 
     }
 
+    /**
+     * This method creates videoId from the different videos using their urls
+     * @param model is the video object
+     * @return videoId
+     */
     public String createVideoIdFromUrl(Video model) {
         //Get video id from the url
         final String videoID;
@@ -208,6 +244,11 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
 
     }
 
+
+    /**
+     * This method creates menu buttons on the different videos on the recyclerview.
+     * @param myViewHolder
+     */
     public void createMenuButton(final MyViewHolder myViewHolder, final Video model) {
         //feature on click for share button
         AppCompatImageButton appCompatImageButton= myViewHolder.textView.getRootView().findViewById(R.id.shareButton);
@@ -245,6 +286,13 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
 
                                 break;
 
+                            case R.id.send_info:
+                                //allows use to send and transictions to send activity to select users
+                                Intent intent = new Intent(activity, SharingVideoActivity.class);
+                                activity.startActivity(intent);
+
+                                break;
+
                         }
                         return false;
                     }
@@ -261,6 +309,10 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
         return new MyViewHolder(view);
     }
 
+
+    /**
+     * This class initialise the different views in the xml file.
+     */
     static class MyViewHolder extends RecyclerView.ViewHolder {
 
         public TextView textView;
