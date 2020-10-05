@@ -3,8 +3,10 @@ package com.example.danceit.Sharing;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,6 +22,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> impl
     private List<String> mDataset;
     private List<String> mOriginalDataset;
 
+    public static List<String> getUsers() {
+        //method to get all the selected users
+        return users;
+    }
+
+    //stores the chosen  users
+    public static List<String> users;
     @Override
     public Filter getFilter() {
         return new Filter() {
@@ -66,9 +75,21 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> impl
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         public TextView textView;
+        public RadioButton radioButton;
         public MyViewHolder(View v) {
             super(v);
             textView = v.findViewById(R.id.textView);
+            radioButton=v.findViewById(R.id.radioButton);
+            radioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if(isChecked){
+
+                        users.add(textView.getText().toString());
+
+                    }
+                }
+            });
         }
     }
 
@@ -76,6 +97,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> impl
     public MyAdapter(List myDataset) {
         mOriginalDataset=myDataset;
         mDataset = myDataset;
+        users=new ArrayList<>();
     }
 
     // Create new views (invoked by the layout manager)
