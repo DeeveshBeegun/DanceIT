@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.danceit.AddTagActivity;
 import com.example.danceit.Model.Video;
 import com.example.danceit.R;
+import com.example.danceit.Sharing.SharingVideoActivity;
 import com.example.danceit.UpdateTagActivity;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -112,6 +113,7 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                                     intent.putExtras(bundle);
                                     view.getContext().startActivity(intent);
                                     break;
+
                             }
 
                             return true;
@@ -243,6 +245,12 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                                 break;
                             case R.id.delete_video:
 
+                                break;
+
+                            case R.id.send_info:
+                                //allows use to send and transictions to send activity to select users
+                                Intent i=new Intent(activity, SharingVideoActivity.class);
+                                activity.startActivity(i);
                                 break;
 
                         }
