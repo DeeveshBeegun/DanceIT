@@ -10,11 +10,20 @@ import android.widget.SearchView;
 
 import com.example.danceit.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class SharingVideoActivity extends AppCompatActivity {
+
+    private FirebaseAuth mAuth;
+    FirebaseFirestore database = FirebaseFirestore.getInstance();
+    CollectionReference reference = database.collection("users");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,8 +32,13 @@ public class SharingVideoActivity extends AppCompatActivity {
         RecyclerView recyclerView=(RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        // Initialize Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
+
+        reference.add("bla");
+
+
         List<String> users = new ArrayList<>();
-        users.add("John");
         users.add("Joe");
         users.add("Bob");
         users.add("Ben");
@@ -36,10 +50,12 @@ public class SharingVideoActivity extends AppCompatActivity {
         final MyAdapter myAdapter =new MyAdapter(users);
         recyclerView.setAdapter(myAdapter);
 
-        SearchView searchView=(SearchView) findViewById(R.id.searchView);
+        final SearchView searchView=(SearchView) findViewById(R.id.searchView);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
+
+
                 return false;
             }
 

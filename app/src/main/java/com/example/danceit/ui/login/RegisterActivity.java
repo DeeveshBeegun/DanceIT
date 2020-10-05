@@ -18,11 +18,18 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Objects;
 
 public class RegisterActivity extends AppCompatActivity {
 
     private static final String TAG = "EmailPassword";
     private FirebaseAuth mAuth;
+    private EditText editTextUsername;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +60,6 @@ public class RegisterActivity extends AppCompatActivity {
         if(currentUser!=null){
         }
 
-
         Button button=(Button) findViewById(R.id.signup);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,6 +68,7 @@ public class RegisterActivity extends AppCompatActivity {
                 EditText editTextPassword=(EditText) findViewById(R.id.password_new);
                 EditText editTextEmail=(EditText) findViewById(R.id.email_entry);
                 editTextEmail.getText();
+                editTextUsername = (EditText) findViewById(R.id.username_entry);
                 createAccount(editTextEmail.getText().toString(),editTextPassword.getText().toString());
 
             }
@@ -89,6 +96,12 @@ public class RegisterActivity extends AppCompatActivity {
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
+
+                            assert user != null;
+                            String userId = user.getUid();
+
+                            createUserDatabase(userId); // creates user database on firebase real time database
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -107,5 +120,23 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void updateUI(FirebaseUser user) {
     }
+
+    /**
+     * This method creates a database on the firestore database on firebase for registered users.
+     * @param userId user ids
+     */
+    public void createUserDatabase(String userId) {
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        DocumentReference reference = database.collection("users").document();
+
+        HashMap<String, String> hashMap = new HashMap<>();
+       // hashMap.put("userId", userId); // auto generated userId
+        hashMap.put("username", editTextUsername.getText().toString()); // name of user
+        hashMap.put("Email", Objects.requireNonNull(mAuth.getCurrentUser()).getEmail());
+
+        reference.set(hashMap);
+
+    }
+
 
 }
