@@ -21,6 +21,7 @@ import com.example.danceit.AddTagActivity;
 import com.example.danceit.Database.VideoViewModel;
 import com.example.danceit.Model.Video;
 import com.example.danceit.R;
+import com.example.danceit.Sharing.SharingVideoActivity;
 import com.example.danceit.UpdateTagActivity;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -202,7 +203,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                 videoViewModel.delete_video(dataset.get(i)); // delete video on the room database (local database)
 
                                 break;
-
+                            case R.id.send_info:
+                                //allows use to send and transictions to send activity to select users
+                                Intent intent=new Intent(activity, SharingVideoActivity.class);
+                                activity.startActivity(intent);
                         }
                         return false;
                     }
