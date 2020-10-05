@@ -47,4 +47,7 @@
     <string name="make_public">Make public</string>
     <string name="share_cap">Share</string>
     <string name="logout_text">Logout</string>
+    <string name="sendto">Send To</string>
+    <string name="Received">Received</string>
+    <string name="third_fragment_label">third fragment</string>
 </resources>

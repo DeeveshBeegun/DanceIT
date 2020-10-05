@@ -22,11 +22,12 @@ import com.google.firebase.firestore.Query;
 public class SecondFragment extends Fragment {
     ObservableSnapshotArray<Video> videoList;
     RecyclerView recyclerView;
-    Firebase_RecyclerViewAdapter adapter;
+    //Firebase_RecyclerViewAdapter adapter;
     ProgressDialog dialog;
 
-    FirebaseFirestore database = FirebaseFirestore.getInstance();
-    CollectionReference reference = database.collection("video_urls");
+
+   //FirebaseFirestore database = FirebaseFirestore.getInstance();
+  //  CollectionReference reference = database.collection("video_urls");
 
 
     @Override
@@ -37,7 +38,7 @@ public class SecondFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_second, container, false);
         //videoList = new ArrayList<>();
-        recyclerView = (RecyclerView) root.findViewById(R.id.recyclerViewDance);
+        /*recyclerView = (RecyclerView) root.findViewById(R.id.recyclerViewDance);
 
         Query query = reference.limit(100);
 
@@ -47,7 +48,7 @@ public class SecondFragment extends Fragment {
         adapter = new Firebase_RecyclerViewAdapter(options, getActivity());
 
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));*/
 
         return root;
     }
@@ -62,7 +63,7 @@ public class SecondFragment extends Fragment {
         dialog.setInverseBackgroundForced(false);
         dialog.show();
 
-        adapter.startListening();
+       // adapter.startListening();
         dialog.hide();
 
    }
@@ -70,7 +71,7 @@ public class SecondFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        adapter.stopListening();
+        //adapter.stopListening();
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {

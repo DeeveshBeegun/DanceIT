@@ -65,20 +65,57 @@ public class MainActivity extends AppCompatActivity {
 
         TabLayout tabLayout=(TabLayout) findViewById(R.id.tabLayout);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            int state=0;
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 //Select the tab selected
                 if(tab.getPosition()==0){
-                    //from second fragment to the first fragment
-                    NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-                    NavController navController = navHostFragment.getNavController();
-                    navController.navigate(R.id.action_SecondFragment_to_FirstFragment);
 
-                }else{
+                    //from second fragment to the first fragment
+                    if(state==1){
+                      NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+                      NavController navController = navHostFragment.getNavController();
+                      navController.navigate(R.id.action_SecondFragment_to_FirstFragment);
+                    }else{
+                        // switch the second fragment
+                        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+                        NavController navController = navHostFragment.getNavController();
+                        navController.navigate(R.id.action_ThirdFragment_to_FirstFragment);
+
+                    } // switch the second fragment
+                    state=0;
+
+                }else if(tab.getPosition()==1){
                     // switch the second fragment
-                    NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-                    NavController navController = navHostFragment.getNavController();
-                    navController.navigate(R.id.action_FirstFragment_to_SecondFragment);
+
+                    if (state == 0) {
+
+                        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+                        NavController navController = navHostFragment.getNavController();
+                        navController.navigate(R.id.action_FirstFragment_to_SecondFragment);
+                    }else {
+                        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+                        NavController navController = navHostFragment.getNavController();
+                        navController.navigate(R.id.action_ThirdFragment_to_SecondFragment);
+                    }
+                    state=1;
+
+                }else {
+
+                    if(state==0){
+                    // switch the second fragment
+                        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+                        NavController navController = navHostFragment.getNavController();
+                        navController.navigate(R.id.action_FirstFragment_to_ThirdFragment);
+                    }else{
+
+                        // switch the second fragment
+                        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+                        NavController navController = navHostFragment.getNavController();
+                        navController.navigate(R.id.action_SecondFragment_to_ThirdFragment);
+
+                    }
+                    state=2;
 
                 }
             }
