@@ -6,7 +6,7 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.danceit.Database.VideoViewModel;
+//import com.example.danceit.Database.VideoViewModel;
 import com.example.danceit.Model.Tag;
 import com.example.danceit.Model.User;
 import com.example.danceit.Model.Video;
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class UpdateTagActivity extends AppCompatActivity {
-    private VideoViewModel videoViewModel;
+    //private VideoViewModel videoViewModel;
 
     private FirebaseAuth mAuth;
 
@@ -28,7 +28,7 @@ public class UpdateTagActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_tag);
 
-        videoViewModel = new VideoViewModel(getApplication());
+       // videoViewModel = new VideoViewModel(getApplication());
         mAuth = FirebaseAuth.getInstance();
 
         Button addButton = (Button) findViewById(R.id.update_tag_button);

@@ -28,11 +28,6 @@ public class SecondFragment extends Fragment {
     ProgressDialog dialog;
 
 
-   FirebaseFirestore database = FirebaseFirestore.getInstance();
-   CollectionReference reference = database.collection("video_urls");
-
-
-
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
@@ -40,13 +35,13 @@ public class SecondFragment extends Fragment {
     ) {
 
         View root = inflater.inflate(R.layout.fragment_second, container, false);
-
         recyclerView = (RecyclerView) root.findViewById(R.id.recyclerViewDance);
 
-        Query query = reference.limit(100);
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        CollectionReference collectionReference = database.collection("video_urls");
 
         FirestoreRecyclerOptions<Video> options = new FirestoreRecyclerOptions.Builder<Video>()
-                .setQuery(query, Video.class)
+                .setQuery(collectionReference, Video.class)
                 .build();
         adapter = new Firebase_RecyclerViewAdapter(options, getActivity());
 

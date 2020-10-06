@@ -18,6 +18,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -88,6 +89,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         // [START create_user_with_email]
         mAuth.createUserWithEmailAndPassword(email, password)
+
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -95,6 +97,13 @@ public class RegisterActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+
+                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                    .setDisplayName(editTextUsername.getText().toString()).build();
+
+                            assert user != null;
+                            user.updateProfile(profileUpdates);
+
                             updateUI(user);
 
                             assert user != null;
@@ -127,12 +136,12 @@ public class RegisterActivity extends AppCompatActivity {
      */
     public void createUserDatabase(String userId) {
         FirebaseFirestore database = FirebaseFirestore.getInstance();
-        DocumentReference reference = database.collection("users").document();
+        DocumentReference reference = database.collection("users").document(
+                editTextUsername.getText().toString());
 
         HashMap<String, String> hashMap = new HashMap<>();
        // hashMap.put("userId", userId); // auto generated userId
         hashMap.put("username", editTextUsername.getText().toString()); // name of user
-        hashMap.put("Email", Objects.requireNonNull(mAuth.getCurrentUser()).getEmail());
 
         reference.set(hashMap);
 

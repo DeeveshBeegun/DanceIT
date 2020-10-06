@@ -36,15 +36,15 @@ public class FirstFragment extends Fragment {
             mAuth = FirebaseAuth.getInstance();
 
             FirebaseFirestore database = FirebaseFirestore.getInstance();
-            CollectionReference reference = database.collection("video_urls_private").
-                    document(Objects.requireNonNull(Objects.requireNonNull(mAuth.getCurrentUser()).getEmail())).
-                    collection("private_video");
+            CollectionReference reference = database.collection("video_urls_private");
 
             View root = inflater.inflate(R.layout.fragment_first, container, false);
             //videoList = new ArrayList<>();
             recyclerView = (RecyclerView) root.findViewById(R.id.recyclerView);
 
-            Query query = reference.limit(100);
+            Query query = reference.
+                    document(Objects.requireNonNull(Objects.requireNonNull(mAuth.getCurrentUser()).getEmail())).
+                    collection("private_video");
 
             FirestoreRecyclerOptions<Video> options = new FirestoreRecyclerOptions.Builder<Video>()
                     .setQuery(query, Video.class)

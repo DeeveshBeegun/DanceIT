@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 5,
-    "identityHash": "c96c99927013572e0be8ce0c7637a00e",
+    "identityHash": "1b5b511b6b3bc3cfdeb6e1db89c13d29",
     "entities": [
       {
         "tableName": "video_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`videoId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `videoUploader` TEXT, `url` TEXT, `tag_list` TEXT, `privacy` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`videoId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `videoUploader` TEXT, `url` TEXT, `tags` TEXT, `privacy` TEXT)",
         "fields": [
           {
             "fieldPath": "videoId",
@@ -27,8 +27,8 @@
             "notNull": false
           },
           {
-            "fieldPath": "tag_list",
-            "columnName": "tag_list",
+            "fieldPath": "tags",
+            "columnName": "tags",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -52,7 +52,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c96c99927013572e0be8ce0c7637a00e')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1b5b511b6b3bc3cfdeb6e1db89c13d29')"
     ]
   }
 }

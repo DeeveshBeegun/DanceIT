@@ -1,6 +1,6 @@
 package com.example.danceit;
 
-import com.example.danceit.Database.VideoViewModel;
+//import com.example.danceit.Database.VideoViewModel;
 import com.firebase.ui.firestore.paging.FirestoreDataSource;
 import com.google.android.material.textfield.TextInputLayout;
 import androidx.appcompat.app.AppCompatActivity;
@@ -109,13 +109,13 @@ public class AddVideoActivity extends AppCompatActivity {
     }
 
     public ArrayList<String> tagInput_string(String textInputTags) {
-        ArrayList<String> tag_lists = new ArrayList<String>();
+        ArrayList<String> tags = new ArrayList<String>();
         String[] description = textInputTags.split(" ");
 
         for (int i = 0; i < description.length; i++) {
-            tag_lists.add(description[i]);
+            tags.add(description[i]);
         }
-        return tag_lists;
+        return tags;
     }
 
     public void checkPrivacy() {

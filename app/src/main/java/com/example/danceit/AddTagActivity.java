@@ -6,7 +6,7 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.danceit.Database.VideoViewModel;
+//import com.example.danceit.Database.VideoViewModel;
 import com.example.danceit.Model.Video;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -17,7 +17,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.Objects;
 
 public class AddTagActivity extends AppCompatActivity {
-    VideoViewModel videoViewModel;
+    //VideoViewModel videoViewModel;
     private FirebaseAuth mAuth;
 
     @Override
@@ -25,7 +25,7 @@ public class AddTagActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_tag);
 
-        videoViewModel = new VideoViewModel(getApplication());
+        //videoViewModel = new VideoViewModel(getApplication());
         mAuth = FirebaseAuth.getInstance();
 
         Button addButton = (Button) findViewById(R.id.add_tag_button);

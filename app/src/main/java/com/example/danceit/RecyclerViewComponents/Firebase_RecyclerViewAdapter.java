@@ -113,7 +113,8 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
 
                                     else {
                                          FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                                        DocumentReference reference = database.collection("video_urls_private").document(Objects.requireNonNull(mAuth.getCurrentUser().getEmail()))
+                                        DocumentReference reference = database.collection("video_urls_private").document(Objects.requireNonNull
+                                                (Objects.requireNonNull(mAuth.getCurrentUser()).getEmail()))
                                                 .collection("private_video")
                                                 .document(getSnapshots().getSnapshot(position).getReference().getId());
 
@@ -286,9 +287,11 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
 
                             case R.id.send_info:
                                 //allows use to send and transictions to send activity to select users
-
-                                Intent i=new Intent(activity, SharingVideoActivity.class);
-                                activity.startActivity(i);
+                                Intent intent = new Intent(activity, SharingVideoActivity.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putParcelable("video_obj", model);
+                                intent.putExtras(bundle);
+                                activity.startActivity(intent);
 
                                 break;
 

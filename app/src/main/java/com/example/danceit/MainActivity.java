@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.danceit.Database.VideoViewModel;
+//import com.example.danceit.Database.VideoViewModel;
 import com.example.danceit.Model.Video;
 import com.example.danceit.ui.login.LoginActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     List<Video> allVideos; // List that stores all the videos in a user's library
     MaterialSearchView searchView;
     Toolbar toolbar;
-    VideoViewModel videoViewModel;
+    //VideoViewModel videoViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
-        videoViewModel = new VideoViewModel(getApplication());
+        //videoViewModel = new VideoViewModel(getApplication());
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        searchViewCode();
+        //searchViewCode();
 
         TabLayout tabLayout=(TabLayout) findViewById(R.id.tabLayout);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -147,55 +147,55 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    /*This method initiates the LibrarySearchActivity and handles the receiving of search queries
-      from the user. The search string and the list of all a user's videos are sent with an intent.*/
-    private void searchViewCode(){
-        String [] yes = {"dog", "johnwick", "german", "germany", "nolan", "batman", "robert"};
-        searchView=(MaterialSearchView) findViewById(R.id.search_view);
-        searchView.setSuggestions(yes); // Pre-saved autocompletion words and phrases for searching
-        searchView.setEllipsize(true);
-
-        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                Intent intent = new Intent(MainActivity.this, LibrarySearchActivity.class);
-                Bundle bundle = new Bundle();
-                String[] searchKeywords = s.split(" ");
-                bundle.putStringArray("Search Keywords", searchKeywords);
-                intent.putExtras(bundle);
-
-                Bundle bundle1 = new Bundle();
-                bundle1.putParcelableArrayList("Videos", (ArrayList<? extends Parcelable>) allVideos);
-                intent.putExtras(bundle1);
-                startActivity(intent);
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-
-        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
-            @Override
-            public void onSearchViewShown() {
-
-            }
-
-            @Override
-            public void onSearchViewClosed() {
-
-            }
-        });
-    }
+//    /*This method initiates the LibrarySearchActivity and handles the receiving of search queries
+//      from the user. The search string and the list of all a user's videos are sent with an intent.*/
+//    private void searchViewCode(){
+//        String [] yes = {"dog", "johnwick", "german", "germany", "nolan", "batman", "robert"};
+//        searchView=(MaterialSearchView) findViewById(R.id.search_view);
+//        searchView.setSuggestions(yes); // Pre-saved autocompletion words and phrases for searching
+//        searchView.setEllipsize(true);
+//
+//        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String s) {
+//                //Intent intent = new Intent(MainActivity.this, LibrarySearchActivity.class);
+//                Bundle bundle = new Bundle();
+//                String[] searchKeywords = s.split(" ");
+//                bundle.putStringArray("Search Keywords", searchKeywords);
+//                intent.putExtras(bundle);
+//
+//                Bundle bundle1 = new Bundle();
+//                bundle1.putParcelableArrayList("Videos", (ArrayList<? extends Parcelable>) allVideos);
+//                intent.putExtras(bundle1);
+//                startActivity(intent);
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                return false;
+//            }
+//        });
+//
+//        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+//            @Override
+//            public void onSearchViewShown() {
+//
+//            }
+//
+//            @Override
+//            public void onSearchViewClosed() {
+//
+//            }
+//        });
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         MenuItem search = menu.findItem(R.id.search);
-        searchView.setMenuItem(search);
+//        searchView.setMenuItem(search);
         return true;
     }
 
