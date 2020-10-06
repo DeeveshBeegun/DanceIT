@@ -50,4 +50,5 @@
     <string name="sendto">Send To</string>
     <string name="Received">Received</string>
     <string name="third_fragment_label">third fragment</string>
+    <string name="show_selected">Show Selected</string>
 </resources>
