@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.SearchView;
 
 import com.example.danceit.Model.Video;
@@ -71,10 +73,29 @@ public class SharingVideoActivity extends AppCompatActivity {
                         return true;
                     }
                 });
+                CheckBox checkBoxSel=(CheckBox)  findViewById(R.id.checkbox_selected);
+                checkBoxSel.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if(isChecked){
+                            myAdapter.showSelectedUsers();
+
+                        }else{
+                            myAdapter.showAllSelectedUsers();
+
+                        }
+
+                    }
+                });
+
             }
         });
 
-        FloatingActionButton floatingActionButton=(FloatingActionButton) findViewById(R.id.sendFloatingActionButton);
+
+
+
+                FloatingActionButton floatingActionButton=(FloatingActionButton) findViewById(R.id.sendFloatingActionButton);
+
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

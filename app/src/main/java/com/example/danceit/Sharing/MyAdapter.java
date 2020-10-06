@@ -3,6 +3,7 @@ package com.example.danceit.Sharing;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -21,14 +22,33 @@ import java.util.List;
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> implements Filterable {
     private List<String> mDataset;
     private List<String> mOriginalDataset;
+    public static List<String> users;
+
 
     public static List<String> getUsers() {
         //method to get all the selected users
         return users;
     }
 
+
+
+
+    public void showSelectedUsers(){
+        mDataset=users;
+        notifyDataSetChanged();
+    }
+
+
+    public void showAllSelectedUsers(){
+        mDataset=mOriginalDataset;
+        notifyDataSetChanged();
+    }
+
+
+
+
     //stores the chosen  users
-    public static List<String> users;
+
     @Override
     public Filter getFilter() {
         return new Filter() {
@@ -64,7 +84,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> impl
                 results.add(item);
             }
         }
-        System.out.println("ssss"+results.size());
         return results;
     }
 
@@ -75,21 +94,31 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> impl
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         public TextView textView;
-        public RadioButton radioButton;
+        public CheckBox checkBox;
         public MyViewHolder(View v) {
             super(v);
+
             textView = v.findViewById(R.id.textView);
-            radioButton=v.findViewById(R.id.radioButton);
-            radioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+
+            checkBox=(CheckBox) v.findViewById(R.id.checkbox);
+
+            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if(isChecked){
-
-                        users.add(textView.getText().toString());
-
+                        if(!users.contains(textView.getText().toString())){
+                            users.add(textView.getText().toString());
+                        }
+                    }else{
+                        users.remove(textView.getText().toString());
                     }
                 }
             });
+
+
+
+
         }
     }
 
@@ -119,6 +148,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> impl
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.textView.setText(mDataset.get(position));
+        if(users.contains(mDataset.get(position))){
+
+            holder.checkBox.setChecked(true);
+        }else {
+        }
 
     }
 
