@@ -98,7 +98,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> impl
         public MyViewHolder(View v) {
             super(v);
 
-            textView = v.findViewById(R.id.textView);
+            textView = v.findViewById(R.id.checkbox_textView);
 
 
             checkBox=(CheckBox) v.findViewById(R.id.checkbox);

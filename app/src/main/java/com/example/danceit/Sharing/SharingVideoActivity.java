@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.example.danceit.Model.Video;
 import com.example.danceit.R;
@@ -26,6 +27,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -44,6 +46,7 @@ public class SharingVideoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sharing_video);
         final RecyclerView recyclerView=(RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
 
         database.collection("users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -73,12 +76,14 @@ public class SharingVideoActivity extends AppCompatActivity {
                         return true;
                     }
                 });
-                CheckBox checkBoxSel=(CheckBox)  findViewById(R.id.checkbox_selected);
+
+                final CheckBox checkBoxSel=(CheckBox)  findViewById(R.id.checkbox_selected);
                 checkBoxSel.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         if(isChecked){
                             myAdapter.showSelectedUsers();
+
 
                         }else{
                             myAdapter.showAllSelectedUsers();
@@ -93,26 +98,24 @@ public class SharingVideoActivity extends AppCompatActivity {
 
 
 
-
-                FloatingActionButton floatingActionButton=(FloatingActionButton) findViewById(R.id.sendFloatingActionButton);
+        FloatingActionButton floatingActionButton=(FloatingActionButton) findViewById(R.id.sendFloatingActionButton);
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                String username = "receiver";
-
                 Bundle bundle = getIntent().getExtras();
                 assert bundle != null;
                 final Video video = bundle.getParcelable("video_obj");
 
-                assert video != null;
-                System.out.println("tag size: "  + video.getTags().size());
+                List<String> selected_users = MyAdapter.getUsers();
+                for (int i = 0; i< selected_users.size(); i ++) {
+                    CollectionReference reference = database.collection("video_sent").document(selected_users.get(i))
+                            .collection("video_received");
+                    assert video != null;
+                    reference.add(video);
+                }
 
-            CollectionReference reference = database.collection("video_sent").document(username)
-                    .collection("video_received");
-                assert video != null;
-                reference.add(video);
 
             }
         });
