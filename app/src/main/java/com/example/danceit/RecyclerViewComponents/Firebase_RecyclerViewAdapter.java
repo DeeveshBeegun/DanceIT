@@ -74,9 +74,6 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
         setVideoThumbnail(holder, createVideoIdFromUrl(model), model);
         createMenuButton(holder, model);
 
-        System.out.println("privacy " + model.getPrivacy());
-
-
     }
 
     /**
@@ -105,6 +102,7 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                         public boolean onMenuItemClick(MenuItem menuItem) {
                             switch (menuItem.getItemId()) {
                                 case R.id.delete_tag:
+                                    FirebaseAuth mAuth = FirebaseAuth.getInstance();
                                     if(model.getPrivacy().equals("public")) {
                                         reference = database.collection("video_urls").document(getSnapshots().getSnapshot(position).getReference().getId());
                                         reference.update("tags", FieldValue.arrayRemove(model.getTags().get(finalJ)));
@@ -112,7 +110,7 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                                     }
 
                                     else if (model.getPrivacy().equals("received")) {
-                                        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
 
                                         DocumentReference reference = database.collection("video_sent").document(Objects.requireNonNull
                                                 (Objects.requireNonNull(mAuth.getCurrentUser()).getEmail()))
@@ -123,7 +121,6 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                                     }
 
                                     else {
-                                         FirebaseAuth mAuth = FirebaseAuth.getInstance();
                                         DocumentReference reference = database.collection("video_urls_private").document(Objects.requireNonNull
                                                 (Objects.requireNonNull(mAuth.getCurrentUser()).getEmail()))
                                                 .collection("private_video")
