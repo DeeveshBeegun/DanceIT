@@ -38,11 +38,11 @@ public class AddTagActivity extends AppCompatActivity {
                 assert bundle != null;
                 final Video video = bundle.getParcelable("video_obj");
 
+                String video_id = bundle.getString("video_id");
+                FirebaseFirestore database = FirebaseFirestore.getInstance();
+
                 assert video != null;
                 if (video.getPrivacy().equals("private")) {
-
-                    String video_id = bundle.getString("video_id");
-                    FirebaseFirestore database = FirebaseFirestore.getInstance();
                     assert video_id != null;
                     DocumentReference reference = database.collection("video_urls_private").document(Objects.requireNonNull(mAuth.getCurrentUser().getEmail()))
                             .collection("private_video")
@@ -51,8 +51,6 @@ public class AddTagActivity extends AppCompatActivity {
                     finish();
                 }
                 else if (video.getPrivacy().equals("received")) {
-                    String video_id = bundle.getString("video_id");
-                    FirebaseFirestore database = FirebaseFirestore.getInstance();
                     assert video_id != null;
                     DocumentReference reference = database.collection("video_sent").document(Objects.requireNonNull(mAuth.getCurrentUser().getDisplayName()))
                             .collection("video_received")
@@ -61,8 +59,6 @@ public class AddTagActivity extends AppCompatActivity {
                     finish();
                 }
                 else {
-                    String video_id = bundle.getString("video_id");
-                    FirebaseFirestore database = FirebaseFirestore.getInstance();
                     assert video_id != null;
                     DocumentReference reference = database.collection("video_urls")
                             .document(video_id);

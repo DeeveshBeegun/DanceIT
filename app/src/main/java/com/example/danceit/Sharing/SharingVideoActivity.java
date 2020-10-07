@@ -26,11 +26,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * This class is responsible for sending a video object to another user.
+ */
+
 public class SharingVideoActivity extends AppCompatActivity {
 
-     FirebaseAuth mAuth;
     FirebaseFirestore database = FirebaseFirestore.getInstance();
     List<String> users;
+    MyAdapter myAdapter = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,57 +43,18 @@ public class SharingVideoActivity extends AppCompatActivity {
         final RecyclerView recyclerView=(RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-
-        database.collection("users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-              users = new ArrayList<>();
-                if (task.isSuccessful()) {
-
-                    for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
-                        users.add(document.getId());
-                    }
-                }
-                final MyAdapter myAdapter =new MyAdapter(users);
-                recyclerView.setAdapter(myAdapter);
-
-                final SearchView searchView=(SearchView) findViewById(R.id.searchView);
-                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                    @Override
-                    public boolean onQueryTextSubmit(String s) {
+        populateRecyclerViewWithUser(recyclerView);
+        initialiseSearchView();
+        createCheckBox();
+        sendVideo();
 
 
-                        return false;
-                    }
+    }
 
-                    @Override
-                    public boolean onQueryTextChange(String s) {
-                        myAdapter.getFilter().filter(s);
-                        return true;
-                    }
-                });
-
-                final CheckBox checkBoxSel=(CheckBox)  findViewById(R.id.checkbox_selected);
-                checkBoxSel.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        if(isChecked){
-                            myAdapter.showSelectedUsers();
-
-
-                        }else{
-                            myAdapter.showAllSelectedUsers();
-
-                        }
-
-                    }
-                });
-
-            }
-        });
-
-
-
+    /**
+     * This method sends video to the selected user when the floating button is pressed.
+     */
+    private void sendVideo() {
         FloatingActionButton floatingActionButton=(FloatingActionButton) findViewById(R.id.sendFloatingActionButton);
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -98,14 +63,14 @@ public class SharingVideoActivity extends AppCompatActivity {
 
                 Bundle bundle = getIntent().getExtras();
                 assert bundle != null;
-                final Video video = bundle.getParcelable("video_obj");
+                final Video video = bundle.getParcelable("video_obj"); // video to send
                 assert video != null;
                 video.setPrivacy("received");
 
-                List<String> selected_users = MyAdapter.getUsers();
+                List<String> selected_users = MyAdapter.getUsers(); // store the name of selected users
                 for (int i = 0; i< selected_users.size(); i ++) {
                     CollectionReference reference = database.collection("video_sent").document(selected_users.get(i))
-                            .collection("video_received");
+                            .collection("video_received"); // path where video sent is saved
                     assert video != null;
                     reference.add(video);
                 }
@@ -113,10 +78,79 @@ public class SharingVideoActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    /**
+     * This method creates the selected item check box and listen to events i.e. selected or unselected events
+     */
+    private void createCheckBox() {
+        final CheckBox checkBoxSel=(CheckBox)  findViewById(R.id.checkbox_selected);
+        checkBoxSel.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    myAdapter.showSelectedUsers(); // when checkbox is checked it shows only the selected users
+
+                }else{
+                    myAdapter.showAllSelectedUsers(); // show all users
+
+                }
+
+            }
+        });
+    }
+
+    /**
+     * This method initialise the search view and listens for events such as search queries
+     */
+    private void initialiseSearchView() {
+        final SearchView searchView=(SearchView) findViewById(R.id.searchView);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
 
 
+                return false;
+            }
 
-
+            @Override
+            public boolean onQueryTextChange(String s) {
+                myAdapter.getFilter().filter(s);
+                return true;
+            }
+        });
 
     }
+
+    /**
+     * This method populates the recyclerview with users found in the firestore database.
+     * @param recyclerView to display users.
+     */
+    public void populateRecyclerViewWithUser(final RecyclerView recyclerView) {
+        database.collection("users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        @Override
+        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+            users = new ArrayList<>(); // store name of users
+            FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+                        if(Objects.equals(Objects.requireNonNull(mAuth.getCurrentUser()).getDisplayName(),
+                                document.getId()))
+                            continue;
+                        users.add(document.getId());
+
+                    }
+
+
+                    myAdapter = new MyAdapter(users);
+                    recyclerView.setAdapter(myAdapter);
+                }
+
+        }
+
+        });
+
+    }
+
+
 }

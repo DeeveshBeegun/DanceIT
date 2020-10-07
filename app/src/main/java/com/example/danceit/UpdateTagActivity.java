@@ -6,9 +6,6 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-//import com.example.danceit.Database.VideoViewModel;
-import com.example.danceit.Model.Tag;
-import com.example.danceit.Model.User;
 import com.example.danceit.Model.Video;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -16,8 +13,9 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
 import java.util.Objects;
+
+//import com.example.danceit.Database.VideoViewModel;
 
 public class UpdateTagActivity extends AppCompatActivity {
     //private VideoViewModel videoViewModel;
