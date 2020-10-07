@@ -69,6 +69,7 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
         holder.textView.setText(model.getUrl());
         holder.chipGroup.animate();
         holder.chipGroup.removeAllViews();
+        holder.itemView.setTag(model.getVideoId());
 
         initialise_chip(holder, position, model);
         createChipAddTagBtn(holder, position, model);
@@ -290,9 +291,9 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
 
                                 break;
                             case R.id.delete_video:
-
+                                String videoId = (String) myViewHolder.itemView.getTag();
                                 if(model.getPrivacy().equals("public")) {
-                                    reference = database.collection("video_urls").document(getSnapshots().getSnapshot(position).getReference().getId());
+                                    reference = database.collection("video_urls").document(videoId);
                                     reference.delete();
 
                                 }
@@ -300,9 +301,9 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                                 else if (model.getPrivacy().equals("received")) {
 
                                     DocumentReference reference = database.collection("video_sent").document(Objects.requireNonNull
-                                            (Objects.requireNonNull(mAuth.getCurrentUser()).getEmail()))
+                                            (Objects.requireNonNull(mAuth.getCurrentUser()).getDisplayName()))
                                             .collection("video_received")
-                                            .document(getSnapshots().getSnapshot(position).getReference().getId());
+                                            .document(videoId);
 
                                     reference.delete();
                                 }
@@ -311,8 +312,8 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                                     DocumentReference reference = database.collection("video_urls_private").document(Objects.requireNonNull
                                             (Objects.requireNonNull(mAuth.getCurrentUser()).getEmail()))
                                             .collection("private_video")
-                                            .document(getSnapshots().getSnapshot(position).getReference().getId());
-
+                                            .document(videoId);
+                                   // getSnapshots().getSnapshot(position).getReference().getId()
                                     reference.delete();
                                 }
 
@@ -363,4 +364,5 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
 //            addButton = itemView.getRootView().findViewById(R.id.addTag);
         }
     }
+
 }

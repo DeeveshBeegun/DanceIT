@@ -14,8 +14,10 @@ import com.example.danceit.Model.Video;
 import com.example.danceit.RecyclerViewComponents.Firebase_RecyclerViewAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.firebase.ui.firestore.ObservableSnapshotArray;
+import com.firebase.ui.firestore.SnapshotParser;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -47,7 +49,17 @@ public class FirstFragment extends Fragment {
                     collection("private_video");
 
             FirestoreRecyclerOptions<Video> options = new FirestoreRecyclerOptions.Builder<Video>()
-                    .setQuery(query, Video.class)
+                    .setQuery(query, new SnapshotParser<Video>() {
+                        @NonNull
+                        @Override
+                        public Video parseSnapshot(@NonNull DocumentSnapshot snapshot) {
+                            Video video = snapshot.toObject(Video.class);
+                            assert video != null;
+                            video.setVideoId(snapshot.getId());
+                            return video;
+                        }
+                    })
+                    .setLifecycleOwner(this)
                     .build();
             adapter = new Firebase_RecyclerViewAdapter(options, getActivity());
 

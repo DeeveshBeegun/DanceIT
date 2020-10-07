@@ -16,6 +16,8 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import com.google.firebase.firestore.Exclude;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -24,7 +26,8 @@ import java.util.List;
 public class Video implements Parcelable {
 
     //@PrimaryKey(autoGenerate = true)
-    private int videoId;
+    @Exclude
+    private String videoId;
     private User videoUploader;
     private String url;
     private List<String> tags = null;
@@ -78,9 +81,9 @@ public class Video implements Parcelable {
     };
 
     /*Get and Set Methods*/
-    public int getVideoId() { return videoId; }
+    public String getVideoId() { return videoId; }
 
-    public void setVideoId(int id) { this.videoId = id; }
+    public void setVideoId(String id) { this.videoId = id; }
 
     public User getVideoUploader() {
         return videoUploader;

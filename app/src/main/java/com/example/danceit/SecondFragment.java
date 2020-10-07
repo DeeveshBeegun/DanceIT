@@ -15,11 +15,14 @@ import com.example.danceit.Model.Video;
 import com.example.danceit.RecyclerViewComponents.Firebase_RecyclerViewAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.firebase.ui.firestore.ObservableSnapshotArray;
+import com.firebase.ui.firestore.SnapshotParser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class SecondFragment extends Fragment {
     ObservableSnapshotArray<Video> videoList;
@@ -41,8 +44,19 @@ public class SecondFragment extends Fragment {
         CollectionReference collectionReference = database.collection("video_urls");
 
         FirestoreRecyclerOptions<Video> options = new FirestoreRecyclerOptions.Builder<Video>()
-                .setQuery(collectionReference, Video.class)
+                .setQuery(collectionReference, new SnapshotParser<Video>() {
+                    @NonNull
+                    @Override
+                    public Video parseSnapshot(@NonNull DocumentSnapshot snapshot) {
+                        Video video = snapshot.toObject(Video.class);
+                        assert video != null;
+                        video.setVideoId(snapshot.getId());
+                        return video;
+                    }
+                })
+                .setLifecycleOwner(this)
                 .build();
+
         adapter = new Firebase_RecyclerViewAdapter(options, getActivity());
 
         recyclerView.setAdapter(adapter);
