@@ -50,6 +50,16 @@ public class AddTagActivity extends AppCompatActivity {
                     reference.update("tags", FieldValue.arrayUnion((Objects.requireNonNull(addTag_textInput.getEditText())).getText().toString()));
                     finish();
                 }
+                else if (video.getPrivacy().equals("received")) {
+                    String video_id = bundle.getString("video_id");
+                    FirebaseFirestore database = FirebaseFirestore.getInstance();
+                    assert video_id != null;
+                    DocumentReference reference = database.collection("video_sent").document(Objects.requireNonNull(mAuth.getCurrentUser().getDisplayName()))
+                            .collection("video_received")
+                            .document(video_id);
+                    reference.update("tags", FieldValue.arrayUnion((Objects.requireNonNull(addTag_textInput.getEditText())).getText().toString()));
+                    finish();
+                }
                 else {
                     String video_id = bundle.getString("video_id");
                     FirebaseFirestore database = FirebaseFirestore.getInstance();

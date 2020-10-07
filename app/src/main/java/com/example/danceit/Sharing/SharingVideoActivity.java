@@ -1,38 +1,30 @@
 package com.example.danceit.Sharing;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.SearchView;
-import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.danceit.Model.Video;
 import com.example.danceit.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.api.Page;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import io.grpc.internal.SharedResourceHolder;
 
 public class SharingVideoActivity extends AppCompatActivity {
 
@@ -107,6 +99,8 @@ public class SharingVideoActivity extends AppCompatActivity {
                 Bundle bundle = getIntent().getExtras();
                 assert bundle != null;
                 final Video video = bundle.getParcelable("video_obj");
+                assert video != null;
+                video.setPrivacy("received");
 
                 List<String> selected_users = MyAdapter.getUsers();
                 for (int i = 0; i< selected_users.size(); i ++) {

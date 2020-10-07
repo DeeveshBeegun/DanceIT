@@ -1,9 +1,6 @@
 package com.example.danceit;
 
 //import com.example.danceit.Database.VideoViewModel;
-import com.firebase.ui.firestore.paging.FirestoreDataSource;
-import com.google.android.material.textfield.TextInputLayout;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -12,24 +9,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.example.danceit.Model.Tag;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.danceit.Model.User;
 import com.example.danceit.Model.Video;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 public class AddVideoActivity extends AppCompatActivity {

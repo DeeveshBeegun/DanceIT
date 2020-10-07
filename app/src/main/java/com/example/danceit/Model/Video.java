@@ -118,6 +118,8 @@ public class Video implements Parcelable {
         return privacy;
     }
 
+    public void setPrivacy(String privacy) { this.privacy = privacy; }
+
 
     @Override
     public String toString() {

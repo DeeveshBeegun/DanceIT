@@ -111,6 +111,17 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
 
                                     }
 
+                                    else if (model.getPrivacy().equals("received")) {
+                                        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+                                        DocumentReference reference = database.collection("video_sent").document(Objects.requireNonNull
+                                                (Objects.requireNonNull(mAuth.getCurrentUser()).getEmail()))
+                                                .collection("video_received")
+                                                .document(getSnapshots().getSnapshot(position).getReference().getId());
+
+                                        reference.update("tags", FieldValue.arrayRemove(model.getTags().get(finalJ)));
+                                    }
+
                                     else {
                                          FirebaseAuth mAuth = FirebaseAuth.getInstance();
                                         DocumentReference reference = database.collection("video_urls_private").document(Objects.requireNonNull
