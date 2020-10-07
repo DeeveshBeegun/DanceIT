@@ -49,6 +49,7 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
     FirebaseFirestore database = FirebaseFirestore.getInstance();
     DocumentReference  reference;
     Activity activity;
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
 
     private String YOUTUBEAPI="AIzaSyAfKidnnKiL3B0yRHR_FRqgMKXg6Z8lT-8";
@@ -72,7 +73,7 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
         initialise_chip(holder, position, model);
         createChipAddTagBtn(holder, position, model);
         setVideoThumbnail(holder, createVideoIdFromUrl(model), model);
-        createMenuButton(holder, model);
+        createMenuButton(holder, model, position);
 
     }
 
@@ -102,7 +103,6 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                         public boolean onMenuItemClick(MenuItem menuItem) {
                             switch (menuItem.getItemId()) {
                                 case R.id.delete_tag:
-                                    FirebaseAuth mAuth = FirebaseAuth.getInstance();
                                     if(model.getPrivacy().equals("public")) {
                                         reference = database.collection("video_urls").document(getSnapshots().getSnapshot(position).getReference().getId());
                                         reference.update("tags", FieldValue.arrayRemove(model.getTags().get(finalJ)));
@@ -256,7 +256,7 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
      * This method creates menu buttons on the different videos on the recyclerview.
      * @param myViewHolder
      */
-    public void createMenuButton(final MyViewHolder myViewHolder, final Video model) {
+    public void createMenuButton(final MyViewHolder myViewHolder, final Video model, final int position) {
         //feature on click for share button
         AppCompatImageButton appCompatImageButton= myViewHolder.textView.getRootView().findViewById(R.id.shareButton);
         appCompatImageButton.setOnClickListener(new View.OnClickListener() {
@@ -290,6 +290,31 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
 
                                 break;
                             case R.id.delete_video:
+
+                                if(model.getPrivacy().equals("public")) {
+                                    reference = database.collection("video_urls").document(getSnapshots().getSnapshot(position).getReference().getId());
+                                    reference.delete();
+
+                                }
+
+                                else if (model.getPrivacy().equals("received")) {
+
+                                    DocumentReference reference = database.collection("video_sent").document(Objects.requireNonNull
+                                            (Objects.requireNonNull(mAuth.getCurrentUser()).getEmail()))
+                                            .collection("video_received")
+                                            .document(getSnapshots().getSnapshot(position).getReference().getId());
+
+                                    reference.delete();
+                                }
+
+                                else {
+                                    DocumentReference reference = database.collection("video_urls_private").document(Objects.requireNonNull
+                                            (Objects.requireNonNull(mAuth.getCurrentUser()).getEmail()))
+                                            .collection("private_video")
+                                            .document(getSnapshots().getSnapshot(position).getReference().getId());
+
+                                    reference.delete();
+                                }
 
                                 break;
 

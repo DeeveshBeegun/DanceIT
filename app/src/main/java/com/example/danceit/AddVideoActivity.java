@@ -26,7 +26,10 @@ import java.util.Objects;
 public class AddVideoActivity extends AppCompatActivity {
 
     private boolean isPrivate; // privacy is public
-    private FirebaseAuth mAuth;
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+//    // Initialize Firebase Auth
+//    mAuth = FirebaseAuth.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +57,6 @@ public class AddVideoActivity extends AppCompatActivity {
 
                     if (isPrivate) {
 
-                        // Initialize Firebase Auth
-                        mAuth = FirebaseAuth.getInstance();
 
                         CollectionReference reference = FirebaseFirestore.getInstance().collection("video_urls_private").
                                 document(Objects.requireNonNull(mAuth.getCurrentUser().getEmail())).collection("private_video");
@@ -69,6 +70,16 @@ public class AddVideoActivity extends AppCompatActivity {
 
                     }
                     else {
+
+                        CollectionReference reference_private = FirebaseFirestore.getInstance().collection("video_urls_private").
+                                document(Objects.requireNonNull(mAuth.getCurrentUser().getEmail())).collection("private_video");
+
+                        Video video = new Video(new User("username", "password"),
+                                Objects.requireNonNull(textInputUrl.getEditText()).getText().toString().trim(), tagInput_string((textInputTags.getEditText())
+                                .getText().toString()), "private");
+
+                        reference_private.add(video);
+
 
                         CollectionReference reference = FirebaseFirestore.getInstance().collection("video_urls");
                         reference.add(new Video(new User("username", "password"),
