@@ -9,6 +9,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -25,8 +27,10 @@ import com.example.danceit.Sharing.SharingVideoActivity;
 import com.example.danceit.UpdateTagActivity;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubeStandalonePlayer;
@@ -37,6 +41,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -44,13 +50,16 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
     FirebaseFirestore database = FirebaseFirestore.getInstance();
     DocumentReference  reference;
     Activity activity;
-
+    public static boolean selection=false;
+    public static List<Integer> selected=new ArrayList<>();
+    public ArrayList<MyViewHolder> myViewHolders=new ArrayList<>();
 
     private String YOUTUBEAPI="AIzaSyAfKidnnKiL3B0yRHR_FRqgMKXg6Z8lT-8";
 
     public Firebase_RecyclerViewAdapter(@NonNull FirestoreRecyclerOptions<Video> options, Activity activity) {
         super(options);
         this.activity = activity;
+        selection=false;
     }
 
     @Override
@@ -65,12 +74,17 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
         createMenuButton(holder, model);
 
         System.out.println("privacy " + model.getPrivacy());
+    }
 
-
+    private void selectVideo(){
+        selection=true;
     }
 
 
     private void initialise_chip(final MyViewHolder holder, final int position, final Video model) {
+
+        myViewHolders.add(holder);
+
         for (int j = 0; j <model.getTags().size() ; j++) {
             Chip chip = new Chip (holder.context);
             chip.setText(model.getTags().get(j));
@@ -153,6 +167,19 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
     }
 
     public void setVideoThumbnail(final MyViewHolder myViewHolder, final String videoID, final Video model) {
+
+
+         /* MaterialCardView materialCardView=(MaterialCardView) myViewHolder.itemView.getRootView().findViewById(R.id.materialCardView);
+        materialCardView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                selection=true;
+                myViewHolder.checkBox.setChecked(true);
+                myViewHolder.checkBox.setVisibility(View.VISIBLE);
+                //notifyDataSetChanged();
+                return true;
+            }
+        });*/
 
         //implementing thumbnail on click to listen for clicks and play video
         YouTubeThumbnailView thumbnailView = (YouTubeThumbnailView) myViewHolder.itemView.getRootView().findViewById(R.id.thumbnail);
@@ -253,6 +280,14 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                                 activity.startActivity(i);
                                 break;
 
+                            case R.id.select_vid:
+                                myViewHolder.checkBox.setVisibility(View.VISIBLE);
+                                myViewHolder.checkBox.setChecked(true);
+                                selection=true;
+                                updateUI();
+                                notifyDataSetChanged();
+                                break;
+
                         }
                         return false;
                     }
@@ -269,17 +304,99 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
         return new MyViewHolder(view);
     }
 
+    private void addCheckBox(boolean  check){
+
+        if(check){
+            for (int i = 0; i <myViewHolders.size() ; i++) {
+
+                myViewHolders.get(i).checkBox.setVisibility(View.VISIBLE);
+
+            }
+        }else{
+
+            for (int i = 0; i <myViewHolders.size() ; i++) {
+
+                myViewHolders.get(i).checkBox.setVisibility(View.INVISIBLE);
+
+            }
+
+
+
+        }
+    }
+
+    private void updateUI(){
+
+        //add check boxes to view
+        addCheckBox(true);
+
+        FloatingActionButton fabButton =(FloatingActionButton) activity.findViewById(R.id.fab);
+        final FloatingActionButton cancelSelection =(FloatingActionButton) activity.findViewById(R.id.floatingActionButton);
+        final FloatingActionButton sendButton =(FloatingActionButton) activity.findViewById(R.id.floatingActionButton2);
+
+
+        cancelSelection.setVisibility(View.VISIBLE);
+        sendButton.setVisibility(View.VISIBLE);
+
+
+        fabButton.setVisibility(View.INVISIBLE);
+
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //allows use to send and transictions to send activity to select users
+                Intent i=new Intent(activity, SharingVideoActivity.class);
+                activity.startActivity(i);
+
+            }
+        });
+
+        //when cancel reset view back to normal
+        cancelSelection.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addCheckBox(false);//remove check boxes
+                cancelSelection.setVisibility(View.INVISIBLE);
+                sendButton.setVisibility(View.INVISIBLE);
+            }
+        });
+    }
+
     static class MyViewHolder extends RecyclerView.ViewHolder {
 
         public TextView textView;
         public ChipGroup chipGroup;
         public Context context;
         public Button addButton;
+        public CheckBox checkBox;
+        public int pos;
+
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             textView = (TextView) itemView.findViewById(R.id.text_recycler);
             chipGroup = (ChipGroup) itemView.findViewById(R.id.chipGroup);
+            checkBox=(CheckBox) itemView.findViewById(R.id.checkbox_multiple_sel);
+
+            if(selection){
+                checkBox.setVisibility(View.VISIBLE);
+            }
+
+
+
+            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if(isChecked){
+                        selected.add(pos);
+                    }else{
+                        selected.remove(pos);
+                    }
+                }
+            });
+
+
             context = itemView.getContext();
 //            addButton = itemView.getRootView().findViewById(R.id.addTag);
         }

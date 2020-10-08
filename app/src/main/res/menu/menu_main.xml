@@ -26,6 +26,11 @@
         android:orderInCategory="100"
         android:title="@string/logout_text"/>
 
+    <item
+        android:id="@+id/tag_management"
+        android:orderInCategory="100"
+        android:title="@string/tagmanagement_text"/>
+
 
 
 </menu>
