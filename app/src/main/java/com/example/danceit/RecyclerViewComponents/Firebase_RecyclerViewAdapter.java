@@ -126,7 +126,7 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                             switch (menuItem.getItemId()) {
                                 case R.id.delete_tag:
                                     if(model.getPrivacy().equals("public")) {
-                                        reference = database.collection("video_urls").document(getSnapshots().getSnapshot(position).getReference().getId());
+                                        reference = database.collection("video_url").document(getSnapshots().getSnapshot(position).getReference().getId());
                                         reference.update("tags", FieldValue.arrayRemove(model.getTags().get(finalJ)));
 
                                     }
@@ -327,7 +327,7 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                             case R.id.delete_video:
                                 String videoId = (String) myViewHolder.itemView.getTag();
                                 if(model.getPrivacy().equals("public")) {
-                                    reference = database.collection("video_urls").document(videoId);
+                                    reference = database.collection("video_url").document(videoId);
                                     reference.delete();
 
                                 }

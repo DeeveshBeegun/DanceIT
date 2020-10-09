@@ -81,7 +81,7 @@ public class AddVideoActivity extends AppCompatActivity {
                         reference_private.add(video);
 
 
-                        CollectionReference reference = FirebaseFirestore.getInstance().collection("video_urls");
+                        CollectionReference reference = FirebaseFirestore.getInstance().collection("video_url");
                         reference.add(new Video(new User("username", "password"),
                                 Objects.requireNonNull(textInputUrl.getEditText()).getText().toString().trim(), tagInput_string((textInputTags.getEditText())
                                 .getText().toString()), "public"));

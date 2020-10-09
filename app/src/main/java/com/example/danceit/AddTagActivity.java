@@ -60,7 +60,7 @@ public class AddTagActivity extends AppCompatActivity {
                 }
                 else {
                     assert video_id != null;
-                    DocumentReference reference = database.collection("video_urls")
+                    DocumentReference reference = database.collection("video_url")
                             .document(video_id);
                     reference.update("tags", FieldValue.arrayUnion((Objects.requireNonNull(addTag_textInput.getEditText())).getText().toString()));
                     finish();

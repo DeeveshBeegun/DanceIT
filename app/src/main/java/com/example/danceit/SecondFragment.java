@@ -41,7 +41,7 @@ public class SecondFragment extends Fragment {
         recyclerView = (RecyclerView) root.findViewById(R.id.recyclerViewDance);
 
         FirebaseFirestore database = FirebaseFirestore.getInstance();
-        CollectionReference collectionReference = database.collection("video_urls");
+        CollectionReference collectionReference = database.collection("video_url");
 
         FirestoreRecyclerOptions<Video> options = new FirestoreRecyclerOptions.Builder<Video>()
                 .setQuery(collectionReference, new SnapshotParser<Video>() {

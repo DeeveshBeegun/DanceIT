@@ -70,7 +70,7 @@ public class UpdateTagActivity extends AppCompatActivity {
                     String tag_descp = bundle.getString("tag_descp");
                     FirebaseFirestore database = FirebaseFirestore.getInstance();
                     assert video_id != null;
-                    DocumentReference reference = database.collection("video_urls")
+                    DocumentReference reference = database.collection("video_url")
                             .document(video_id);
                     reference.update("tags", FieldValue.arrayRemove(tag_descp));
                     reference.update("tags", FieldValue.arrayUnion((addTag_textInput.getEditText()).getText().toString()));
