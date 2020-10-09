@@ -32,6 +32,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="200dp">
 
+
+
                     <com.google.android.youtube.player.YouTubeThumbnailView
                         android:id="@+id/thumbnail"
                         android:layout_width="match_parent"
@@ -39,6 +41,16 @@
                         android:scaleType="fitXY"
 
                         android:visibility="visible" />
+
+                    <CheckBox
+                        android:id="@+id/checkbox_multiple_sel"
+                        android:background="#FFFFFF"
+                        android:layout_margin="5dp"
+                        android:layout_marginLeft="30dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="invisible"
+                        />
 
                     <androidx.appcompat.widget.AppCompatImageButton
                         android:id="@+id/shareButton"

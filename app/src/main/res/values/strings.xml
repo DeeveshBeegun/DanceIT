@@ -51,4 +51,12 @@
     <string name="Received">Received</string>
     <string name="third_fragment_label">third fragment</string>
     <string name="show_selected">Show Selected</string>
+    <string name="select">Select</string>
+    <string name="tagmanagement_text">Tag Management</string>
+    <string name="title_activity_tag_management">TagManagementActivity</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="hello_world">Hello Square World!</string>
 </resources>

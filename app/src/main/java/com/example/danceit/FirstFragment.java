@@ -14,7 +14,9 @@ import com.example.danceit.Model.Video;
 import com.example.danceit.RecyclerViewComponents.Firebase_RecyclerViewAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.firebase.ui.firestore.ObservableSnapshotArray;
+
 import com.firebase.ui.firestore.SnapshotParser;
+import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -33,6 +35,8 @@ public class FirstFragment extends Fragment {
                 LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState
         ) {
+
+
 
             // Initialize Firebase Auth
             mAuth = FirebaseAuth.getInstance();
@@ -66,7 +70,10 @@ public class FirstFragment extends Fragment {
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-            return root;
+
+
+
+        return root;
         }
 
         @Override

@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 //import com.example.danceit.Database.VideoViewModel;
 import com.example.danceit.Model.Video;
+import com.example.danceit.TagManagement.TagManagementActivity;
 import com.example.danceit.ui.login.LoginActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -215,6 +216,10 @@ public class MainActivity extends AppCompatActivity {
         }else if(id==R.id.logout){
             mAuth.signOut();
             Intent intent=new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+            return true;
+        }else if(id==R.id.tag_management){
+            Intent intent=new Intent(MainActivity.this, TagManagementActivity.class);
             startActivity(intent);
             return true;
         }
