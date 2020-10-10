@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-//import com.example.danceit.Database.VideoViewModel;
 import com.example.danceit.Model.Video;
 import com.example.danceit.TagManagement.TagManagementActivity;
 import com.example.danceit.ui.login.LoginActivity;
@@ -237,18 +236,19 @@ public class MainActivity extends AppCompatActivity {
             Intent intent=new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
             return true;
-        }else if(id==R.id.tag_management){
-            Intent intent=new Intent(MainActivity.this, TagManagementActivity.class);
-            startActivity(intent);
-            return true;
-        }
-        /*else if (id == R.id.tag_management){
+        }//else if(id==R.id.tag_management){
+            //Intent intent=new Intent(MainActivity.this, TagManagementActivity.class);
+            //startActivity(intent);
+            //return true;
+        //}
+        else if (id == R.id.tag_management){
             Intent intent = new Intent(MainActivity.this, TagManagementActivity.class);
             Bundle bundle = new Bundle();
             bundle.putParcelableArrayList("Videos", (ArrayList<? extends Parcelable>) allVideos);
             intent.putExtras(bundle);
             startActivity(intent);
-        }*/
+            return true;
+        }
 
 
         return super.onOptionsItemSelected(item);
