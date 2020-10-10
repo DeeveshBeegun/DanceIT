@@ -27,6 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,7 +35,7 @@ public class FirstFragment extends Fragment {
         RecyclerView recyclerView;
         Firebase_RecyclerViewAdapter adapter;
         private FirebaseAuth mAuth;
-        List<Video> allVideos;
+        ArrayList<Video> allVideos;
 
     @Override
         public View onCreateView(
@@ -86,7 +87,7 @@ public class FirstFragment extends Fragment {
                             }
 
                             // Convert query snapshot to a list of chats
-                            allVideos = snapshot.toObjects(Video.class);
+                            allVideos = (ArrayList<Video>) snapshot.toObjects(Video.class);
                             ((MainActivity) getActivity()).setAllVideos(allVideos);
                             // Update UI
                         }
