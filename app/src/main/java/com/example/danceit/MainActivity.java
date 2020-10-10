@@ -36,7 +36,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
-    List<Video> allVideos; // List that stores all the videos in a user's library
+    private ArrayList<Video> allVideos; // List that stores all the videos in a user's library
+    int Fragment = 1; // Determines which fragment the Main Activity is on
     MaterialSearchView searchView;
     Toolbar toolbar;
     //VideoViewModel videoViewModel;
@@ -77,11 +78,13 @@ public class MainActivity extends AppCompatActivity {
                       NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
                       NavController navController = navHostFragment.getNavController();
                       navController.navigate(R.id.action_SecondFragment_to_FirstFragment);
+                        Fragment=1;
                     }else{
                         // switch the second fragment
                         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
                         NavController navController = navHostFragment.getNavController();
                         navController.navigate(R.id.action_ThirdFragment_to_FirstFragment);
+                        Fragment=1;
 
                     } // switch the second fragment
                     state=0;
@@ -94,10 +97,12 @@ public class MainActivity extends AppCompatActivity {
                         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
                         NavController navController = navHostFragment.getNavController();
                         navController.navigate(R.id.action_FirstFragment_to_SecondFragment);
+                        Fragment=2;
                     }else {
                         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
                         NavController navController = navHostFragment.getNavController();
                         navController.navigate(R.id.action_ThirdFragment_to_SecondFragment);
+                        Fragment=2;
                     }
                     state=1;
 
@@ -108,12 +113,14 @@ public class MainActivity extends AppCompatActivity {
                         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
                         NavController navController = navHostFragment.getNavController();
                         navController.navigate(R.id.action_FirstFragment_to_ThirdFragment);
+                        Fragment=3;
                     }else{
 
                         // switch the second fragment
                         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
                         NavController navController = navHostFragment.getNavController();
                         navController.navigate(R.id.action_SecondFragment_to_ThirdFragment);
+                        Fragment=3;
 
                     }
                     state=2;
@@ -148,55 +155,67 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-//    /*This method initiates the LibrarySearchActivity and handles the receiving of search queries
-//      from the user. The search string and the list of all a user's videos are sent with an intent.*/
-//    private void searchViewCode(){
-//        String [] yes = {"dog", "johnwick", "german", "germany", "nolan", "batman", "robert"};
-//        searchView=(MaterialSearchView) findViewById(R.id.search_view);
-//        searchView.setSuggestions(yes); // Pre-saved autocompletion words and phrases for searching
-//        searchView.setEllipsize(true);
-//
-//        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String s) {
-//                //Intent intent = new Intent(MainActivity.this, LibrarySearchActivity.class);
-//                Bundle bundle = new Bundle();
-//                String[] searchKeywords = s.split(" ");
-//                bundle.putStringArray("Search Keywords", searchKeywords);
-//                intent.putExtras(bundle);
-//
-//                Bundle bundle1 = new Bundle();
-//                bundle1.putParcelableArrayList("Videos", (ArrayList<? extends Parcelable>) allVideos);
-//                intent.putExtras(bundle1);
-//                startActivity(intent);
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                return false;
-//            }
-//        });
-//
-//        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
-//            @Override
-//            public void onSearchViewShown() {
-//
-//            }
-//
-//            @Override
-//            public void onSearchViewClosed() {
-//
-//            }
-//        });
-//    }
+    /*This method initiates the LibrarySearchActivity and handles the receiving of search queries
+          from the user. The search string and the list of all a user's videos are sent with an intent.*/
+    private void searchViewCode(){
+        String [] yes = {"dog", "johnwick", "german", "germany", "nolan", "batman", "robert"};
+        searchView=(MaterialSearchView) findViewById(R.id.search_view);
+        searchView.setSuggestions(yes); // Pre-saved autocompletion words and phrases for searching
+        searchView.setEllipsize(true);
+
+        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                Bundle bundle = new Bundle();
+                String[] searchKeywords = s.split(" ");
+                bundle.putStringArray("Search Keywords", searchKeywords);
+
+                Bundle bundle1 = new Bundle();
+                bundle1.putParcelableArrayList("Videos", (ArrayList<? extends Parcelable>) allVideos);
+
+                if (Fragment==1){
+                    Intent intent = new Intent(MainActivity.this, LibrarySearchActivity.class);
+                    intent.putExtras(bundle);
+                    intent.putExtras(bundle1);
+                    startActivity(intent);
+                    System.out.println("Fragment 1");
+                }
+                else if(Fragment==2){
+                    Intent intent = new Intent(MainActivity.this, PublicSearchActivity.class);
+                    intent.putExtras(bundle);
+                    intent.putExtras(bundle1);
+                    startActivity(intent);
+                    System.out.println("Fragment 2");
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+            @Override
+            public void onSearchViewShown() {
+
+            }
+
+            @Override
+            public void onSearchViewClosed() {
+
+            }
+        });
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         MenuItem search = menu.findItem(R.id.search);
-//        searchView.setMenuItem(search);
+        searchView.setMenuItem(search);
         return true;
     }
 
@@ -223,13 +242,21 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             return true;
         }
+        /*else if (id == R.id.tag_management){
+            Intent intent = new Intent(MainActivity.this, TagManagementActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putParcelableArrayList("Videos", (ArrayList<? extends Parcelable>) allVideos);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        }*/
+
 
         return super.onOptionsItemSelected(item);
     }
 
     /*This method allows related fragments and activities to set the copy of the videos
       list/database that the Main Activity has of a user's library */
-    public void setAllVideos(List<Video> allVideos) {
+    public void setAllVideos(ArrayList<Video> allVideos) {
         this.allVideos = allVideos;
     }
 }
