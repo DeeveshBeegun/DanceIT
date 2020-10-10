@@ -30,7 +30,7 @@ public class Video implements Parcelable {
     private String videoId;
     private User videoUploader;
     private String url;
-    private List<String> tags = null;
+    private ArrayList<String> tags = null;
    // private ArrayList<Tag> tag_list;
     public String privacy;
 
@@ -47,7 +47,7 @@ public class Video implements Parcelable {
     public Video(User videoUploader, String url, List<String> tags, String privacy) {
         this.videoUploader = videoUploader;
         this.url = url;
-        this.tags = tags;
+        this.tags = (ArrayList<String>) tags;
         this.privacy = privacy;
     }
 
@@ -109,12 +109,12 @@ public class Video implements Parcelable {
 //        this.tag_list = tag_list;
 //    }
 
-    public List<String> getTags() {
+    public ArrayList<String> getTags() {
         return tags;
     }
 
     public void setTags(List<String> tags) {
-        this.tags = tags;
+        this.tags = (ArrayList<String>) tags;
     }
 
     public String getPrivacy() {
