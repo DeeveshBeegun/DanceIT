@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,15 +21,20 @@ import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.List;
 import java.util.Objects;
 
 public class FirstFragment extends Fragment {
         RecyclerView recyclerView;
         Firebase_RecyclerViewAdapter adapter;
         private FirebaseAuth mAuth;
+        List<Video> allVideos;
 
     @Override
         public View onCreateView(
@@ -70,8 +76,21 @@ public class FirstFragment extends Fragment {
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+            reference.addSnapshotListener(
+                    new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot snapshot, @Nullable FirebaseFirestoreException e) {
+                            if (e != null) {
+                                // Handle error
+                                return;
+                            }
 
-
+                            // Convert query snapshot to a list of chats
+                            allVideos = snapshot.toObjects(Video.class);
+                            ((MainActivity) getActivity()).setAllVideos(allVideos);
+                            // Update UI
+                        }
+                    });
 
         return root;
         }
