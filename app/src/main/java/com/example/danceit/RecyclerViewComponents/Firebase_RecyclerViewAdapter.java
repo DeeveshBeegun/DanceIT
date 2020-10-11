@@ -46,6 +46,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -60,6 +61,7 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
     DocumentReference  reference;
     Activity activity;
     List<Video> video_list = new ArrayList<>();
+    HashMap<Integer, Video> videoHashMap= new HashMap<>();
 
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
@@ -103,12 +105,15 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked)
                     getVideosFromDatabase(position);
+                else
+                    if(videoHashMap.size() > 0) 
+                        videoHashMap.remove(position);
             }
         });
 
     }
 
-    private void getVideosFromDatabase(int position) {
+    private void getVideosFromDatabase(final int position) {
         DocumentReference reference = database.collection("video_urls_private").document(Objects.requireNonNull
                 (Objects.requireNonNull(mAuth.getCurrentUser()).getEmail()))
                 .collection("private_video")
@@ -122,7 +127,7 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                     DocumentSnapshot document = task.getResult();
                     if (document != null) {
                         Video video = task.getResult().toObject(Video.class);
-                        video_list.add(video);
+                        videoHashMap.put(position, video);
 
                     }
 
@@ -473,7 +478,7 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                video_list.addAll(videoHashMap.values());
                 //allows use to send and transictions to send activity to select users
                 Intent intent = new Intent(activity, SharingVideoActivity.class);
                 Bundle bundle = new Bundle();
@@ -488,11 +493,15 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
         //when cancel reset view back to normal
         cancelSelection.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) { ;
+                for (int i = 0; i <myViewHolders.size() ; i++)
+                    myViewHolders.get(i).checkBox.setChecked(false);
+
                 addCheckBox(false);//remove check boxes
                 cancelSelection.setVisibility(View.INVISIBLE);
                 sendButton.setVisibility(View.INVISIBLE);
                 fabButton.setVisibility(View.VISIBLE);
+
             }
         });
     }
