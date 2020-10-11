@@ -37,13 +37,19 @@ public class Search {
             Video video = allVideos.get(a);
             ArrayList<String> tagList = video.getTags();
 
+            /*Converts all tags to lower case for the array list contains method
+              below.*/
+            for(int i = 0; i<tagList.size(); i++){
+                tagList.add(i, tagList.get(i).toLowerCase());
+            }
+
             for(int i=0; i<searchKeywords.length; i++){
                 if(tagList.contains(searchKeywords[i])){ //If video contains the specified tag
                     if(! map.isEmpty() && map.containsKey(video)){
                         int newValue = map.get(video)+1;
                         map.replace(video, newValue);
                         if (max<newValue){
-                            max=newValue; //Update max
+                            max=newValue; //Updating max
                         }
                     }
                     else{
@@ -56,9 +62,7 @@ public class Search {
         if(!map.isEmpty()){
             for(Map.Entry <Video, Integer> item: map.entrySet()) {
                 if(item.getValue()==max){
-                    System.out.println("Yesssssssssssssssssssssssssssssss");
                     searchResults.add(item.getKey());
-                    System.out.println("Noooooooooooooooooooooooo");
                 }
             }
         }
