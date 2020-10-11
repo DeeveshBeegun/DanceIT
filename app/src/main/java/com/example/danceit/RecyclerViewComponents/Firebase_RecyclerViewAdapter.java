@@ -106,7 +106,7 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                 if(isChecked)
                     getVideosFromDatabase(position);
                 else
-                    if(videoHashMap.size() > 0) 
+                    if(videoHashMap.size() > 0)
                         videoHashMap.remove(position);
             }
         });
