@@ -62,18 +62,38 @@ public class SharingVideoActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 Bundle bundle = getIntent().getExtras();
-                assert bundle != null;
-                final Video video = bundle.getParcelable("video_obj"); // video to send
-                assert video != null;
-                video.setPrivacy("received");
-
                 List<String> selected_users = MyAdapter.getUsers(); // store the name of selected users
-                for (int i = 0; i< selected_users.size(); i ++) {
-                    CollectionReference reference = database.collection("video_sent").document(selected_users.get(i))
-                            .collection("video_received"); // path where video sent is saved
+
+                assert bundle != null;
+                if (Objects.equals(bundle.getString("single_user"), "single_user")) {
+                    final Video video = bundle.getParcelable("video_obj"); // video to send
                     assert video != null;
-                    reference.add(video);
+                    video.setPrivacy("received");
+                    for (int i = 0; i< selected_users.size(); i ++) {
+                        CollectionReference reference = database.collection("video_sent").document(selected_users.get(i))
+                                .collection("video_received"); // path where video sent is saved
+                        reference.add(video);
+                    }
+
                 }
+                else {
+                    List<Video> videoList = bundle.getParcelableArrayList("video_list");
+
+                    for(int i = 0; i < selected_users.size(); i++) {
+                        assert videoList != null;
+                        for(int j = 0; j < videoList.size(); j++) {
+                            CollectionReference reference = database.collection("video_sent").document(selected_users.get(i))
+                                    .collection("video_received"); // path where video sent is saved
+                            Video video = videoList.get(j);
+                            video.setPrivacy("received");
+                            reference.add(video);
+                        }
+                    }
+
+                }
+
+
+
 
 
             }
