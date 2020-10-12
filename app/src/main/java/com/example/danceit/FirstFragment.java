@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.danceit.Model.FirebaseManager;
 import com.example.danceit.Model.Video;
 import com.example.danceit.RecyclerViewComponents.Firebase_RecyclerViewAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -28,7 +29,7 @@ import java.util.Objects;
 public class FirstFragment extends Fragment {
         RecyclerView recyclerView;
         Firebase_RecyclerViewAdapter adapter;
-        private FirebaseAuth mAuth;
+        FirebaseManager firebaseManager = new FirebaseManager();
 
     @Override
         public View onCreateView(
@@ -37,20 +38,10 @@ public class FirstFragment extends Fragment {
         ) {
 
 
-
-            // Initialize Firebase Auth
-            mAuth = FirebaseAuth.getInstance();
-
-            FirebaseFirestore database = FirebaseFirestore.getInstance();
-            CollectionReference reference = database.collection("video_urls_private");
-
             View root = inflater.inflate(R.layout.fragment_first, container, false);
-            //videoList = new ArrayList<>();
             recyclerView = (RecyclerView) root.findViewById(R.id.recyclerView);
 
-            Query query = reference.
-                    document(Objects.requireNonNull(Objects.requireNonNull(mAuth.getCurrentUser()).getEmail())).
-                    collection("private_video");
+            Query query = firebaseManager.getPrivate_videoReference("video_urls_private/private_video");
 
             FirestoreRecyclerOptions<Video> options = new FirestoreRecyclerOptions.Builder<Video>()
                     .setQuery(query, new SnapshotParser<Video>() {
@@ -69,9 +60,6 @@ public class FirstFragment extends Fragment {
 
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-
-
 
         return root;
         }

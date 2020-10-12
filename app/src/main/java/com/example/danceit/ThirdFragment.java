@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.danceit.Model.FirebaseManager;
 import com.example.danceit.Model.Video;
 import com.example.danceit.RecyclerViewComponents.Firebase_RecyclerViewAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -26,7 +27,7 @@ import java.util.Objects;
 public class ThirdFragment extends Fragment {
     RecyclerView recyclerView;
     Firebase_RecyclerViewAdapter adapter;
-    private FirebaseAuth mAuth;
+    FirebaseManager firebaseManager = new FirebaseManager();
 
     @Override
     public View onCreateView(
@@ -34,19 +35,10 @@ public class ThirdFragment extends Fragment {
             Bundle savedInstanceState
     ) {
 
-        // Initialize Firebase Auth
-        mAuth = FirebaseAuth.getInstance();
-
-        FirebaseFirestore database = FirebaseFirestore.getInstance();
-        CollectionReference reference = database.collection("video_sent");
-
         View root = inflater.inflate(R.layout.fragment_third, container, false);
-        //videoList = new ArrayList<>();
         recyclerView = (RecyclerView) root.findViewById(R.id.recyclerViewThird);
 
-            Query query = reference
-            .document(Objects.requireNonNull(mAuth.getCurrentUser().getDisplayName())).
-                    collection("video_received");
+        Query query = firebaseManager.getReceive_videoReference("video_sent/video_received");
 
         FirestoreRecyclerOptions<Video> options = new FirestoreRecyclerOptions.Builder<Video>()
                         .setQuery(query, new SnapshotParser<Video>() {

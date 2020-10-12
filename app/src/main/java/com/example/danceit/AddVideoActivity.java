@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.danceit.Model.FirebaseManager;
 import com.example.danceit.Model.User;
 import com.example.danceit.Model.Video;
 import com.google.android.material.textfield.TextInputLayout;
@@ -20,35 +21,35 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class AddVideoActivity extends AppCompatActivity {
 
     private boolean isPrivate; // privacy is public
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-
-//    // Initialize Firebase Auth
-//    mAuth = FirebaseAuth.getInstance();
+    FirebaseManager firebaseManager = new FirebaseManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_video);
 
-        saveInput();
+        final TextInputLayout textInputUrl = findViewById(R.id.textInput_url);
+        final TextInputLayout textInputTags = findViewById(R.id.textInput_tag);
+        final Button saveButton = (Button) findViewById(R.id.saveButton);
+
+        addVideo(textInputUrl, textInputTags, saveButton);
 
     }
 
-    public void saveInput() {
+    public void addVideo(final TextInputLayout textInputUrl, final TextInputLayout textInputTags, Button saveButton) {
 
-        final Intent intent=new Intent(this,MainActivity.class);
+        final Intent intent = new Intent(this,MainActivity.class);
 
-        final TextInputLayout textInputUrl = findViewById(R.id.textInput_url);
-        final TextInputLayout textInputTags = findViewById(R.id.textInput_tag);
-        checkPrivacy();
-        //Get save button
-        final Button saveButton = (Button) findViewById(R.id.saveButton);
+        checkPrivacy(); // checks if video is public or private
+
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,35 +57,26 @@ public class AddVideoActivity extends AppCompatActivity {
                 if(isURL(textInputUrl.getEditText().getText().toString().trim())) {
 
                     if (isPrivate) {
-
-
-                        CollectionReference reference = FirebaseFirestore.getInstance().collection("video_urls_private").
-                                document(Objects.requireNonNull(mAuth.getCurrentUser().getEmail())).collection("private_video");
-
                         Video video = new Video(new User("username", "password"),
                                 Objects.requireNonNull(textInputUrl.getEditText()).getText().toString().trim(), tagInput_string((textInputTags.getEditText())
                                 .getText().toString()), "private");
 
-                        reference.add(video);
+                        firebaseManager.addPrivate_video("video_urls_private/private_video", video);
 
+                        Toast toast = Toast.makeText(getApplicationContext(), "Url saved as private.", Toast.LENGTH_SHORT);
+                        toast.show();
 
                     }
                     else {
-
-                        CollectionReference reference_private = FirebaseFirestore.getInstance().collection("video_urls_private").
-                                document(Objects.requireNonNull(mAuth.getCurrentUser().getEmail())).collection("private_video");
-
                         Video video = new Video(new User("username", "password"),
                                 Objects.requireNonNull(textInputUrl.getEditText()).getText().toString().trim(), tagInput_string((textInputTags.getEditText())
                                 .getText().toString()), "private");
 
-                        reference_private.add(video);
+                        firebaseManager.addPrivate_video("video_urls_private/private_video", video);
 
+                        video.setPrivacy("public");
 
-                        CollectionReference reference = FirebaseFirestore.getInstance().collection("video_url");
-                        reference.add(new Video(new User("username", "password"),
-                                Objects.requireNonNull(textInputUrl.getEditText()).getText().toString().trim(), tagInput_string((textInputTags.getEditText())
-                                .getText().toString()), "public"));
+                        firebaseManager.addPublic_video("video_url", video);
 
                         Toast toast = Toast.makeText(getApplicationContext(), "Url saved as public.", Toast.LENGTH_SHORT);
                             toast.show();

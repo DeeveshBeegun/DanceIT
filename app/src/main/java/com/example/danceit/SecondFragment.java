@@ -1,6 +1,5 @@
 package com.example.danceit;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,25 +10,18 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.danceit.Model.FirebaseManager;
 import com.example.danceit.Model.Video;
 import com.example.danceit.RecyclerViewComponents.Firebase_RecyclerViewAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.firebase.ui.firestore.ObservableSnapshotArray;
 import com.firebase.ui.firestore.SnapshotParser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
-import java.util.ArrayList;
-import java.util.Objects;
-
 public class SecondFragment extends Fragment {
-    ObservableSnapshotArray<Video> videoList;
     RecyclerView recyclerView;
     Firebase_RecyclerViewAdapter adapter;
-    ProgressDialog dialog;
-
+    FirebaseManager firebaseManager = new FirebaseManager();
 
     @Override
     public View onCreateView(
@@ -40,11 +32,10 @@ public class SecondFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_second, container, false);
         recyclerView = (RecyclerView) root.findViewById(R.id.recyclerViewDance);
 
-        FirebaseFirestore database = FirebaseFirestore.getInstance();
-        CollectionReference collectionReference = database.collection("video_url");
+        Query query = firebaseManager.getPublic_videoReference("video_url");
 
         FirestoreRecyclerOptions<Video> options = new FirestoreRecyclerOptions.Builder<Video>()
-                .setQuery(collectionReference, new SnapshotParser<Video>() {
+                .setQuery(query, new SnapshotParser<Video>() {
                     @NonNull
                     @Override
                     public Video parseSnapshot(@NonNull DocumentSnapshot snapshot) {
@@ -69,14 +60,7 @@ public class SecondFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        ProgressDialog dialog=new ProgressDialog(getContext());
-        dialog.setMessage("Loading...");
-        dialog.setCancelable(false);
-        dialog.setInverseBackgroundForced(false);
-        dialog.show();
-
         adapter.startListening();
-        dialog.hide();
 
    }
 
