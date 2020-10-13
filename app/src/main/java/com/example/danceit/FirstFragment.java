@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,15 +14,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.danceit.Model.Video;
 import com.example.danceit.RecyclerViewComponents.Firebase_RecyclerViewAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.firebase.ui.firestore.ObservableSnapshotArray;
+
 
 import com.firebase.ui.firestore.SnapshotParser;
-import com.google.android.material.card.MaterialCardView;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+
 import com.google.firebase.firestore.FirebaseFirestore;
+
 import com.google.firebase.firestore.Query;
+
+
+import java.util.ArrayList;
 
 import java.util.Objects;
 
@@ -29,6 +35,8 @@ public class FirstFragment extends Fragment {
         RecyclerView recyclerView;
         Firebase_RecyclerViewAdapter adapter;
         private FirebaseAuth mAuth;
+        ArrayList<Video> allVideos = new ArrayList<Video>();
+        ArrayList<String> autoCompletion = new ArrayList<String>();
 
     @Override
         public View onCreateView(
@@ -36,16 +44,14 @@ public class FirstFragment extends Fragment {
                 Bundle savedInstanceState
         ) {
 
-
-
             // Initialize Firebase Auth
             mAuth = FirebaseAuth.getInstance();
 
             FirebaseFirestore database = FirebaseFirestore.getInstance();
-            CollectionReference reference = database.collection("video_urls_private");
+            final CollectionReference reference = database.collection("video_urls_private");
 
             View root = inflater.inflate(R.layout.fragment_first, container, false);
-            //videoList = new ArrayList<>();
+
             recyclerView = (RecyclerView) root.findViewById(R.id.recyclerView);
 
             Query query = reference.
@@ -59,19 +65,21 @@ public class FirstFragment extends Fragment {
                         public Video parseSnapshot(@NonNull DocumentSnapshot snapshot) {
                             Video video = snapshot.toObject(Video.class);
                             assert video != null;
+                            Video videoCopy = new Video (video.getVideoUploader(), video.getVideoId(), video.getUrl(), video.getTags(), video.getPrivacy());
+                            allVideos.add(videoCopy);
+                            autoCompletion.addAll(videoCopy.getTags());
+                            ((MainActivity) getActivity()).setAutocompletion(autoCompletion.toArray(new String [0]));
                             video.setVideoId(snapshot.getId());
                             return video;
                         }
                     })
                     .setLifecycleOwner(this)
                     .build();
+
             adapter = new Firebase_RecyclerViewAdapter(options, getActivity());
 
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-
-
 
         return root;
         }
@@ -79,7 +87,7 @@ public class FirstFragment extends Fragment {
         @Override
         public void onStart() {
             super.onStart();
-            adapter.startListening();;
+            adapter.startListening();
 
         }
 
@@ -91,6 +99,7 @@ public class FirstFragment extends Fragment {
 
         public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
+            ((MainActivity) getActivity()).setAllVideos(allVideos);
         }
     }
 

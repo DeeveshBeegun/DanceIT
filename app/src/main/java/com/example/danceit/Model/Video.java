@@ -26,12 +26,11 @@ import java.util.List;
 public class Video implements Parcelable {
 
     //@PrimaryKey(autoGenerate = true)
-    @Exclude
-    private String videoId;
+    //@Exclude
     private User videoUploader;
+    private String videoId;
     private String url;
-    private List<String> tags = null;
-   // private ArrayList<Tag> tag_list;
+    private ArrayList<String> tags = null;
     public String privacy;
 
 
@@ -44,10 +43,11 @@ public class Video implements Parcelable {
 //        this.privacy = privacy;
 //    }
 
-    public Video(User videoUploader, String url, List<String> tags, String privacy) {
+    public Video(User videoUploader, String videoId ,String url, List<String> tags, String privacy) {
         this.videoUploader = videoUploader;
+        this.videoId = videoId;
         this.url = url;
-        this.tags = tags;
+        this.tags = (ArrayList<String>) tags;
         this.privacy = privacy;
     }
 
@@ -58,12 +58,10 @@ public class Video implements Parcelable {
     @RequiresApi(api = Build.VERSION_CODES.Q)
     protected Video(Parcel in) {
         videoUploader = in.readTypedObject(User.CREATOR);
-        //videoId = in.readInt();
+        videoId = in.readString();
         url = in.readString();
-        //tag_list = in.createTypedArrayList(Tag.CREATOR);
         privacy = in.readString();
         tags = in.createStringArrayList();
-
     }
 
 
@@ -109,12 +107,12 @@ public class Video implements Parcelable {
 //        this.tag_list = tag_list;
 //    }
 
-    public List<String> getTags() {
+    public ArrayList<String> getTags() {
         return tags;
     }
 
     public void setTags(List<String> tags) {
-        this.tags = tags;
+        this.tags = (ArrayList<String>) tags;
     }
 
     public String getPrivacy() {
@@ -129,6 +127,37 @@ public class Video implements Parcelable {
         return url;
     }
 
+    /*Overriding equals method to allow correct Video object comparison*/
+    @Override
+    public boolean equals(Object object)
+    {
+
+        if(this == object){
+            return true;
+        }
+
+        if(object == null || object.getClass()!= this.getClass()) {
+            return false;
+        }
+
+        Video video = (Video) object;
+
+        if(video.url.equals(this.url) && video.videoUploader.getName().equals(this.videoUploader.getName())
+                && video.privacy.equals(this.privacy) && video.videoId.equals(this.videoId)){
+            return true;
+        }
+
+        return false;
+    }
+
+    /*Overriding hashCode method to allow correct Video object comparison*/
+    @Override
+    public int hashCode()
+    {
+        return this.url.hashCode() * this.videoUploader.getName().hashCode() * this.videoId.hashCode() * 19;
+    }
+
+
     @Override
     public int describeContents() {
         return 0;
@@ -138,9 +167,8 @@ public class Video implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeTypedObject(videoUploader, 1);
-      //  parcel.writeInt(videoId);
+        parcel.writeString(videoId);
         parcel.writeString(url);
-        //parcel.writeTypedList(tag_list);
         parcel.writeString(privacy);
         parcel.writeStringList(tags);
     }

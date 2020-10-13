@@ -20,8 +20,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Random;
 
 public class AddVideoActivity extends AppCompatActivity {
 
@@ -61,7 +63,7 @@ public class AddVideoActivity extends AppCompatActivity {
                         CollectionReference reference = FirebaseFirestore.getInstance().collection("video_urls_private").
                                 document(Objects.requireNonNull(mAuth.getCurrentUser().getEmail())).collection("private_video");
 
-                        Video video = new Video(new User("username", "password"),
+                        Video video = new Video(new User("username", "password"), getAlphaNumericString(14),
                                 Objects.requireNonNull(textInputUrl.getEditText()).getText().toString().trim(), tagInput_string((textInputTags.getEditText())
                                 .getText().toString()), "private");
 
@@ -74,7 +76,7 @@ public class AddVideoActivity extends AppCompatActivity {
                         CollectionReference reference_private = FirebaseFirestore.getInstance().collection("video_urls_private").
                                 document(Objects.requireNonNull(mAuth.getCurrentUser().getEmail())).collection("private_video");
 
-                        Video video = new Video(new User("username", "password"),
+                        Video video = new Video(new User("username", "password"), getAlphaNumericString(14),
                                 Objects.requireNonNull(textInputUrl.getEditText()).getText().toString().trim(), tagInput_string((textInputTags.getEditText())
                                 .getText().toString()), "private");
 
@@ -82,7 +84,7 @@ public class AddVideoActivity extends AppCompatActivity {
 
 
                         CollectionReference reference = FirebaseFirestore.getInstance().collection("video_url");
-                        reference.add(new Video(new User("username", "password"),
+                        reference.add(new Video(new User("username", "password"), getAlphaNumericString(14),
                                 Objects.requireNonNull(textInputUrl.getEditText()).getText().toString().trim(), tagInput_string((textInputTags.getEditText())
                                 .getText().toString()), "public"));
 
@@ -99,6 +101,45 @@ public class AddVideoActivity extends AppCompatActivity {
         }
 
         });
+
+    }
+
+    // Java program generate a random AlphaNumeric String
+    // using Regular Expressions method
+    private String getAlphaNumericString(int n){
+        {
+
+            // length is bounded by 256 Character
+            byte[] array = new byte[256];
+            new Random().nextBytes(array);
+
+            String randomString
+                    = new String(array, Charset.forName("UTF-8"));
+
+            // Create a StringBuffer to store the result
+            StringBuffer r = new StringBuffer();
+
+            // remove all spacial char
+            String  AlphaNumericString
+                    = randomString
+                    .replaceAll("[^A-Za-z0-9]", "");
+
+            // Append first 20 alphanumeric characters
+            // from the generated random String into the result
+            for (int k = 0; k < AlphaNumericString.length(); k++) {
+
+                if (Character.isLetter(AlphaNumericString.charAt(k))
+                        && (n > 0)
+                        || Character.isDigit(AlphaNumericString.charAt(k))
+                        && (n > 0)) {
+
+                    r.append(AlphaNumericString.charAt(k));
+                    n--;
+                }
+            }
+            // return the resultant string
+            return r.toString();
+        }
 
     }
 

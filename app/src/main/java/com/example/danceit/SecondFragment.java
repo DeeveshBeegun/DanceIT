@@ -29,6 +29,8 @@ public class SecondFragment extends Fragment {
     RecyclerView recyclerView;
     Firebase_RecyclerViewAdapter adapter;
     ProgressDialog dialog;
+    ArrayList<Video> allVideos = new ArrayList<Video>();
+    ArrayList<String> autoCompletion = new ArrayList<String>();
 
 
     @Override
@@ -50,6 +52,10 @@ public class SecondFragment extends Fragment {
                     public Video parseSnapshot(@NonNull DocumentSnapshot snapshot) {
                         Video video = snapshot.toObject(Video.class);
                         assert video != null;
+                        Video videoCopy = new Video (video.getVideoUploader(), video.getVideoId(), video.getUrl(), video.getTags(), video.getPrivacy());
+                        allVideos.add(videoCopy);
+                        autoCompletion.addAll(videoCopy.getTags());
+                        ((MainActivity) getActivity()).setAutocompletion(autoCompletion.toArray(new String [0]));
                         video.setVideoId(snapshot.getId());
                         return video;
                     }
@@ -88,5 +94,6 @@ public class SecondFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ((MainActivity) getActivity()).setAllVideos(allVideos);
     }
 }

@@ -1,11 +1,9 @@
-/**
- * This activity handles the library search queries
- *
- * @author Bohlale Motsieloa (MTSBOH002)
- * @date: 29/09/2020
- * @version: 1.0
- */
 package com.example.danceit;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,27 +17,20 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class LibrarySearchActivity extends AppCompatActivity {
+public class ReceivedSearchActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     Firebase_RecyclerViewAdapter adapter;
     private FirebaseAuth mAuth;
     ArrayList<String> searchResults = new ArrayList<>();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_library_search);
+        setContentView(R.layout.activity_received_search);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -47,32 +38,36 @@ public class LibrarySearchActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         FirebaseFirestore database = FirebaseFirestore.getInstance();
-        CollectionReference reference = database.collection("video_urls_private").
-                document(Objects.requireNonNull(Objects.requireNonNull(mAuth.getCurrentUser()).getEmail())).
-                collection("private_video");
+        CollectionReference reference = database.collection("video_sent");
 
 
-        // Getting intent, user search query and all the videos in the user's library from the Main Activity
+
+        // Getting intent, user search query and all the videos in the received database from the Main Activity
         Intent intent = getIntent();
         String [] searchKeywords = intent.getExtras().getStringArray("Search Keywords");
         ArrayList<Video> allVideos = intent.getExtras().getParcelableArrayList("Videos");
 
         //Create Search object to get search results and set the adapter
         Search search = new Search (searchKeywords, allVideos);
-        searchResults = search.searchResults();
+        ArrayList<String> searchResults = search.searchResults();
 
         if(!searchResults.isEmpty()){
             recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
-            Query query = reference.whereIn("videoId", searchResults);
+            Query query = reference
+                    .document(Objects.requireNonNull(mAuth.getCurrentUser().getDisplayName())).
+                            collection("video_received").whereIn("videoId", searchResults);
+
 
             FirestoreRecyclerOptions<Video> options = new FirestoreRecyclerOptions.Builder<Video>()
                     .setQuery(query, Video.class)
                     .build();
+
             adapter = new Firebase_RecyclerViewAdapter(options, this);
 
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(this.getApplicationContext()));
+
         }
         else{
             TextView noResults = (TextView) findViewById(R.id.noSearchResults);
@@ -84,7 +79,6 @@ public class LibrarySearchActivity extends AppCompatActivity {
             noResults.setText(R.string.NoResults);
             word.setText("\""+searchKeyword+" \"");
         }
-
     }
 
     @Override
