@@ -27,11 +27,11 @@ public class Search {
 
     /*Returns a list of videos that have the most matches (determined by max) for the search keywords
       the user queried*/
-    public ArrayList<Video> searchResults(){
+    public ArrayList<String> searchResults(){
         Map <Video, Integer> map = new HashMap<Video, Integer> (); // Stores videos and their match count, only
         //videos with a count equal to max are part of the search results
 
-        ArrayList<Video> searchResults = new ArrayList<>();
+        ArrayList<String> searchResults = new ArrayList<String>();
 
         for (int a = 0; a < allVideos.size() ; a++) {
             Video video = allVideos.get(a);
@@ -39,12 +39,13 @@ public class Search {
 
             /*Converts all tags to lower case for the array list contains method
               below.*/
+
             for(int i = 0; i<tagList.size(); i++){
-                tagList.add(i, tagList.get(i).toLowerCase());
+                tagList.set(i, tagList.get(i).toLowerCase());
             }
 
             for(int i=0; i<searchKeywords.length; i++){
-                if(tagList.contains(searchKeywords[i])){ //If video contains the specified tag
+                if(tagList.contains(searchKeywords[i].toLowerCase())){ //If video contains the specified tag
                     if(! map.isEmpty() && map.containsKey(video)){
                         int newValue = map.get(video)+1;
                         map.replace(video, newValue);
@@ -62,7 +63,8 @@ public class Search {
         if(!map.isEmpty()){
             for(Map.Entry <Video, Integer> item: map.entrySet()) {
                 if(item.getValue()==max){
-                    searchResults.add(item.getKey());
+                    Video video = item.getKey();
+                    searchResults.add(video.getVideoId());
                 }
             }
         }
