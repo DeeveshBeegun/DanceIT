@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.danceit.Model.Video;
 import com.example.danceit.RecyclerViewComponents.Firebase_RecyclerViewAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.firebase.ui.firestore.ObservableSnapshotArray;
 import com.firebase.ui.firestore.SnapshotParser;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -21,12 +20,15 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class ThirdFragment extends Fragment {
     RecyclerView recyclerView;
     Firebase_RecyclerViewAdapter adapter;
     private FirebaseAuth mAuth;
+    ArrayList<Video> allVideos = new ArrayList<Video>();
+    ArrayList<String> autoCompletion = new ArrayList<String>();
 
     @Override
     public View onCreateView(
@@ -55,6 +57,10 @@ public class ThirdFragment extends Fragment {
                             public Video parseSnapshot(@NonNull DocumentSnapshot snapshot) {
                                 Video video = snapshot.toObject(Video.class);
                                 assert video != null;
+                                Video videoCopy = new Video (video.getVideoUploader(), video.getVideoId(), video.getUrl(), video.getTags(), video.getPrivacy());
+                                allVideos.add(videoCopy);
+                                autoCompletion.addAll(videoCopy.getTags());
+                                ((MainActivity) getActivity()).setAutocompletion(autoCompletion.toArray(new String [0]));
                                 video.setVideoId(snapshot.getId());
                                 return video;
                             }
@@ -63,7 +69,6 @@ public class ThirdFragment extends Fragment {
                         .build();
 
         adapter = new Firebase_RecyclerViewAdapter(options, getActivity());
-
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -85,5 +90,6 @@ public class ThirdFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ((MainActivity) getActivity()).setAllVideos(allVideos);
     }
 }
