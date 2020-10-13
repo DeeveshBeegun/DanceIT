@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import com.example.danceit.Model.Search;
 
@@ -24,6 +25,7 @@ public class PublicSearchActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     Firebase_RecyclerViewAdapter adapter;
     private FirebaseAuth mAuth;
+    ArrayList<String> searchResults = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,33 +48,49 @@ public class PublicSearchActivity extends AppCompatActivity {
 
         //Create Search object to get search results and set the adapter
         Search search = new Search (searchKeywords, allVideos);
-        ArrayList<String> searchResults = search.searchResults();
+        searchResults = search.searchResults();
 
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        if(!searchResults.isEmpty()){
+            recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
-        Query query = reference.whereIn("videoId", searchResults);
+            Query query = reference.whereIn("videoId", searchResults);
 
-        FirestoreRecyclerOptions<Video> options = new FirestoreRecyclerOptions.Builder<Video>()
-                .setQuery(query, Video.class)
-                .build();
+            FirestoreRecyclerOptions<Video> options = new FirestoreRecyclerOptions.Builder<Video>()
+                    .setQuery(query, Video.class)
+                    .build();
 
-        adapter = new Firebase_RecyclerViewAdapter(options, this);
+            adapter = new Firebase_RecyclerViewAdapter(options, this);
 
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getApplicationContext()));
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this.getApplicationContext()));
+
+        }
+        else{
+            TextView noResults = (TextView) findViewById(R.id.noSearchResults);
+            TextView word = (TextView) findViewById(R.id.search_keywords);
+            String searchKeyword = "";
+            for(String words : searchKeywords){
+                searchKeyword=searchKeyword + " "+words;
+            }
+            noResults.setText(R.string.NoResults);
+            word.setText("\""+searchKeyword+" \"");
+        }
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        adapter.startListening();
-
+        if(!searchResults.isEmpty()){
+            adapter.startListening();
+        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        adapter.stopListening();
+        if(!searchResults.isEmpty()){
+            adapter.stopListening();
+        }
     }
 
 }
