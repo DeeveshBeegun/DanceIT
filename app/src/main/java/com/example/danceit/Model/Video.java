@@ -26,7 +26,8 @@ import java.util.List;
 public class Video implements Parcelable {
 
     //@PrimaryKey(autoGenerate = true)
-    @Exclude
+    //@Exclude
+    private User videoUploader;
     private String videoId;
     private User videoUploader;
     private String url;
@@ -44,8 +45,9 @@ public class Video implements Parcelable {
 //        this.privacy = privacy;
 //    }
 
-    public Video(User videoUploader, String url, List<String> tags, String privacy) {
+    public Video(User videoUploader, String videoId ,String url, List<String> tags, String privacy) {
         this.videoUploader = videoUploader;
+        this.videoId = videoId;
         this.url = url;
         this.tags = (ArrayList<String>) tags;
         this.privacy = privacy;
@@ -58,7 +60,7 @@ public class Video implements Parcelable {
     @RequiresApi(api = Build.VERSION_CODES.Q)
     protected Video(Parcel in) {
         videoUploader = in.readTypedObject(User.CREATOR);
-        //videoId = in.readInt();
+        videoId = in.readString();
         url = in.readString();
         //tag_list = in.createTypedArrayList(Tag.CREATOR);
         privacy = in.readString();
@@ -144,7 +146,8 @@ public class Video implements Parcelable {
 
         Video video = (Video) object;
 
-        if(video.url.equals(this.url) && video.videoUploader.getName().equals(this.videoUploader.getName()) && video.privacy == this.privacy){
+        if(video.url.equals(this.url) && video.videoUploader.getName().equals(this.videoUploader.getName())
+                && video.privacy.equals(this.privacy) && video.videoId.equals(this.videoId)){
             return true;
         }
 
@@ -155,7 +158,7 @@ public class Video implements Parcelable {
     @Override
     public int hashCode()
     {
-        return this.url.hashCode() * this.videoUploader.getName().hashCode() * 19;
+        return this.url.hashCode() * this.videoUploader.getName().hashCode() * this.videoId.hashCode() * 19;
     }
 
 
@@ -168,7 +171,7 @@ public class Video implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeTypedObject(videoUploader, 1);
-      //  parcel.writeInt(videoId);
+        parcel.writeString(videoId);
         parcel.writeString(url);
         //parcel.writeTypedList(tag_list);
         parcel.writeString(privacy);
