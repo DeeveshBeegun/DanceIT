@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.danceit.Model.FirebaseManager;
 import com.example.danceit.Model.Video;
 import com.example.danceit.RecyclerViewComponents.Firebase_RecyclerViewAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -37,6 +38,7 @@ public class FirstFragment extends Fragment {
         private FirebaseAuth mAuth;
         ArrayList<Video> allVideos = new ArrayList<Video>();
         ArrayList<String> autoCompletion = new ArrayList<String>();
+        FirebaseManager firebaseManager = new FirebaseManager();
 
     @Override
         public View onCreateView(
@@ -44,19 +46,10 @@ public class FirstFragment extends Fragment {
                 Bundle savedInstanceState
         ) {
 
-            // Initialize Firebase Auth
-            mAuth = FirebaseAuth.getInstance();
-
-            FirebaseFirestore database = FirebaseFirestore.getInstance();
-            final CollectionReference reference = database.collection("video_urls_private");
-
             View root = inflater.inflate(R.layout.fragment_first, container, false);
-
             recyclerView = (RecyclerView) root.findViewById(R.id.recyclerView);
 
-            Query query = reference.
-                    document(Objects.requireNonNull(Objects.requireNonNull(mAuth.getCurrentUser()).getEmail())).
-                    collection("private_video");
+            Query query = firebaseManager.getPrivate_videoReference();
 
             FirestoreRecyclerOptions<Video> options = new FirestoreRecyclerOptions.Builder<Video>()
                     .setQuery(query, new SnapshotParser<Video>() {

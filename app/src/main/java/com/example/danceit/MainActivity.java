@@ -142,7 +142,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
     /*This method initiates the LibrarySearchActivity and handles the receiving of search queries
           from the user. The search string and the list of all a user's videos are sent with an intent.*/
     private void searchViewCode(){
@@ -209,7 +208,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

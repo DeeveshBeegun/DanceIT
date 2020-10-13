@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.danceit.Model.FirebaseManager;
 import com.example.danceit.Model.Video;
 import com.example.danceit.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -35,6 +36,7 @@ public class SharingVideoActivity extends AppCompatActivity {
     FirebaseFirestore database = FirebaseFirestore.getInstance();
     List<String> users;
     MyAdapter myAdapter = null;
+    FirebaseManager firebaseManager = new FirebaseManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,18 +64,33 @@ public class SharingVideoActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 Bundle bundle = getIntent().getExtras();
-                assert bundle != null;
-                final Video video = bundle.getParcelable("video_obj"); // video to send
-                assert video != null;
-                video.setPrivacy("received");
-
                 List<String> selected_users = MyAdapter.getUsers(); // store the name of selected users
-                for (int i = 0; i< selected_users.size(); i ++) {
-                    CollectionReference reference = database.collection("video_sent").document(selected_users.get(i))
-                            .collection("video_received"); // path where video sent is saved
+
+                assert bundle != null;
+                if (Objects.equals(bundle.getString("single_user"), "single_user")) {
+                    final Video video = bundle.getParcelable("video_obj"); // video to send
                     assert video != null;
-                    reference.add(video);
+                    video.setPrivacy("received");
+                    for (int i = 0; i< selected_users.size(); i ++)
+                        firebaseManager.sendVideoToUsers(selected_users, i, video);
+
                 }
+                else {
+                    List<Video> videoList = bundle.getParcelableArrayList("video_list");
+
+                    for(int i = 0; i < selected_users.size(); i++) {
+                        assert videoList != null;
+                        for(int j = 0; j < videoList.size(); j++) {
+                            Video video = videoList.get(j);
+                            video.setPrivacy("received");
+                            firebaseManager.sendVideoToUsers(selected_users, i, video);
+                        }
+                    }
+
+                }
+
+
+
 
 
             }
@@ -127,7 +144,7 @@ public class SharingVideoActivity extends AppCompatActivity {
      * @param recyclerView to display users.
      */
     public void populateRecyclerViewWithUser(final RecyclerView recyclerView) {
-        database.collection("users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        firebaseManager.getUser_reference().get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
         @Override
         public void onComplete(@NonNull Task<QuerySnapshot> task) {
             users = new ArrayList<>(); // store name of users

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,12 +22,15 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.danceit.AddTagActivity;
+import com.example.danceit.Model.FirebaseManager;
 import com.example.danceit.Model.Video;
 import com.example.danceit.R;
 import com.example.danceit.Sharing.SharingVideoActivity;
 import com.example.danceit.UpdateTagActivity;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -38,10 +42,12 @@ import com.google.android.youtube.player.YouTubeThumbnailLoader;
 import com.google.android.youtube.player.YouTubeThumbnailView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -55,8 +61,12 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
     FirebaseFirestore database = FirebaseFirestore.getInstance();
     DocumentReference  reference;
     Activity activity;
+    List<Video> video_list = new ArrayList<>();
+    HashMap<Integer, Video> videoHashMap= new HashMap<>();
 
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+    FirebaseManager firebaseManager = new FirebaseManager();
 
     public static boolean selection=false;
     public static List<Integer> selected=new ArrayList<>();
@@ -87,14 +97,41 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
         setVideoThumbnail(holder, createVideoIdFromUrl(model), model);
         createMenuButton(holder, model, position);
 
+        checkBox_listener(holder, position);
 
-        System.out.println("privacy " + model.getPrivacy());
-    }
-
-    private void selectVideo(){
-        selection=true;
 
     }
+
+    public void checkBox_listener(MyViewHolder holder, final int position) {
+        holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    firebaseManager.getPrivate_videoReference()
+                            .document(getSnapshots().getSnapshot(position).getId())
+                            .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document != null) {
+                                    Video video = task.getResult().toObject(Video.class);
+                                    videoHashMap.put(position, video);
+                                }
+
+                            }
+                        }
+                    });
+
+                }
+                else
+                    if(videoHashMap.size() > 0)
+                        videoHashMap.remove(position);
+            }
+        });
+
+    }
+
 
     /**
      * This method creates chip objects and sets their text as different tags in the video object.
@@ -123,34 +160,12 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                     popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem menuItem) {
+                            String video_id = getSnapshots().getSnapshot(position).getReference().getId();
                             switch (menuItem.getItemId()) {
                                 case R.id.delete_tag:
-                                    if(model.getPrivacy().equals("public")) {
-                                        reference = database.collection("video_url").document(getSnapshots().getSnapshot(position).getReference().getId());
-                                        reference.update("tags", FieldValue.arrayRemove(model.getTags().get(finalJ)));
-
-                                    }
-
-                                    else if (model.getPrivacy().equals("received")) {
-
-
-                                        DocumentReference reference = database.collection("video_sent").document(Objects.requireNonNull
-                                                (Objects.requireNonNull(mAuth.getCurrentUser()).getEmail()))
-                                                .collection("video_received")
-                                                .document(getSnapshots().getSnapshot(position).getReference().getId());
-
-                                        reference.update("tags", FieldValue.arrayRemove(model.getTags().get(finalJ)));
-                                    }
-
-                                    else {
-                                        DocumentReference reference = database.collection("video_urls_private").document(Objects.requireNonNull
-                                                (Objects.requireNonNull(mAuth.getCurrentUser()).getEmail()))
-                                                .collection("private_video")
-                                                .document(getSnapshots().getSnapshot(position).getReference().getId());
-
-                                        reference.update("tags", FieldValue.arrayRemove(model.getTags().get(finalJ)));
-                                    }
+                                        firebaseManager.deleteTag(video_id, model.getTags().get(finalJ), model.getPrivacy());
                                     break;
+
                                 case R.id.update_tag:
                                     Intent intent = new Intent(view.getContext(), UpdateTagActivity.class);
                                     Bundle bundle = new Bundle();
@@ -326,30 +341,7 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                                 break;
                             case R.id.delete_video:
                                 String videoId = (String) myViewHolder.itemView.getTag();
-                                if(model.getPrivacy().equals("public")) {
-                                    reference = database.collection("video_url").document(videoId);
-                                    reference.delete();
-
-                                }
-
-                                else if (model.getPrivacy().equals("received")) {
-
-                                    DocumentReference reference = database.collection("video_sent").document(Objects.requireNonNull
-                                            (Objects.requireNonNull(mAuth.getCurrentUser()).getDisplayName()))
-                                            .collection("video_received")
-                                            .document(videoId);
-
-                                    reference.delete();
-                                }
-
-                                else {
-                                    DocumentReference reference = database.collection("video_urls_private").document(Objects.requireNonNull
-                                            (Objects.requireNonNull(mAuth.getCurrentUser()).getEmail()))
-                                            .collection("private_video")
-                                            .document(videoId);
-                                   // getSnapshots().getSnapshot(position).getReference().getId()
-                                    reference.delete();
-                                }
+                                    firebaseManager.deleteVideo(videoId, model.getPrivacy());
 
                                 break;
 
@@ -358,14 +350,17 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                                 Intent intent = new Intent(activity, SharingVideoActivity.class);
                                 Bundle bundle = new Bundle();
                                 bundle.putParcelable("video_obj", model);
+                                bundle.putString("single_user", "single_user");
                                 intent.putExtras(bundle);
                                 activity.startActivity(intent);
+
 
                                 break;
 
                             case R.id.select_vid:
                                 myViewHolder.checkBox.setVisibility(View.VISIBLE);
                                 myViewHolder.checkBox.setChecked(true);
+
                                 selection=true;
                                 updateUI();
                                 notifyDataSetChanged();
@@ -379,6 +374,8 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
         });
     }
 
+
+
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -387,16 +384,13 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
         return new MyViewHolder(view);
     }
 
-
-    /**
-     * This class initialise the different views in the xml file.
-     */
     private void addCheckBox(boolean  check){
 
         if(check){
             for (int i = 0; i <myViewHolders.size() ; i++) {
 
                 myViewHolders.get(i).checkBox.setVisibility(View.VISIBLE);
+
 
             }
         }else{
@@ -417,7 +411,7 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
         //add check boxes to view
         addCheckBox(true);
 
-        FloatingActionButton fabButton =(FloatingActionButton) activity.findViewById(R.id.fab);
+        final FloatingActionButton fabButton =(FloatingActionButton) activity.findViewById(R.id.fab);
         final FloatingActionButton cancelSelection =(FloatingActionButton) activity.findViewById(R.id.floatingActionButton);
         final FloatingActionButton sendButton =(FloatingActionButton) activity.findViewById(R.id.floatingActionButton2);
 
@@ -431,10 +425,14 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                video_list.addAll(videoHashMap.values());
                 //allows use to send and transictions to send activity to select users
-                Intent i=new Intent(activity, SharingVideoActivity.class);
-                activity.startActivity(i);
+                Intent intent = new Intent(activity, SharingVideoActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList("video_list", (ArrayList<? extends Parcelable>) video_list);
+                intent.putExtras(bundle);
+
+                activity.startActivity(intent);
 
             }
         });
@@ -442,10 +440,15 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
         //when cancel reset view back to normal
         cancelSelection.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) { ;
+                for (int i = 0; i <myViewHolders.size() ; i++)
+                    myViewHolders.get(i).checkBox.setChecked(false);
+
                 addCheckBox(false);//remove check boxes
                 cancelSelection.setVisibility(View.INVISIBLE);
                 sendButton.setVisibility(View.INVISIBLE);
+                fabButton.setVisibility(View.VISIBLE);
+
             }
         });
     }
@@ -460,7 +463,7 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
         public int pos;
 
 
-        public MyViewHolder(@NonNull View itemView) {
+        public MyViewHolder(@NonNull final View itemView) {
             super(itemView);
             textView = (TextView) itemView.findViewById(R.id.text_recycler);
             chipGroup = (ChipGroup) itemView.findViewById(R.id.chipGroup);
@@ -469,19 +472,6 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
             if(selection){
                 checkBox.setVisibility(View.VISIBLE);
             }
-
-
-
-            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if(isChecked){
-                        selected.add(pos);
-                    }else{
-                        selected.remove(pos);
-                    }
-                }
-            });
 
 
             context = itemView.getContext();
