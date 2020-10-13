@@ -41,7 +41,7 @@ public class FirstFragment extends Fragment {
             View root = inflater.inflate(R.layout.fragment_first, container, false);
             recyclerView = (RecyclerView) root.findViewById(R.id.recyclerView);
 
-            Query query = firebaseManager.getPrivate_videoReference("video_urls_private/private_video");
+            Query query = firebaseManager.getPrivate_videoReference();
 
             FirestoreRecyclerOptions<Video> options = new FirestoreRecyclerOptions.Builder<Video>()
                     .setQuery(query, new SnapshotParser<Video>() {

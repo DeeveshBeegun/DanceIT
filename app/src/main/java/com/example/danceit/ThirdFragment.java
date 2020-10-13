@@ -38,7 +38,7 @@ public class ThirdFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_third, container, false);
         recyclerView = (RecyclerView) root.findViewById(R.id.recyclerViewThird);
 
-        Query query = firebaseManager.getReceive_videoReference("video_sent/video_received");
+        Query query = firebaseManager.getReceive_videoReference();
 
         FirestoreRecyclerOptions<Video> options = new FirestoreRecyclerOptions.Builder<Video>()
                         .setQuery(query, new SnapshotParser<Video>() {

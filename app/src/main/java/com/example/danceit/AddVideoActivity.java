@@ -61,7 +61,7 @@ public class AddVideoActivity extends AppCompatActivity {
                                 Objects.requireNonNull(textInputUrl.getEditText()).getText().toString().trim(), tagInput_string((textInputTags.getEditText())
                                 .getText().toString()), "private");
 
-                        firebaseManager.addPrivate_video("video_urls_private/private_video", video);
+                        firebaseManager.addPrivate_video(video);
 
                         Toast toast = Toast.makeText(getApplicationContext(), "Url saved as private.", Toast.LENGTH_SHORT);
                         toast.show();
@@ -72,11 +72,11 @@ public class AddVideoActivity extends AppCompatActivity {
                                 Objects.requireNonNull(textInputUrl.getEditText()).getText().toString().trim(), tagInput_string((textInputTags.getEditText())
                                 .getText().toString()), "private");
 
-                        firebaseManager.addPrivate_video("video_urls_private/private_video", video);
+                        firebaseManager.addPrivate_video(video);
 
                         video.setPrivacy("public");
 
-                        firebaseManager.addPublic_video("video_url", video);
+                        firebaseManager.addPublic_video(video);
 
                         Toast toast = Toast.makeText(getApplicationContext(), "Url saved as public.", Toast.LENGTH_SHORT);
                             toast.show();

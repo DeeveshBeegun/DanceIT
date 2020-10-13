@@ -32,7 +32,7 @@ public class SecondFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_second, container, false);
         recyclerView = (RecyclerView) root.findViewById(R.id.recyclerViewDance);
 
-        Query query = firebaseManager.getPublic_videoReference("video_url");
+        Query query = firebaseManager.getPublic_videoReference();
 
         FirestoreRecyclerOptions<Video> options = new FirestoreRecyclerOptions.Builder<Video>()
                 .setQuery(query, new SnapshotParser<Video>() {
