@@ -29,10 +29,8 @@ public class Video implements Parcelable {
     //@Exclude
     private User videoUploader;
     private String videoId;
-    private User videoUploader;
     private String url;
     private ArrayList<String> tags = null;
-   // private ArrayList<Tag> tag_list;
     public String privacy;
 
 
@@ -62,10 +60,8 @@ public class Video implements Parcelable {
         videoUploader = in.readTypedObject(User.CREATOR);
         videoId = in.readString();
         url = in.readString();
-        //tag_list = in.createTypedArrayList(Tag.CREATOR);
         privacy = in.readString();
         tags = in.createStringArrayList();
-
     }
 
 
@@ -173,7 +169,6 @@ public class Video implements Parcelable {
         parcel.writeTypedObject(videoUploader, 1);
         parcel.writeString(videoId);
         parcel.writeString(url);
-        //parcel.writeTypedList(tag_list);
         parcel.writeString(privacy);
         parcel.writeStringList(tags);
     }
