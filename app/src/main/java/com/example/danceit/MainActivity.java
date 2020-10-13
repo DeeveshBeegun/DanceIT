@@ -1,7 +1,4 @@
 package com.example.danceit;
-
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -15,7 +12,6 @@ import com.google.android.material.tabs.TabLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.LiveData;
 
 import android.os.Parcelable;
 import androidx.navigation.NavController;
@@ -25,13 +21,8 @@ import android.view.View;
 
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.SearchView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -39,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
     int Fragment = 1; // Determines which fragment the Main Activity is on
     MaterialSearchView searchView;
     Toolbar toolbar;
-    //VideoViewModel videoViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
-        //videoViewModel = new VideoViewModel(getApplication());
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -62,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //searchViewCode();
+        searchViewCode();
 
         TabLayout tabLayout=(TabLayout) findViewById(R.id.tabLayout);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -157,10 +146,10 @@ public class MainActivity extends AppCompatActivity {
     /*This method initiates the LibrarySearchActivity and handles the receiving of search queries
           from the user. The search string and the list of all a user's videos are sent with an intent.*/
     private void searchViewCode(){
-        String [] yes = {"dog", "johnwick", "german", "germany", "nolan", "batman", "robert"};
         searchView=(MaterialSearchView) findViewById(R.id.search_view);
-        searchView.setSuggestions(yes); // Pre-saved autocompletion words and phrases for searching
         searchView.setEllipsize(true);
+        //Drawable myDrawable = Drawable.createFromXml(getResources(), getResources().getXml(getDrawable()));
+        searchView.setSuggestionIcon(getDrawable(R.drawable.ic_baseline_search_24));
 
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
@@ -258,5 +247,11 @@ public class MainActivity extends AppCompatActivity {
       list/database that the Main Activity has of a user's library */
     public void setAllVideos(ArrayList<Video> allVideos) {
         this.allVideos = allVideos;
+    }
+
+    /*This method allows related fragments and activities to set the autocompletion
+      suggestions when a user searches videos*/
+    public void setAutocompletion(String [] autoCompletion) {
+        searchView.setSuggestions(autoCompletion); // Pre-saved autocompletion words and phrases for searching
     }
 }
