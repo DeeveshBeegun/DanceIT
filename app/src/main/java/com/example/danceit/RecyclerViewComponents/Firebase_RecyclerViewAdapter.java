@@ -14,6 +14,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageButton;
@@ -58,8 +59,7 @@ import java.util.Objects;
  * recyclerview in "Your Library" fragment.
  */
 public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video, Firebase_RecyclerViewAdapter.MyViewHolder> {
-    FirebaseFirestore database = FirebaseFirestore.getInstance();
-    DocumentReference  reference;
+
     Activity activity;
     List<Video> video_list = new ArrayList<>();
     HashMap<Integer, Video> videoHashMap= new HashMap<>();
@@ -373,6 +373,17 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                                 selection=true;
                                 updateUI();
                                 notifyDataSetChanged();
+                                break;
+
+                            case R.id.make_public:
+                                model.setBeingShared("yes");
+                                firebaseManager.getPrivate_videoReference()
+                                        .document(getSnapshots().getSnapshot(position).getId()).set(model);
+                                firebaseManager.addPublic_video(model);
+                                setPrivacyTextView(model, myViewHolder);
+                                Toast toast = Toast.makeText(activity, "Video made public.", Toast.LENGTH_SHORT);
+                                toast.show();
+
                                 break;
 
                         }
