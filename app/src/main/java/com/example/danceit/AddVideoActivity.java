@@ -1,7 +1,5 @@
 package com.example.danceit;
 
-//import com.example.danceit.Database.VideoViewModel;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,8 +15,6 @@ import com.example.danceit.Model.FirebaseManager;
 import com.example.danceit.Model.User;
 import com.example.danceit.Model.Video;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -56,9 +52,9 @@ public class AddVideoActivity extends AppCompatActivity {
                 if(isURL(textInputUrl.getEditText().getText().toString().trim())) {
 
                     if (isPrivate) {
-                        Video video = new Video(new User("username", "password"), getAlphaNumericString(14),
+                        Video video = new Video(firebaseManager.getUserEmail(), getAlphaNumericString(14),
                                 Objects.requireNonNull(textInputUrl.getEditText()).getText().toString().trim(), tagInput_string((textInputTags.getEditText())
-                                .getText().toString()), "private");
+                                .getText().toString()), "private", "no");
 
                         firebaseManager.addPrivate_video(video);
 
@@ -68,9 +64,9 @@ public class AddVideoActivity extends AppCompatActivity {
                     }
 
                     else {
-                        Video video = new Video(new User("username", "password"), getAlphaNumericString(14),
+                        Video video = new Video(firebaseManager.getUserEmail(), getAlphaNumericString(14),
                                 Objects.requireNonNull(textInputUrl.getEditText()).getText().toString().trim(), tagInput_string((textInputTags.getEditText())
-                                .getText().toString()), "private");
+                                .getText().toString()), "private", "yes");
 
                         firebaseManager.addPrivate_video(video);
 

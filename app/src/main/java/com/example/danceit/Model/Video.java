@@ -24,14 +24,12 @@ import java.util.List;
 
 //@Entity(tableName="video_table")
 public class Video implements Parcelable {
-
-    //@PrimaryKey(autoGenerate = true)
-    //@Exclude
-    private User videoUploader;
+    private String videoUploader;
     private String videoId;
     private String url;
     private ArrayList<String> tags = null;
     public String privacy;
+    public String beingShared;
 
 
 //
@@ -43,12 +41,14 @@ public class Video implements Parcelable {
 //        this.privacy = privacy;
 //    }
 
-    public Video(User videoUploader, String videoId ,String url, List<String> tags, String privacy) {
+    public Video(String videoUploader, String videoId ,String url, List<String> tags,
+                 String privacy, String beingShared) {
         this.videoUploader = videoUploader;
         this.videoId = videoId;
         this.url = url;
         this.tags = (ArrayList<String>) tags;
         this.privacy = privacy;
+        this.beingShared = beingShared;
     }
 
 
@@ -57,10 +57,11 @@ public class Video implements Parcelable {
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
     protected Video(Parcel in) {
-        videoUploader = in.readTypedObject(User.CREATOR);
+        videoUploader = in.readString();
         videoId = in.readString();
         url = in.readString();
         privacy = in.readString();
+        beingShared = in.readString();
         tags = in.createStringArrayList();
     }
 
@@ -83,11 +84,11 @@ public class Video implements Parcelable {
 
     public void setVideoId(String id) { this.videoId = id; }
 
-    public User getVideoUploader() {
+    public String getVideoUploader() {
         return videoUploader;
     }
 
-    public void setVideoUploader(User videoUploader) {
+    public void setVideoUploader(String videoUploader) {
         this.videoUploader = videoUploader;
     }
 
@@ -121,6 +122,10 @@ public class Video implements Parcelable {
 
     public void setPrivacy(String privacy) { this.privacy = privacy; }
 
+    public String getBeingShared() { return beingShared; }
+
+    public void setBeingShared(String beingShared) { this.beingShared = beingShared; }
+
 
     @Override
     public String toString() {
@@ -142,8 +147,8 @@ public class Video implements Parcelable {
 
         Video video = (Video) object;
 
-        if(video.url.equals(this.url) && video.videoUploader.getName().equals(this.videoUploader.getName())
-                && video.privacy.equals(this.privacy) && video.videoId.equals(this.videoId)){
+        if(video.url.equals(this.url) && video.videoUploader.equals(this.videoUploader)
+                && video.privacy.equals(this.privacy) && video.beingShared.equals(this.beingShared) && video.videoId.equals(this.videoId)){
             return true;
         }
 
@@ -154,7 +159,7 @@ public class Video implements Parcelable {
     @Override
     public int hashCode()
     {
-        return this.url.hashCode() * this.videoUploader.getName().hashCode() * this.videoId.hashCode() * 19;
+        return this.url.hashCode() * this.videoUploader.hashCode() * this.videoId.hashCode() * 19;
     }
 
 
@@ -166,10 +171,11 @@ public class Video implements Parcelable {
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeTypedObject(videoUploader, 1);
+        parcel.writeString(videoUploader);
         parcel.writeString(videoId);
         parcel.writeString(url);
         parcel.writeString(privacy);
+        parcel.writeString(beingShared);
         parcel.writeStringList(tags);
     }
 }

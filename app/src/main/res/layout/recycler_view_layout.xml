@@ -65,6 +65,15 @@
 
                 </RelativeLayout>
 
+            <TextView
+                android:id="@+id/privacy_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:singleLine="true"
+
+                />
+
 
             <TextView
                 android:id="@+id/text_recycler"
@@ -77,8 +86,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
-
+            
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/chipGroup"
                     android:layout_width="wrap_content"

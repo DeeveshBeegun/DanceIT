@@ -99,6 +99,8 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
 
         checkBox_listener(holder, position);
 
+        setPrivacyTextView(model, holder);
+
 
     }
 
@@ -130,6 +132,13 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
             }
         });
 
+    }
+
+    public void setPrivacyTextView(Video model, MyViewHolder holder) {
+        if (model.getBeingShared().equals("yes") && model.getPrivacy().equals("private"))
+            holder.privacyTextView.setText("video saved as public");
+        else
+            holder.privacyTextView.setText("video saved as private");
     }
 
 
@@ -460,6 +469,7 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
         public Context context;
         public Button addButton;
         public CheckBox checkBox;
+        public TextView privacyTextView;
         public int pos;
 
 
@@ -468,6 +478,7 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
             textView = (TextView) itemView.findViewById(R.id.text_recycler);
             chipGroup = (ChipGroup) itemView.findViewById(R.id.chipGroup);
             checkBox=(CheckBox) itemView.findViewById(R.id.checkbox_multiple_sel);
+            privacyTextView = (TextView) itemView.findViewById(R.id.privacy_textView);
 
             if(selection){
                 checkBox.setVisibility(View.VISIBLE);
