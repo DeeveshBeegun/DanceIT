@@ -34,6 +34,14 @@ public class AddTagActivity extends AppCompatActivity {
 
         addTag(addButton, addTag_textInput);
 
+        Button cancelButton = (Button) findViewById(R.id.cancel_button);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish(); // close popup menu
+            }
+        });
+
     }
 
     /**
@@ -76,6 +84,7 @@ public class AddTagActivity extends AppCompatActivity {
 
                         }
                     });
+
                 }
                 else if(video.getBeingShared().equals("yes") && privacy.equals("public")) {
                     firebaseManager.addTag(video_id, newTag, video);
@@ -94,20 +103,16 @@ public class AddTagActivity extends AppCompatActivity {
 
                         }
                     });
+
+
                 }
 
                 else
                     firebaseManager.addTag(video_id, newTag, video);
 
-                Button cancelButton = (Button) findViewById(R.id.cancel_button);
-                cancelButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        finish(); // close popup menu
-                    }
-                });
+                finish();
 
-                finish(); // close popup menu
+
             }
 
         });

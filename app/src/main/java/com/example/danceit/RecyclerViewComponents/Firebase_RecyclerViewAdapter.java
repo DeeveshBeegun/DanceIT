@@ -122,6 +122,8 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                                 DocumentSnapshot document = task.getResult();
                                 if (document != null) {
                                     Video video = task.getResult().toObject(Video.class);
+                                    video.setBeingShared("no");
+                                    video.setPrivacy("received");
                                     videoHashMap.put(position, video);
                                 }
 
@@ -139,6 +141,9 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
     }
 
     public void setPrivacyTextView(Video model, MyViewHolder holder) {
+        if(model.getPrivacy().equals("received"))
+            holder.privacyTextView.setText("video shared by " + model.getVideoUploader());
+
         if (model.getBeingShared().equals("yes"))
             holder.privacyTextView.setText("public");
         else
@@ -381,7 +386,9 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
 
                 }
 
-                if(model.getPrivacy().equals("public") || model.getPrivacy().equals("received")) {
+                if(model.getPrivacy().equals("public") ) {
+                    if (mAuth.getCurrentUser().getEmail().equals(model.getVideoUploader()))
+                        popupMenu.getMenu().findItem(R.id.delete_video).setVisible(true);
                     popupMenu.getMenu().findItem(R.id.select_vid).setVisible(false);
                     popupMenu.getMenu().findItem(R.id.send_info).setVisible(false);
                     popupMenu.getMenu().findItem(R.id.make_public).setVisible(false);
@@ -389,9 +396,17 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                     popupMenu.getMenu().findItem(R.id.save_video).setVisible(true);
                 }
 
-                if (!mAuth.getCurrentUser().getEmail().equals(model.getVideoUploader())) {
-                    popupMenu.getMenu().findItem(R.id.delete_video).setVisible(false);
+                if(model.getPrivacy().equals("received") ) {
+                    popupMenu.getMenu().findItem(R.id.select_vid).setVisible(false);
+                    popupMenu.getMenu().findItem(R.id.send_info).setVisible(false);
+                    popupMenu.getMenu().findItem(R.id.make_public).setVisible(false);
+                    popupMenu.getMenu().findItem(R.id.make_private).setVisible(false);
+                    popupMenu.getMenu().findItem(R.id.save_video).setVisible(true);
+                    popupMenu.getMenu().findItem(R.id.delete_video).setVisible(true);
+
                 }
+
+
 
 
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -441,6 +456,8 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                                 //allows use to send and transictions to send activity to select users
                                 Intent intent = new Intent(activity, SharingVideoActivity.class);
                                 Bundle bundle = new Bundle();
+                                model.setPrivacy("received");
+                                model.setBeingShared("no");
                                 bundle.putParcelable("video_obj", model);
                                 bundle.putString("single_user", "single_user");
                                 intent.putExtras(bundle);
@@ -492,6 +509,7 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                                 break;
 
                             case R.id.save_video:
+                                model.setPrivacy("private");
                                 firebaseManager.addPrivate_video(model);
                                 toast = Toast.makeText(activity, "Video saved to library.", Toast.LENGTH_SHORT);
                                 toast.show();
@@ -563,6 +581,8 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                 intent.putExtras(bundle);
 
                 activity.startActivity(intent);
+                if(video_list.size() > 0)
+                    video_list.clear();
 
             }
         });
@@ -578,6 +598,9 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                 cancelSelection.setVisibility(View.INVISIBLE);
                 sendButton.setVisibility(View.INVISIBLE);
                 fabButton.setVisibility(View.VISIBLE);
+
+                if(video_list.size() > 0)
+                    video_list.clear();
 
             }
         });
