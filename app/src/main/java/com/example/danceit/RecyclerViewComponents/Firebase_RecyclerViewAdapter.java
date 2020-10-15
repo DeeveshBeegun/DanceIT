@@ -140,9 +140,9 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
 
     public void setPrivacyTextView(Video model, MyViewHolder holder) {
         if (model.getBeingShared().equals("yes"))
-            holder.privacyTextView.setText("video saved as public");
+            holder.privacyTextView.setText("public");
         else
-            holder.privacyTextView.setText("video saved as private");
+            holder.privacyTextView.setText("private");
 
     }
 
@@ -338,6 +338,18 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
 
                 }
 
+                if(model.getPrivacy().equals("public") || model.getPrivacy().equals("received")) {
+                    popupMenu.getMenu().findItem(R.id.select_vid).setVisible(false);
+                    popupMenu.getMenu().findItem(R.id.send_info).setVisible(false);
+                    popupMenu.getMenu().findItem(R.id.make_public).setVisible(false);
+                    popupMenu.getMenu().findItem(R.id.make_private).setVisible(false);
+                    popupMenu.getMenu().findItem(R.id.save_video).setVisible(true);
+                }
+
+                if (!mAuth.getCurrentUser().getEmail().equals(model.getVideoUploader())) {
+                    popupMenu.getMenu().findItem(R.id.delete_video).setVisible(false);
+                }
+
 
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
@@ -363,6 +375,21 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                             case R.id.delete_video:
                                 String parseId = (String) myViewHolder.itemView.getTag();
                                     firebaseManager.deleteVideo(parseId, model.getPrivacy());
+
+                                firebaseManager.getPrivate_videoReference().whereEqualTo("videoId", model.getVideoId())
+                                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+                                                model.setBeingShared("no");
+                                                firebaseManager.getPrivate_videoReference().document(document.getId()).set(model);
+
+                                            }
+                                        }
+
+                                    }
+                                });
 
                                 break;
 
@@ -419,6 +446,11 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                                 toast.show();
 
                                 break;
+
+                            case R.id.save_video:
+                                firebaseManager.addPrivate_video(model);
+                                toast = Toast.makeText(activity, "Video saved to library.", Toast.LENGTH_SHORT);
+                                toast.show();
 
                         }
                         return false;
@@ -528,7 +560,6 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
             if(selection){
                 checkBox.setVisibility(View.VISIBLE);
             }
-
 
             context = itemView.getContext();
 //            addButton = itemView.getRootView().findViewById(R.id.addTag);

@@ -71,6 +71,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:singleLine="true"
+                android:textAlignment="center"
+                android:layout_gravity="center"
 
                 />
 
