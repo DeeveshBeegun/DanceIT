@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -57,7 +58,7 @@ public class SharingVideoActivity extends AppCompatActivity {
      * This method sends video to the selected user when the floating button is pressed.
      */
     private void sendVideo() {
-        FloatingActionButton floatingActionButton=(FloatingActionButton) findViewById(R.id.sendFloatingActionButton);
+        final FloatingActionButton floatingActionButton=(FloatingActionButton) findViewById(R.id.sendFloatingActionButton);
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,7 +66,8 @@ public class SharingVideoActivity extends AppCompatActivity {
 
                 Bundle bundle = getIntent().getExtras();
                 List<String> selected_users = MyAdapter.getUsers(); // store the name of selected users
-
+                Toast toast = Toast.makeText(getApplication(), "Sending video...", Toast.LENGTH_SHORT);
+                toast.show();
                 assert bundle != null;
                 if (Objects.equals(bundle.getString("single_user"), "single_user")) {
                     final Video video = bundle.getParcelable("video_obj"); // video to send
@@ -74,10 +76,15 @@ public class SharingVideoActivity extends AppCompatActivity {
                     for (int i = 0; i< selected_users.size(); i ++)
                         firebaseManager.sendVideoToUsers(selected_users, i, video);
 
+                     toast = Toast.makeText(getApplication(), "Video sent.", Toast.LENGTH_SHORT);
+                    toast.show();
+                    finish();
+
                 }
                 else {
                     List<Video> videoList = bundle.getParcelableArrayList("video_list");
-
+                     toast = Toast.makeText(getApplication(), "Sending video...", Toast.LENGTH_SHORT);
+                    toast.show();
                     for(int i = 0; i < selected_users.size(); i++) {
                         assert videoList != null;
                         for(int j = 0; j < videoList.size(); j++) {
@@ -86,6 +93,9 @@ public class SharingVideoActivity extends AppCompatActivity {
                             firebaseManager.sendVideoToUsers(selected_users, i, video);
                         }
                     }
+                     toast = Toast.makeText(getApplication(), "Video sent.", Toast.LENGTH_SHORT);
+                    toast.show();
+                    finish();
 
                 }
 
