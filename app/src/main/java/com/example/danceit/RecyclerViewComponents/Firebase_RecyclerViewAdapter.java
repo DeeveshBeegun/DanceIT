@@ -176,7 +176,49 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                         public boolean onMenuItemClick(MenuItem menuItem) {
                             switch (menuItem.getItemId()) {
                                 case R.id.delete_tag:
-                                        firebaseManager.deleteTag(getSnapshots().getSnapshot(position).getReference().getId(), model.getTags().get(finalJ), model.getPrivacy());
+                                    String videoID = getSnapshots().getSnapshot(position).getReference().getId();
+                                        //firebaseManager.deleteTag(videoID, model.getTags().get(finalJ), model.getPrivacy());
+
+                                    if (model.getBeingShared().equals("yes") && model.getPrivacy().equals("private")) {
+                                        firebaseManager.deleteTag(videoID, model.getTags().get(finalJ), model.getPrivacy());
+
+                                        firebaseManager.getPublic_videoReference().whereEqualTo("videoId", model.getVideoId())
+                                                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                if (task.isSuccessful()) {
+                                                    System.out.println("success");
+                                                    for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+                                                        model.setPrivacy("public");
+                                                        firebaseManager.deleteTag(document.getId(), model.getTags().get(finalJ), model.getPrivacy());
+                                                    }
+                                                }
+
+
+                                            }
+                                        });
+                                    }
+                                    else if(model.getBeingShared().equals("yes") && model.getPrivacy().equals("public")) {
+                                        firebaseManager.deleteTag(videoID, model.getTags().get(finalJ), model.getPrivacy());
+
+                                        firebaseManager.getPrivate_videoReference().whereEqualTo("videoId", model.getVideoId())
+                                                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                if (task.isSuccessful()) {
+                                                    for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+                                                        model.setPrivacy("private");
+                                                        firebaseManager.deleteTag(document.getId(), model.getTags().get(finalJ), model.getPrivacy());
+                                                    }
+                                                }
+
+
+                                            }
+                                        });
+                                    }
+
+                                    else
+                                        firebaseManager.deleteTag(videoID, model.getTags().get(finalJ), model.getPrivacy());
                                     break;
 
                                 case R.id.update_tag:
