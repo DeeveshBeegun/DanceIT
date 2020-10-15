@@ -62,4 +62,6 @@
     -->
     <string name="hello_world">Hello Square World!</string>
     <string name="NoResults">No Matching Results Found For</string>
+    <string name="make_private">Make private</string>
+    <string name="save_video">Save</string>
 </resources>

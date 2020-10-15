@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,10 +15,12 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -45,6 +48,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,8 +63,7 @@ import java.util.Objects;
  * recyclerview in "Your Library" fragment.
  */
 public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video, Firebase_RecyclerViewAdapter.MyViewHolder> {
-    FirebaseFirestore database = FirebaseFirestore.getInstance();
-    DocumentReference  reference;
+
     Activity activity;
     List<Video> video_list = new ArrayList<>();
     HashMap<Integer, Video> videoHashMap= new HashMap<>();
@@ -87,10 +91,10 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
 
     @Override
     protected void onBindViewHolder(@NonNull final MyViewHolder holder, final int position, @NonNull final Video model) {
-        holder.textView.setText(model.getUrl());
+        //holder.textView.setText(model.getUrl());
         holder.chipGroup.animate();
         holder.chipGroup.removeAllViews();
-        holder.itemView.setTag(model.getVideoId());
+        holder.itemView.setTag(model.getParseId());
 
         initialise_chip(holder, position, model);
         createChipAddTagBtn(holder, position, model);
@@ -98,6 +102,8 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
         createMenuButton(holder, model, position);
 
         checkBox_listener(holder, position);
+
+        setPrivacyTextView(model, holder);
 
 
     }
@@ -116,6 +122,8 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                                 DocumentSnapshot document = task.getResult();
                                 if (document != null) {
                                     Video video = task.getResult().toObject(Video.class);
+                                    video.setBeingShared("no");
+                                    video.setPrivacy("received");
                                     videoHashMap.put(position, video);
                                 }
 
@@ -129,6 +137,17 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                         videoHashMap.remove(position);
             }
         });
+
+    }
+
+    public void setPrivacyTextView(Video model, MyViewHolder holder) {
+        if(model.getPrivacy().equals("received"))
+            holder.privacyTextView.setText("video shared by " + model.getVideoUploader());
+
+        if (model.getBeingShared().equals("yes"))
+            holder.privacyTextView.setText("public");
+        else
+            holder.privacyTextView.setText("private");
 
     }
 
@@ -160,10 +179,51 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                     popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem menuItem) {
-                            String video_id = getSnapshots().getSnapshot(position).getReference().getId();
                             switch (menuItem.getItemId()) {
                                 case R.id.delete_tag:
-                                        firebaseManager.deleteTag(video_id, model.getTags().get(finalJ), model.getPrivacy());
+                                    String videoID = getSnapshots().getSnapshot(position).getReference().getId();
+                                        //firebaseManager.deleteTag(videoID, model.getTags().get(finalJ), model.getPrivacy());
+
+                                    if (model.getBeingShared().equals("yes") && model.getPrivacy().equals("private")) {
+                                        firebaseManager.deleteTag(videoID, model.getTags().get(finalJ), model.getPrivacy());
+
+                                        firebaseManager.getPublic_videoReference().whereEqualTo("videoId", model.getVideoId())
+                                                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                if (task.isSuccessful()) {
+                                                    System.out.println("success");
+                                                    for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+                                                        model.setPrivacy("public");
+                                                        firebaseManager.deleteTag(document.getId(), model.getTags().get(finalJ), model.getPrivacy());
+                                                    }
+                                                }
+
+
+                                            }
+                                        });
+                                    }
+                                    else if(model.getBeingShared().equals("yes") && model.getPrivacy().equals("public")) {
+                                        firebaseManager.deleteTag(videoID, model.getTags().get(finalJ), model.getPrivacy());
+
+                                        firebaseManager.getPrivate_videoReference().whereEqualTo("videoId", model.getVideoId())
+                                                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                if (task.isSuccessful()) {
+                                                    for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+                                                        model.setPrivacy("private");
+                                                        firebaseManager.deleteTag(document.getId(), model.getTags().get(finalJ), model.getPrivacy());
+                                                    }
+                                                }
+
+
+                                            }
+                                        });
+                                    }
+
+                                    else
+                                        firebaseManager.deleteTag(videoID, model.getTags().get(finalJ), model.getPrivacy());
                                     break;
 
                                 case R.id.update_tag:
@@ -210,11 +270,12 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
         holder.chipGroup.addView(add_chip);
     }
 
-    public void addTag(View view, int position, Video model) {
-        Intent intent=new Intent(view.getContext(), AddTagActivity.class);
-        Bundle bundle = new Bundle();
+    public void addTag(View view, final int position, Video model) {
+        Intent intent = new Intent(view.getContext(), AddTagActivity.class);
+        final Bundle bundle = new Bundle();
         bundle.putString("video_id", getSnapshots().getSnapshot(position).getReference().getId());
         bundle.putParcelable("video_obj", model);
+
         intent.putExtras(bundle);
         view.getContext().startActivity(intent);
     }
@@ -307,8 +368,9 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
      * @param myViewHolder
      */
     public void createMenuButton(final MyViewHolder myViewHolder, final Video model, final int position) {
+
         //feature on click for share button
-        AppCompatImageButton appCompatImageButton= myViewHolder.textView.getRootView().findViewById(R.id.shareButton);
+        AppCompatImageButton appCompatImageButton= myViewHolder.chipGroup.getRootView().findViewById(R.id.shareButton);
         appCompatImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -317,6 +379,35 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                 final PopupMenu popupMenu=new PopupMenu(myViewHolder.context,v);
                 popupMenu.getMenuInflater().inflate(R.menu.video_popoptions,popupMenu.getMenu());
                 popupMenu.show();
+
+                if(model.getBeingShared().equals("yes")) {
+                    popupMenu.getMenu().findItem(R.id.make_public).setVisible(false);
+                    popupMenu.getMenu().findItem(R.id.make_private).setVisible(true);
+
+                }
+
+                if(model.getPrivacy().equals("public") ) {
+                    if (mAuth.getCurrentUser().getEmail().equals(model.getVideoUploader()))
+                        popupMenu.getMenu().findItem(R.id.delete_video).setVisible(true);
+                    popupMenu.getMenu().findItem(R.id.select_vid).setVisible(false);
+                    popupMenu.getMenu().findItem(R.id.send_info).setVisible(false);
+                    popupMenu.getMenu().findItem(R.id.make_public).setVisible(false);
+                    popupMenu.getMenu().findItem(R.id.make_private).setVisible(false);
+                    popupMenu.getMenu().findItem(R.id.save_video).setVisible(true);
+                }
+
+                if(model.getPrivacy().equals("received") ) {
+                    popupMenu.getMenu().findItem(R.id.select_vid).setVisible(false);
+                    popupMenu.getMenu().findItem(R.id.send_info).setVisible(false);
+                    popupMenu.getMenu().findItem(R.id.make_public).setVisible(false);
+                    popupMenu.getMenu().findItem(R.id.make_private).setVisible(false);
+                    popupMenu.getMenu().findItem(R.id.save_video).setVisible(true);
+                    popupMenu.getMenu().findItem(R.id.delete_video).setVisible(true);
+
+                }
+
+
+
 
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
@@ -340,8 +431,24 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
 
                                 break;
                             case R.id.delete_video:
-                                String videoId = (String) myViewHolder.itemView.getTag();
-                                    firebaseManager.deleteVideo(videoId, model.getPrivacy());
+                                String parseId = (String) myViewHolder.itemView.getTag();
+                                    firebaseManager.deleteVideo(parseId, model.getPrivacy());
+
+                                firebaseManager.getPrivate_videoReference().whereEqualTo("videoId", model.getVideoId())
+                                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+                                                model.setPrivacy("private");
+                                                model.setBeingShared("no");
+                                                firebaseManager.getPrivate_videoReference().document(document.getId()).set(model);
+
+                                            }
+                                        }
+
+                                    }
+                                });
 
                                 break;
 
@@ -349,11 +456,12 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                                 //allows use to send and transictions to send activity to select users
                                 Intent intent = new Intent(activity, SharingVideoActivity.class);
                                 Bundle bundle = new Bundle();
+                                model.setPrivacy("received");
+                                model.setBeingShared("no");
                                 bundle.putParcelable("video_obj", model);
                                 bundle.putString("single_user", "single_user");
                                 intent.putExtras(bundle);
                                 activity.startActivity(intent);
-
 
                                 break;
 
@@ -365,6 +473,46 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                                 updateUI();
                                 notifyDataSetChanged();
                                 break;
+
+                            case R.id.make_public:
+                                model.setBeingShared("yes");
+                                firebaseManager.getPrivate_videoReference()
+                                        .document(getSnapshots().getSnapshot(position).getId()).set(model); // update private video
+
+                                model.setPrivacy("public");
+                                firebaseManager.addPublic_video(model);
+                                setPrivacyTextView(model, myViewHolder);
+                                Toast toast = Toast.makeText(activity, "Video made public.", Toast.LENGTH_SHORT);
+                                toast.show();
+                                break;
+
+                            case R.id.make_private:
+                                firebaseManager.getPublic_videoReference().whereEqualTo("videoId", model.getVideoId())
+                                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult()))
+                                                firebaseManager.deleteVideo(document.getId(), "public");
+                                            model.setBeingShared("no");
+                                            firebaseManager.getPrivate_videoReference()
+                                                    .document(getSnapshots().getSnapshot(position).getId()).set(model);
+                                        }
+
+                                    }
+                                });
+
+                                setPrivacyTextView(model, myViewHolder);
+                                toast = Toast.makeText(activity, "Video made private.", Toast.LENGTH_SHORT);
+                                toast.show();
+
+                                break;
+
+                            case R.id.save_video:
+                                model.setPrivacy("private");
+                                firebaseManager.addPrivate_video(model);
+                                toast = Toast.makeText(activity, "Video saved to library.", Toast.LENGTH_SHORT);
+                                toast.show();
 
                         }
                         return false;
@@ -433,6 +581,8 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                 intent.putExtras(bundle);
 
                 activity.startActivity(intent);
+                if(video_list.size() > 0)
+                    video_list.clear();
 
             }
         });
@@ -449,6 +599,9 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                 sendButton.setVisibility(View.INVISIBLE);
                 fabButton.setVisibility(View.VISIBLE);
 
+                if(video_list.size() > 0)
+                    video_list.clear();
+
             }
         });
     }
@@ -460,19 +613,20 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
         public Context context;
         public Button addButton;
         public CheckBox checkBox;
+        public TextView privacyTextView;
         public int pos;
 
 
         public MyViewHolder(@NonNull final View itemView) {
             super(itemView);
-            textView = (TextView) itemView.findViewById(R.id.text_recycler);
+           // textView = (TextView) itemView.findViewById(R.id.text_recycler);
             chipGroup = (ChipGroup) itemView.findViewById(R.id.chipGroup);
             checkBox=(CheckBox) itemView.findViewById(R.id.checkbox_multiple_sel);
+            privacyTextView = (TextView) itemView.findViewById(R.id.privacy_textView);
 
             if(selection){
                 checkBox.setVisibility(View.VISIBLE);
             }
-
 
             context = itemView.getContext();
 //            addButton = itemView.getRootView().findViewById(R.id.addTag);

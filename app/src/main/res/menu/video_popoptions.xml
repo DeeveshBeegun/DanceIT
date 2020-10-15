@@ -17,4 +17,15 @@
     <item
         android:id="@+id/make_public"
         android:title="@string/make_public"/>
+
+    <item
+        android:id="@+id/make_private"
+        android:title="@string/make_private"
+        android:visible="false"/>
+
+    <item
+        android:id="@+id/save_video"
+        android:title="@string/save_video"
+        android:visible="false"/>
+
 </menu>

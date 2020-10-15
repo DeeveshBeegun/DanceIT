@@ -25,14 +25,14 @@ public class FirebaseManager {
      * based on the privacy of the video.
      * @param video_id is the id of the video object were tags need to be added.
      * @param newTag is the tag to be added.
-     * @param privacy is the privacy of the video i.e. public, private or received.
+     * @param video is the video where tags need to be added.
      */
-    public void addTag(String video_id, String newTag, String privacy) {
-        if (privacy.equals("private"))
+    public void addTag(String video_id, String newTag, Video video) {
+        if (video.getPrivacy().equals("private"))
             documentReference = getPrivate_videoReference()
                     .document(video_id);
 
-        else if (privacy.equals("received"))
+        else if (video.getPrivacy().equals("received"))
             documentReference = getReceive_videoReference()
                     .document(video_id);
 
@@ -154,6 +154,14 @@ public class FirebaseManager {
      */
     public CollectionReference getUser_reference() {
         return collectionReference = database.collection("users");
+    }
+
+    /**
+     * This method gets the username of the current user.
+     * @return username of current user.
+     */
+    public String getUserEmail() {
+        return Objects.requireNonNull(mAuth.getCurrentUser()).getEmail();
     }
 
 
