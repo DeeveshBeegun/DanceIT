@@ -15,22 +15,28 @@ public class StartUP extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_start_u_p);
 
-        /*final Intent intent=new Intent(this,
-                MainActivity.class);*/
+        //delay  for a 10sec and switch activity
+        Thread welcomeThread = new Thread() {
 
-        //calling  the activity login
-        final Intent intent=new Intent(this,
-                LoginActivity.class);
+            @Override
+            public void run() {
+                try {
+                    super.run();
+                    sleep(5000);  //Delay of 5 seconds
+                } catch (Exception e) {
 
-        // Testing if the Youtube API is working
-       /* final Intent intent=new Intent(this,
-                MainYoutube.class);*/
+                } finally {
 
-
-
-
-        startActivity(intent);
+                    Intent i = new Intent(StartUP.this,
+                            LoginActivity.class);
+                    startActivity(i);
+                    finish();
+                }
+            }
+        };
+        welcomeThread.start();
 
 
     }

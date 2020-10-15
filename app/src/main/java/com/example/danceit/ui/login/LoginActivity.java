@@ -18,7 +18,6 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -27,8 +26,6 @@ import android.widget.Toast;
 
 import com.example.danceit.MainActivity;
 import com.example.danceit.R;
-import com.example.danceit.ui.login.LoginViewModel;
-import com.example.danceit.ui.login.LoginViewModelFactory;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -37,22 +34,25 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private LoginViewModel loginViewModel;
+
     private static final String TAG = "EmailPassword";
     private FirebaseAuth mAuth;
+    private ProgressBar loadingProgressBar;
+    private LoginViewModel loginViewModel;
 // ...
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
-                .get(LoginViewModel.class);
+
+        loginViewModel=new LoginViewModel();
+
 
         final EditText usernameEditText = findViewById(R.id.username);
         final EditText passwordEditText = findViewById(R.id.password);
         final Button loginButton = findViewById(R.id.login);
-        final ProgressBar loadingProgressBar = findViewById(R.id.loading);
+        loadingProgressBar = findViewById(R.id.loading);
 
         final Intent i=new  Intent(this,RegisterActivity.class);
         final TextView textView=(TextView) findViewById(R.id.link_signup);
@@ -63,6 +63,8 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
+
+
 
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
             @Override
@@ -80,25 +82,9 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        loginViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
-            @Override
-            public void onChanged(@Nullable LoginResult loginResult) {
-                if (loginResult == null) {
-                    return;
-                }
-                loadingProgressBar.setVisibility(View.GONE);
-                if (loginResult.getError() != null) {
-                    showLoginFailed(loginResult.getError());
-                }
-                if (loginResult.getSuccess() != null) {
-                    updateUiWithUser(loginResult.getSuccess());
-                }
-                setResult(Activity.RESULT_OK);
 
-                //Complete and destroy login activity once successful
-                finish();
-            }
-        });
+
+
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
@@ -115,6 +101,7 @@ public class LoginActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 loginViewModel.loginDataChanged(usernameEditText.getText().toString(),
                         passwordEditText.getText().toString());
+
             }
         };
         usernameEditText.addTextChangedListener(afterTextChangedListener);
@@ -136,7 +123,9 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadingProgressBar.setVisibility(View.VISIBLE);
+
+                loading(true);
+                //sign  to the server
                 mAuth.signInWithEmailAndPassword(usernameEditText.getText().toString(), passwordEditText.getText().toString())
                         .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
@@ -145,12 +134,14 @@ public class LoginActivity extends AppCompatActivity {
                                     // Sign in success, update UI with the signed-in user's information
                                     Log.d(TAG, "signInWithEmail:success");
                                     FirebaseUser user = mAuth.getCurrentUser();
+                                    loading(false);
                                     String welcome = getString(R.string.welcome) ;
                                     Intent intent=new Intent(LoginActivity.this,MainActivity.class);
                                     startActivity(intent);
                                     Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
                                     ///updateUI(user);
                                 } else {
+                                    loading(false);
                                     // If sign in fails, display a message to the user.
                                     Log.w(TAG, "signInWithEmail:failure", task.getException());
                                     Toast.makeText(LoginActivity.this, "Authentication failed.",
@@ -160,9 +151,21 @@ public class LoginActivity extends AppCompatActivity {
                                 // ...
                             }
                         });
-                loadingProgressBar.setVisibility(View.INVISIBLE);
+
             }
         });
+    }
+
+
+    private  void loading(boolean choice){
+
+        //loadingProgress visible or not
+        if(choice){
+            loadingProgressBar.setVisibility(View.VISIBLE);
+
+        }else{
+            loadingProgressBar.setVisibility(View.INVISIBLE);
+        }
     }
 
 
@@ -180,8 +183,8 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void updateUiWithUser(LoggedInUserView model) {
-        String welcome = getString(R.string.welcome) + model.getDisplayName();
+    private void updateUiWithUser() {
+        String welcome = getString(R.string.welcome) ;
         Intent intent=new Intent(this,MainActivity.class);
         startActivity(intent);
  
