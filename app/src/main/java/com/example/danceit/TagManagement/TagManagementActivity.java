@@ -18,7 +18,7 @@ import java.util.List;
 public class TagManagementActivity extends AppCompatActivity {
 
     private ChipGroup chipGroup;//display available tags
-    private List<String> tags;
+
 
 
     @Override
@@ -26,7 +26,7 @@ public class TagManagementActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tag_management);
 
-        tags=new ArrayList<>();
+
 
         //Chip group to show all the tags
         chipGroup=(ChipGroup) findViewById(R.id.chip_group_tag_management);
@@ -45,8 +45,7 @@ public class TagManagementActivity extends AppCompatActivity {
             }
         });
 
-        dummy();
-        populateChipgroup();
+        populateChipgroup(getTags());
     }
 
     private void filter(String text){
@@ -64,29 +63,38 @@ public class TagManagementActivity extends AppCompatActivity {
         }
     }
 
-    private void dummy(){
+    private List<String> getTags(){
+       //attach tags  by entering intoa string
 
-            tags.add("dance");
-            tags.add("joburg");
-            tags.add("capetown");
-            tags.add("Kizomba");
-            tags.add("gwara gwara");
+        List<String> tags=new ArrayList<>();;
 
+        tags.add("dance");
+        tags.add("joburg");
+        tags.add("capetown");
+        tags.add("Kizomba");
+        tags.add("gwara gwara");
+        return tags;
 
 
     }
 
-    private void populateChipgroup(){
+    private void populateChipgroup(List<String> tags){
 
         for (int i = 0; i <tags.size() ; i++) {
-
+            //Add chip and set the text
             Chip chip=new Chip(this);
             chip.setText(tags.get(i));
+
+            //set chip to be visible
             chip.setVisibility(View.VISIBLE);
 
 
-            chipGroup.addView(chip);
-            chip.setClickable(true);
+            chipGroup.addView(chip);//add chip to  chip group
+            chip.setClickable(true);//Chip  clickable
+
+
+
+            //an on click listen that gives options on what to do with the tag
             chip.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
