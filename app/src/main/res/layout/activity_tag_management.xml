@@ -11,7 +11,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:orientation="horizontal"
+            android:orientation="vertical"
+            android:layout_margin="10dp"
             android:layout_height="wrap_content"
             android:layout_width="match_parent">
 
@@ -23,7 +24,7 @@
 
 
         <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chip_group_tagmanagement"
+            android:id="@+id/chip_group_tag_management"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
            />

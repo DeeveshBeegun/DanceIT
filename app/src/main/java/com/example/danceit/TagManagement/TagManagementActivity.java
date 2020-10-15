@@ -3,7 +3,9 @@ package com.example.danceit.TagManagement;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.PopupMenu;
 import android.widget.SearchView;
 
 import com.example.danceit.R;
@@ -27,7 +29,7 @@ public class TagManagementActivity extends AppCompatActivity {
         tags=new ArrayList<>();
 
         //Chip group to show all the tags
-        chipGroup=(ChipGroup) findViewById(R.id.chip_group_tagmanagement);
+        chipGroup=(ChipGroup) findViewById(R.id.chip_group_tag_management);
 
         SearchView searchView=(SearchView) findViewById(R.id.tag_management_searchview);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -38,6 +40,7 @@ public class TagManagementActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                filter(newText);
                 return false;
             }
         });
@@ -47,16 +50,17 @@ public class TagManagementActivity extends AppCompatActivity {
     }
 
     private void filter(String text){
-        List<Integer> chipids=chipGroup.getCheckedChipIds();
+        int size=chipGroup.getChildCount();
 
-        for (int i=0;i<chipids.size();i++){
-            Chip chip=(Chip)chipGroup.getChildAt(i);
+        for (int i = 0; i <size ; i++) {
+            Chip chip=(Chip) chipGroup.getChildAt(i);
 
-            if(!chip.getText().toString().contains(text)){
-
+            if(chip.getText().toString().contains(text)){
+                chip.setVisibility(View.VISIBLE);
+            }else{
                 chip.setVisibility(View.INVISIBLE);
-
             }
+
         }
     }
 
@@ -80,7 +84,32 @@ public class TagManagementActivity extends AppCompatActivity {
             chip.setText(tags.get(i));
             chip.setVisibility(View.VISIBLE);
 
+
             chipGroup.addView(chip);
+            chip.setClickable(true);
+            chip.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
+                    popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
+                    popupMenu.show();
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem menuItem) {
+                            switch (menuItem.getItemId()) {
+                                case R.id.tag_management:
+                                    break;
+                                case R.id.update_tag_management:
+                                    break;
+
+                            }
+
+                            return true;
+                        }
+
+                    });
+                }
+            });
         }
     }
 
