@@ -4,11 +4,16 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.danceit.Model.FirebaseManager;
 import com.example.danceit.Model.Video;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Objects;
 
@@ -49,23 +54,64 @@ public class AddTagActivity extends AppCompatActivity {
 
                 assert video != null;
                 String video_id = bundle.getString("video_id");
+                String documentId = bundle.getString("documentId");
                 String privacy = video.getPrivacy();
-                String newTag = Objects.requireNonNull(addTag_textInput.getEditText()).getText().toString();
+                final String newTag = Objects.requireNonNull(addTag_textInput.getEditText()).getText().toString();
 
-                assert video_id != null;
-                firebaseManager.addTag(video_id, newTag, privacy);
+                if (video.getBeingShared().equals("yes") && privacy.equals("private")) {
+                    firebaseManager.addTag(video_id, newTag, video);
+
+                    firebaseManager.getPublic_videoReference().whereEqualTo("videoId", video.getVideoId())
+                            .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                System.out.println("success");
+                                for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+                                    video.setPrivacy("public");
+                                    firebaseManager.addTag(document.getId(), newTag, video);
+                                }
+                            }
+
+
+                        }
+                    });
+                }
+                else if(video.getBeingShared().equals("yes") && privacy.equals("public")) {
+                    firebaseManager.addTag(video_id, newTag, video);
+
+                    firebaseManager.getPrivate_videoReference().whereEqualTo("videoId", video.getVideoId())
+                            .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+                                    video.setPrivacy("private");
+                                    firebaseManager.addTag(document.getId(), newTag, video);
+                                }
+                            }
+
+
+                        }
+                    });
+                }
+
+                else
+                    firebaseManager.addTag(video_id, newTag, video);
+
+                Button cancelButton = (Button) findViewById(R.id.cancel_button);
+                cancelButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        finish(); // close popup menu
+                    }
+                });
 
                 finish(); // close popup menu
             }
+
         });
 
-        Button cancelButton = (Button)findViewById(R.id.cancel_button);
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish(); // close popup menu
-            }
-        });
-    }
+}
 
 }

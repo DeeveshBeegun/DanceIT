@@ -223,11 +223,12 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
         holder.chipGroup.addView(add_chip);
     }
 
-    public void addTag(View view, int position, Video model) {
-        Intent intent=new Intent(view.getContext(), AddTagActivity.class);
-        Bundle bundle = new Bundle();
+    public void addTag(View view, final int position, Video model) {
+        Intent intent = new Intent(view.getContext(), AddTagActivity.class);
+        final Bundle bundle = new Bundle();
         bundle.putString("video_id", getSnapshots().getSnapshot(position).getReference().getId());
         bundle.putParcelable("video_obj", model);
+
         intent.putExtras(bundle);
         view.getContext().startActivity(intent);
     }
@@ -382,6 +383,7 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                         if (task.isSuccessful()) {
                                             for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+                                                model.setPrivacy("private");
                                                 model.setBeingShared("no");
                                                 firebaseManager.getPrivate_videoReference().document(document.getId()).set(model);
 
