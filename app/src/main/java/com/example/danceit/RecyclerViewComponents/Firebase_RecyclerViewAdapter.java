@@ -46,6 +46,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -87,10 +89,10 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
 
     @Override
     protected void onBindViewHolder(@NonNull final MyViewHolder holder, final int position, @NonNull final Video model) {
-        holder.textView.setText(model.getUrl());
+        //holder.textView.setText(model.getUrl());
         holder.chipGroup.animate();
         holder.chipGroup.removeAllViews();
-        holder.itemView.setTag(model.getVideoId());
+        holder.itemView.setTag(model.getParseId());
 
         initialise_chip(holder, position, model);
         createChipAddTagBtn(holder, position, model);
@@ -135,7 +137,7 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
     }
 
     public void setPrivacyTextView(Video model, MyViewHolder holder) {
-        if (model.getBeingShared().equals("yes") && model.getPrivacy().equals("private"))
+        if (model.getBeingShared().equals("yes"))
             holder.privacyTextView.setText("video saved as public");
         else
             holder.privacyTextView.setText("video saved as private");
@@ -169,10 +171,9 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                     popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem menuItem) {
-                            String video_id = getSnapshots().getSnapshot(position).getReference().getId();
                             switch (menuItem.getItemId()) {
                                 case R.id.delete_tag:
-                                        firebaseManager.deleteTag(video_id, model.getTags().get(finalJ), model.getPrivacy());
+                                        firebaseManager.deleteTag(getSnapshots().getSnapshot(position).getReference().getId(), model.getTags().get(finalJ), model.getPrivacy());
                                     break;
 
                                 case R.id.update_tag:
@@ -316,8 +317,9 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
      * @param myViewHolder
      */
     public void createMenuButton(final MyViewHolder myViewHolder, final Video model, final int position) {
+
         //feature on click for share button
-        AppCompatImageButton appCompatImageButton= myViewHolder.textView.getRootView().findViewById(R.id.shareButton);
+        AppCompatImageButton appCompatImageButton= myViewHolder.chipGroup.getRootView().findViewById(R.id.shareButton);
         appCompatImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -326,6 +328,13 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                 final PopupMenu popupMenu=new PopupMenu(myViewHolder.context,v);
                 popupMenu.getMenuInflater().inflate(R.menu.video_popoptions,popupMenu.getMenu());
                 popupMenu.show();
+
+                if(model.getBeingShared().equals("yes")) {
+                    popupMenu.getMenu().findItem(R.id.make_public).setVisible(false);
+                    popupMenu.getMenu().findItem(R.id.make_private).setVisible(true);
+
+                }
+
 
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
@@ -349,8 +358,8 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
 
                                 break;
                             case R.id.delete_video:
-                                String videoId = (String) myViewHolder.itemView.getTag();
-                                    firebaseManager.deleteVideo(videoId, model.getPrivacy());
+                                String parseId = (String) myViewHolder.itemView.getTag();
+                                    firebaseManager.deleteVideo(parseId, model.getPrivacy());
 
                                 break;
 
@@ -362,7 +371,6 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                                 bundle.putString("single_user", "single_user");
                                 intent.putExtras(bundle);
                                 activity.startActivity(intent);
-
 
                                 break;
 
@@ -378,10 +386,33 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                             case R.id.make_public:
                                 model.setBeingShared("yes");
                                 firebaseManager.getPrivate_videoReference()
-                                        .document(getSnapshots().getSnapshot(position).getId()).set(model);
+                                        .document(getSnapshots().getSnapshot(position).getId()).set(model); // update private video
+
+                                model.setPrivacy("public");
                                 firebaseManager.addPublic_video(model);
                                 setPrivacyTextView(model, myViewHolder);
                                 Toast toast = Toast.makeText(activity, "Video made public.", Toast.LENGTH_SHORT);
+                                toast.show();
+                                break;
+
+                            case R.id.make_private:
+                                firebaseManager.getPublic_videoReference().whereEqualTo("videoId", model.getVideoId())
+                                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult()))
+                                                firebaseManager.deleteVideo(document.getId(), "public");
+                                            model.setBeingShared("no");
+                                            firebaseManager.getPrivate_videoReference()
+                                                    .document(getSnapshots().getSnapshot(position).getId()).set(model);
+                                        }
+
+                                    }
+                                });
+
+                                setPrivacyTextView(model, myViewHolder);
+                                toast = Toast.makeText(activity, "Video made private.", Toast.LENGTH_SHORT);
                                 toast.show();
 
                                 break;
@@ -486,7 +517,7 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
 
         public MyViewHolder(@NonNull final View itemView) {
             super(itemView);
-            textView = (TextView) itemView.findViewById(R.id.text_recycler);
+           // textView = (TextView) itemView.findViewById(R.id.text_recycler);
             chipGroup = (ChipGroup) itemView.findViewById(R.id.chipGroup);
             checkBox=(CheckBox) itemView.findViewById(R.id.checkbox_multiple_sel);
             privacyTextView = (TextView) itemView.findViewById(R.id.privacy_textView);

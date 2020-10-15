@@ -49,11 +49,11 @@ public class SecondFragment extends Fragment {
                     public Video parseSnapshot(@NonNull DocumentSnapshot snapshot) {
                         Video video = snapshot.toObject(Video.class);
                         assert video != null;
-                        Video videoCopy = new Video (video.getVideoUploader(), video.getVideoId(), video.getUrl(), video.getTags(), video.getPrivacy(), video.getBeingShared());
+                        Video videoCopy = new Video (video.getVideoUploader(), video.getVideoId(), video.getParseId(), video.getUrl(), video.getTags(), video.getPrivacy(), video.getBeingShared());
                         allVideos.add(videoCopy);
                         autoCompletion.addAll(videoCopy.getTags());
                         ((MainActivity) getActivity()).setAutocompletion(autoCompletion.toArray(new String [0]));
-                        video.setVideoId(snapshot.getId());
+                        video.setParseId(snapshot.getId());
                         return video;
                     }
                 })

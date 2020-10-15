@@ -12,6 +12,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Objects;
 
+
 public class AddTagActivity extends AppCompatActivity {
 
     FirebaseManager firebaseManager = new FirebaseManager();

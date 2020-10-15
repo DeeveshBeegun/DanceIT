@@ -26,6 +26,7 @@ import java.util.List;
 public class Video implements Parcelable {
     private String videoUploader;
     private String videoId;
+    private String parseId;
     private String url;
     private ArrayList<String> tags = null;
     public String privacy;
@@ -41,10 +42,11 @@ public class Video implements Parcelable {
 //        this.privacy = privacy;
 //    }
 
-    public Video(String videoUploader, String videoId ,String url, List<String> tags,
+    public Video(String videoUploader, String videoId , String parseId, String url, List<String> tags,
                  String privacy, String beingShared) {
         this.videoUploader = videoUploader;
         this.videoId = videoId;
+        this.parseId = parseId;
         this.url = url;
         this.tags = (ArrayList<String>) tags;
         this.privacy = privacy;
@@ -59,6 +61,7 @@ public class Video implements Parcelable {
     protected Video(Parcel in) {
         videoUploader = in.readString();
         videoId = in.readString();
+        parseId = in.readString();
         url = in.readString();
         privacy = in.readString();
         beingShared = in.readString();
@@ -83,6 +86,10 @@ public class Video implements Parcelable {
     public String getVideoId() { return videoId; }
 
     public void setVideoId(String id) { this.videoId = id; }
+
+    public String getParseId() { return parseId; }
+
+    public void setParseId(String id) { this.parseId = id; }
 
     public String getVideoUploader() {
         return videoUploader;
@@ -148,7 +155,8 @@ public class Video implements Parcelable {
         Video video = (Video) object;
 
         if(video.url.equals(this.url) && video.videoUploader.equals(this.videoUploader)
-                && video.privacy.equals(this.privacy) && video.beingShared.equals(this.beingShared) && video.videoId.equals(this.videoId)){
+                && video.privacy.equals(this.privacy) && video.beingShared.equals(this.beingShared) && video.videoId.equals(this.videoId) &&
+        video.parseId.equals(this.parseId)){
             return true;
         }
 
@@ -173,6 +181,7 @@ public class Video implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(videoUploader);
         parcel.writeString(videoId);
+        parcel.writeString(parseId);
         parcel.writeString(url);
         parcel.writeString(privacy);
         parcel.writeString(beingShared);
