@@ -1,7 +1,6 @@
 package com.example.danceit;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,7 +11,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.danceit.Model.FirebaseManager;
-import com.example.danceit.Model.User;
 import com.example.danceit.Model.Video;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -21,10 +19,13 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
 
+/**
+ * This class is responsible for adding a video object on the database.
+ */
 public class AddVideoActivity extends AppCompatActivity {
 
     private boolean isPrivate; // privacy is public
-    FirebaseManager firebaseManager = new FirebaseManager();
+    FirebaseManager firebaseManager = new FirebaseManager(); // create an instance of FirebaseManager class; used to add videos to database.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +40,15 @@ public class AddVideoActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * This method is used to add a video object in the database.
+     * It creates a video object depending on the privacy and if it is being shared
+     * to other users. The firebaseManager class is used to add the video object to the database.
+     * @param textInputUrl is where the url is input.
+     * @param textInputTags is where the tags are input.
+     * @param saveButton saves a video to the database depending on the privacy of the video.
+     */
     public void addVideo(final TextInputLayout textInputUrl, final TextInputLayout textInputTags, Button saveButton) {
-
         final Intent intent = new Intent(this,MainActivity.class);
 
         checkPrivacy(); // checks if video is public or private
@@ -48,7 +56,7 @@ public class AddVideoActivity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri uri=Uri.parse(textInputUrl.getEditText().getText().toString().trim());
+                // checks if the input url is a valid url
                 if(isURL(textInputUrl.getEditText().getText().toString().trim())) {
 
                     if (isPrivate) {
@@ -56,7 +64,7 @@ public class AddVideoActivity extends AppCompatActivity {
                                 Objects.requireNonNull(textInputUrl.getEditText()).getText().toString().trim(), tagInput_string((textInputTags.getEditText())
                                 .getText().toString()), "private", "no");
 
-                        firebaseManager.addPrivate_video(video);
+                        firebaseManager.addPrivate_video(video); // add video as private in the database
 
                         Toast toast = Toast.makeText(getApplicationContext(), "Url saved as private.", Toast.LENGTH_SHORT);
                         toast.show();
@@ -64,16 +72,15 @@ public class AddVideoActivity extends AppCompatActivity {
                     }
 
                     else {
-                        final String videoId = getAlphaNumericString(14);
-                        Video video = new Video(firebaseManager.getUserEmail(), videoId, "",
+                        Video video = new Video(firebaseManager.getUserEmail(), getAlphaNumericString(14), "",
                                 Objects.requireNonNull(textInputUrl.getEditText()).getText().toString().trim(), tagInput_string((textInputTags.getEditText())
                                 .getText().toString()), "private", "yes");
 
-                        firebaseManager.addPrivate_video(video);
+                        firebaseManager.addPrivate_video(video); // add video in the private field of the database
 
                         video.setPrivacy("public");
 
-                        firebaseManager.addPublic_video(video);
+                        firebaseManager.addPublic_video(video);// add video in the public field of the database
 
                         Toast toast = Toast.makeText(getApplicationContext(), "Url saved as public.", Toast.LENGTH_SHORT);
                             toast.show();
@@ -138,16 +145,28 @@ public class AddVideoActivity extends AppCompatActivity {
        }
     }
 
+    /**
+     * This method splits the text in the text input in AddVideoActivity and
+     * adds to an arraylist.
+     * @param textInputTags text from the text input in the AddVideoActivity
+     * @return arraylist of tags.
+     */
     public ArrayList<String> tagInput_string(String textInputTags) {
-        ArrayList<String> tags = new ArrayList<String>();
+        ArrayList<String> tags = new ArrayList<>(); // stores the tags as string
         String[] description = textInputTags.split(" ");
 
         for (int i = 0; i < description.length; i++) {
-            tags.add(description[i]);
+            if(!description[i].equals(" ")) // does not include white spaces
+                tags.add(description[i].trim());
         }
         return tags;
     }
 
+    /**
+     * This method checks which radio button (i.e. private or public) is checked.
+     * If the private radio button is checked, the isPrivate variable is set to true.
+     * Otherwise, it is set to false.
+     */
     public void checkPrivacy() {
         RadioButton radiobutton_private;
         radiobutton_private = findViewById(R.id.radioButton_private);

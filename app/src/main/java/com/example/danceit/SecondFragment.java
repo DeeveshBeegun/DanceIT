@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -39,6 +40,7 @@ public class SecondFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_second, container, false);
         recyclerView = (RecyclerView) root.findViewById(R.id.recyclerViewDance);
+
 
         Query query = firebaseManager.getPublic_videoReference();
 
