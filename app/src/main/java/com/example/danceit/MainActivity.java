@@ -130,13 +130,26 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
 
     @Override
     public void onBackPressed() {
-        if(searchView.isSearchOpen()){
+        if (searchView.isSearchOpen()) {
             searchView.closeSearch();
-        }
-        else{
+        } else {
             super.onBackPressed();
         }
         moveTaskToBack(true);
