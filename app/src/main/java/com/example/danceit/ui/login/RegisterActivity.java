@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.danceit.MainActivity;
 import com.example.danceit.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -37,18 +38,19 @@ public class RegisterActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private EditText editTextUsername;
     private ProgressBar loadingProgressBar;
-    private LoginViewModel signup;
+    private SignupViewModel signup;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
         // get model
-        signup=new LoginViewModel();
+        signup=new SignupViewModel();
 
         //set up edittext
         final EditText editTextPassword=(EditText) findViewById(R.id.password_new);
         final EditText editTextEmail=(EditText) findViewById(R.id.email_entry);
+        editTextUsername = (EditText) findViewById(R.id.username_entry);
         final Button button=(Button) findViewById(R.id.signup);
 
 
@@ -72,23 +74,33 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
 
-        signup.getLoginFormState().observe(this, new Observer<LoginFormState>() {
+        //Getting the state of the register activity and update UI
+        signup.getLoginFormState().observe(this, new Observer<SignUpFormState>() {
             @Override
-            public void onChanged(@Nullable LoginFormState loginFormState) {
-                if (loginFormState == null) {
+            public void onChanged(SignUpFormState signUpFormState) {
+                if (signUpFormState == null) {
                     return;
                 }
-                button.setEnabled(loginFormState.isDataValid());
-                if (loginFormState.getUsernameError() != null) {
-                    editTextEmail.setError(getString(loginFormState.getUsernameError()));
+                button.setEnabled(signUpFormState.isDataValid());
+                if (signUpFormState.getUsernameError() != null) {
+                    editTextUsername.setError(getString(signUpFormState.getUsernameError()));
                 }
-                if (loginFormState.getPasswordError() != null) {
-                    editTextPassword.setError(getString(loginFormState.getPasswordError()));
+                if (signUpFormState.getPasswordError() != null) {
+                    editTextPassword.setError(getString(signUpFormState.getPasswordError()));
                 }
+
+                if (signUpFormState.getEmailError() != null) {
+                    editTextEmail.setError(getString(signUpFormState.getEmailError()));
+                }
+
+
+
+
             }
+
         });
 
-
+        //watch text entered by the user
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -102,7 +114,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                signup.loginDataChanged(editTextEmail.getText().toString(),
+                signup.signUpDataChanged(editTextUsername.getText().toString(),editTextEmail.getText().toString(),
                         editTextPassword.getText().toString());
 
             }
@@ -112,6 +124,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         editTextEmail.addTextChangedListener(afterTextChangedListener);
         editTextPassword.addTextChangedListener(afterTextChangedListener);
+        editTextUsername.addTextChangedListener(afterTextChangedListener);
 
 
 
@@ -137,7 +150,7 @@ public class RegisterActivity extends AppCompatActivity {
                 EditText editTextPassword=(EditText) findViewById(R.id.password_new);
                 EditText editTextEmail=(EditText) findViewById(R.id.email_entry);
                 editTextEmail.getText();
-                editTextUsername = (EditText) findViewById(R.id.username_entry);
+
                 createAccount(editTextEmail.getText().toString(),editTextPassword.getText().toString());
 
             }
@@ -190,7 +203,7 @@ public class RegisterActivity extends AppCompatActivity {
                             String userId = user.getUid();
 
                             createUserDatabase(userId); // creates user database on firebase real time
-
+                            loading(false);
                             Toast.makeText(RegisterActivity.this, "User successfully created.",
                                     Toast.LENGTH_SHORT).show();
 
@@ -213,6 +226,14 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void updateUI(FirebaseUser user) {
+        if (user == null) {
+
+
+        } else {
+            Intent i = new Intent(this, MainActivity.class);
+            startActivity(i);
+
+        }
     }
 
     /**
