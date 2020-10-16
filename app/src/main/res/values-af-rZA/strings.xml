@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">DanceIT</string>
+    <string name="hintTextTags">" Voer etikette in"</string>
+    <string name="privateHint">U biblioteek</string>
+    <string name="enter_a_url">" Voer die URL in"</string>
+    <string name="enter_tags_e_g_kizomba">" Voer etikette in e.g. #Kizomba"</string>
+    <string name="public_video">" publiek"</string>
+    <string name="private_video">" privaat"</string>
+    <string name="save">" red"</string>
+    <string name="add_a_tag">" Voeg 'n merker by"</string>
+    <string name="cancel">" Kanselleer"</string>
+    <string name="add">" Voeg by"</string>
+    <string name="delete">" Vee uit"</string>
+    <string name="update">" Opdateer"</string>
+    <string name="update_tag">" Opdateer"</string>
+    <string name="prompt_email">" E-pos"</string>
+    <string name="prompt_password">Wagwoord</string>
+    <string name="save_video">" Stoor"</string>
+    <string name="make_private">" Maak privaat"</string>
+    <string name="NoResults">" Geen ooreenstemmende resultate gevind vir"</string>
+    <string name="hello_world">Hallo ronde wêreld!</string>
+    <string name="tag">" Merk"</string>
+    <string name="occurrence">" Voorkoms"</string>
+    <string name="select">" kies"</string>
+    <string name="show_selected">" Wys gekies"</string>
+    <string name="Received">" ontvang"</string>
+    <string name="sendto">" stuur na"</string>
+    <string name="logout_text">" Teken uit"</string>
+    <string name="share_cap">" deel"</string>
+    <string name="make_public">" Openbaar te maak"</string>
+    <string name="update_tag_hint">" Dateer tag op"</string>
+    <string name="search">Search</string>
+    <string name="create_folder">" Skep gids"</string>
+    <string name="action_sign_in">" aanmeld"</string>
+    <string name="action_sign_in_short">" aanmeld"</string>
+    <string name="action_sign_up">" teken aan"</string>
+    <string name="login_failed">" Aanmelding het misluk"</string>
+    <string name="prompt_username">" gebruikersnaam"</string>
+    <string name="enter_tags">" Voer etikette in"</string>
+    <string name="share">" deel"</string>
+</resources>
