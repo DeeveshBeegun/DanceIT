@@ -509,9 +509,15 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                                 break;
 
                             case R.id.save_video:
-                                model.setPrivacy("private");
-                                model.setBeingShared("no");
-                                firebaseManager.addPrivate_video(model);
+                                if(model.getPrivacy().equals("private"))
+                                    firebaseManager.addPrivate_video(model);
+                                else {
+                                    model.setVideoId(model.getVideoId()+"1");
+                                    model.setPrivacy("private");
+                                    model.setBeingShared("no");
+                                    firebaseManager.addPrivate_video(model);
+                                }
+
                                 toast = Toast.makeText(activity, "Video saved to library.", Toast.LENGTH_SHORT);
                                 toast.show();
 
