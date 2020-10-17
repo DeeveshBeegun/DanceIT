@@ -14,6 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.os.Parcelable;
+
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -24,6 +26,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -149,12 +152,16 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (searchView.isSearchOpen()) {
             searchView.closeSearch();
-        } else {
+        }
+
+        else {
             super.onBackPressed();
         }
+        finish();
         moveTaskToBack(true);
 
     }
+
 
     /*This method initiates the LibrarySearchActivity and handles the receiving of search queries
           from the user. The search string and the list of all a user's videos are sent with an intent.*/
