@@ -60,7 +60,7 @@ public class AddVideoActivity extends AppCompatActivity {
                 if(isURL(textInputUrl.getEditText().getText().toString().trim())) {
 
                     if (isPrivate) {
-                        Video video = new Video(firebaseManager.getUserEmail(), getAlphaNumericString(14), "",
+                        Video video = new Video(firebaseManager.getUsername(), getAlphaNumericString(14), "",
                                 Objects.requireNonNull(textInputUrl.getEditText()).getText().toString().trim(), tagInput_string((textInputTags.getEditText())
                                 .getText().toString()), "private", "no");
 
@@ -72,7 +72,7 @@ public class AddVideoActivity extends AppCompatActivity {
                     }
 
                     else {
-                        Video video = new Video(firebaseManager.getUserEmail(), getAlphaNumericString(14), "",
+                        Video video = new Video(firebaseManager.getUsername(), getAlphaNumericString(14), "",
                                 Objects.requireNonNull(textInputUrl.getEditText()).getText().toString().trim(), tagInput_string((textInputTags.getEditText())
                                 .getText().toString()), "private", "yes");
 

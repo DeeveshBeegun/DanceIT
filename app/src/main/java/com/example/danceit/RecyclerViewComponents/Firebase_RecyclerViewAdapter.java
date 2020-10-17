@@ -144,11 +144,14 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
         if(model.getPrivacy().equals("received"))
             holder.privacyTextView.setText("video shared by " + model.getVideoUploader());
 
-        if (model.getBeingShared().equals("yes"))
+        if (model.getBeingShared().equals("yes") && model.getPrivacy().equals("private"))
             holder.privacyTextView.setText("public");
-        else
+        else if (model.getBeingShared().equals("no") && model.getPrivacy().equals("private"))
             holder.privacyTextView.setText("private");
-
+        else if (model.getBeingShared().equals("yes") && model.getPrivacy().equals("public"))
+            holder.privacyTextView.setText("Video shared by " + model.getVideoUploader());
+        else if (model.getBeingShared().equals("no") && model.getPrivacy().equals("received"))
+            holder.privacyTextView.setText("Video sent by " + model.getVideoUploader());
     }
 
 
@@ -387,7 +390,7 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                 }
 
                 if(model.getPrivacy().equals("public") ) {
-                    if (mAuth.getCurrentUser().getEmail().equals(model.getVideoUploader()))
+
                         popupMenu.getMenu().findItem(R.id.delete_video).setVisible(true);
                     popupMenu.getMenu().findItem(R.id.select_vid).setVisible(false);
                     popupMenu.getMenu().findItem(R.id.send_info).setVisible(false);
@@ -476,10 +479,13 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
 
                             case R.id.make_public:
                                 model.setBeingShared("yes");
+                                model.setVideoUploader(firebaseManager.getUsername());
                                 firebaseManager.getPrivate_videoReference()
                                         .document(getSnapshots().getSnapshot(position).getId()).set(model); // update private video
 
                                 model.setPrivacy("public");
+                                model.setVideoId(model.getVideoId());
+
                                 firebaseManager.addPublic_video(model);
                                 setPrivacyTextView(model, myViewHolder);
                                 Toast toast = Toast.makeText(activity, "Video made public.", Toast.LENGTH_SHORT);
@@ -512,7 +518,7 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                                 if(model.getPrivacy().equals("private"))
                                     firebaseManager.addPrivate_video(model);
                                 else {
-                                    model.setVideoId(model.getVideoId()+"1");
+                                    model.setVideoId(model.getVideoId()+firebaseManager.getUsername());
                                     model.setPrivacy("private");
                                     model.setBeingShared("no");
                                     firebaseManager.addPrivate_video(model);

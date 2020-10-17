@@ -160,8 +160,8 @@ public class FirebaseManager {
      * This method gets the username of the current user.
      * @return username of current user.
      */
-    public String getUserEmail() {
-        return Objects.requireNonNull(mAuth.getCurrentUser()).getEmail();
+    public String getUsername() {
+        return Objects.requireNonNull(mAuth.getCurrentUser()).getDisplayName();
     }
 
 
