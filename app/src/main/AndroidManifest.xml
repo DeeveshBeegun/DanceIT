@@ -12,9 +12,6 @@
         <activity android:name=".ReceivedSearchActivity"
                   android:label="@string/app_name"
                   android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".TagManagementActivity2"
-                  android:label="@string/app_name"
-                  android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".PublicSearchActivity"
                   android:label="@string/app_name"
                   android:theme="@style/AppTheme.NoActionBar"/>
