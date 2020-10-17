@@ -32,6 +32,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Objects;
 
+/*
+ Class shows the register activity
+ */
+
 public class RegisterActivity extends AppCompatActivity {
 
     private static final String TAG = "EmailPassword";
@@ -39,6 +43,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText editTextUsername;
     private ProgressBar loadingProgressBar;
     private SignupViewModel signup;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -171,13 +176,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void createAccount(String email, String password) {
         Log.d(TAG, "createAccount:" + email);
-        /*if (!validateForm()) {
-            return;
-        }
 
-        showProgressBar();
-
-         */
 
         // [START create_user_with_email]
         loading(true);
@@ -209,6 +208,8 @@ public class RegisterActivity extends AppCompatActivity {
 
 
                         } else {
+                            https:
+//www.youtube.com/watch?v=LRqlPDdFxR0
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
                             loading(false);
