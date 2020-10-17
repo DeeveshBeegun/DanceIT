@@ -21,6 +21,11 @@ import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
 
+/**
+ * This class is responsible for searching for videos in a the DanceIT Tab (SecondFragment)
+ * and displaying the results on the mobile screen.
+ */
+
 public class PublicSearchActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     Firebase_RecyclerViewAdapter adapter;
@@ -77,6 +82,11 @@ public class PublicSearchActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This methods displays the adapter on screen and causes it to listen if
+     * there are any changes in the database. If no search results are found the adapter
+     * is not displayed.
+     */
     @Override
     public void onStart() {
         super.onStart();
@@ -85,6 +95,11 @@ public class PublicSearchActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This methods ceases to display the adapter on screen and causes it to stop listening
+     * for any changes in the database. If no search results are found adapter.stopListening() is
+     * not executed since adapter.startListening() was not executed before it.
+     */
     @Override
     public void onStop() {
         super.onStop();

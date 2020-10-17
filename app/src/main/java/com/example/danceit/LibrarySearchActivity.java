@@ -1,10 +1,3 @@
-/**
- * This activity handles the library search queries
- *
- * @author Bohlale Motsieloa (MTSBOH002)
- * @date: 29/09/2020
- * @version: 1.0
- */
 package com.example.danceit;
 
 import android.content.Intent;
@@ -24,11 +17,13 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.Objects;
 
+/**
+ * This class is responsible for searching for videos in the Your Library Tab (FirstFragment)
+ * and displaying the results on the mobile screen.
+ */
 public class LibrarySearchActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     Firebase_RecyclerViewAdapter adapter;
@@ -87,6 +82,11 @@ public class LibrarySearchActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * This methods displays the adapter on screen and causes it to listen if
+     * there are any changes in the database. If no search results are found the adapter
+     * is not displayed.
+     */
     @Override
     public void onStart() {
         super.onStart();
@@ -95,6 +95,11 @@ public class LibrarySearchActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This methods ceases to display the adapter on screen and causes it to stop listening
+     * for any changes in the database. If no search results are found adapter.stopListening() is
+     * not executed since adapter.startListening() was not executed before it.
+     */
     @Override
     public void onStop() {
         super.onStop();
