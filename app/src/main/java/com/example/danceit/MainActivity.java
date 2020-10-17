@@ -23,7 +23,6 @@ import android.view.View;
 
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -163,9 +162,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-    /*This method initiates the LibrarySearchActivity and handles the receiving of search queries
-          from the user. The search string and the list of all a user's videos are sent with an intent.*/
+    /**This method initiates the LibrarySearchActivity and handles the receiving of search queries
+     * from the user. The search string and the list of all a user's videos are sent with
+     * an intent.*/
     private void searchViewCode(){
         searchView=(MaterialSearchView) findViewById(R.id.search_view);
         searchView.setEllipsize(true);
@@ -187,27 +186,18 @@ public class MainActivity extends AppCompatActivity {
                     intent.putExtras(bundle);
                     intent.putExtras(bundle1);
                     startActivity(intent);
-                    System.out.println("Fragment 1");
-                    System.out.println("Search Keywords "+ searchKeywords.toString());
-                    System.out.println("Videos "+ allVideos.toString());
                 }
                 else if(Fragment==2){
                     Intent intent = new Intent(MainActivity.this, PublicSearchActivity.class);
                     intent.putExtras(bundle);
                     intent.putExtras(bundle1);
                     startActivity(intent);
-                    System.out.println("Fragment 2");
-                    System.out.println("Search Keywords "+ searchKeywords.toString());
-                    System.out.println("Videos "+ allVideos.toString());
                 }
                 else if(Fragment==3){
                     Intent intent = new Intent(MainActivity.this, ReceivedSearchActivity.class);
                     intent.putExtras(bundle);
                     intent.putExtras(bundle1);
                     startActivity(intent);
-                    System.out.println("Fragment 3");
-                    System.out.println("Search Keywords "+ searchKeywords.toString());
-                    System.out.println("Videos "+ allVideos.toString());
                 }
                 return false;
             }
@@ -254,11 +244,7 @@ public class MainActivity extends AppCompatActivity {
             Intent intent=new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
             return true;
-        }//else if(id==R.id.tag_management){
-            //Intent intent=new Intent(MainActivity.this, TagManagementActivity.class);
-            //startActivity(intent);
-            //return true;
-        //}
+        }
         else if (id == R.id.tag_management){
             Intent intent = new Intent(MainActivity.this, TagManagementActivity.class);
             Bundle bundle = new Bundle();
@@ -272,14 +258,14 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /*This method allows related fragments and activities to set the copy of the videos
-      list/database that the Main Activity has of a user's library */
+    /**This method allows related fragments and activities to set the copy of the videos
+     *list/database that the Main Activity has of a user's library */
     public void setAllVideos(ArrayList<Video> allVideos) {
         this.allVideos = allVideos;
     }
 
-    /*This method allows related fragments and activities to set the autocompletion
-      suggestions when a user searches videos*/
+    /**This method allows related fragments and activities to set the autocompletion
+     *suggestions when a user searches videos*/
     public void setAutocompletion(String [] autoCompletion) {
         searchView.setSuggestions(autoCompletion); // Pre-saved autocompletion words and phrases for searching
     }

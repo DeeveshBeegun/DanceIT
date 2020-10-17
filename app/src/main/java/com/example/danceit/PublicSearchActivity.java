@@ -9,23 +9,26 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.example.danceit.Model.FirebaseManager;
 import com.example.danceit.Model.Search;
 
 import com.example.danceit.Model.Video;
 import com.example.danceit.RecyclerViewComponents.Firebase_RecyclerViewAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
 
+/**
+ * This class is responsible for searching for videos in a the DanceIT Tab (SecondFragment)
+ * and displaying the results on the mobile screen.
+ */
+
 public class PublicSearchActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     Firebase_RecyclerViewAdapter adapter;
-    private FirebaseAuth mAuth;
     ArrayList<String> searchResults = new ArrayList<>();
+    FirebaseManager firebaseManager = new FirebaseManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,13 +36,6 @@ public class PublicSearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_public_search2);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        // Initialize Firebase Auth
-        mAuth = FirebaseAuth.getInstance();
-
-        FirebaseFirestore database = FirebaseFirestore.getInstance();
-        CollectionReference reference = database.collection("video_url");
-
 
         // Getting intent, user search query and all the videos in the public database from the Main Activity
         Intent intent = getIntent();
@@ -53,7 +49,7 @@ public class PublicSearchActivity extends AppCompatActivity {
         if(!searchResults.isEmpty()){
             recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
-            Query query = reference.whereIn("videoId", searchResults);
+            Query query = firebaseManager.getPublic_videoReference().whereIn("videoId", searchResults);
 
             FirestoreRecyclerOptions<Video> options = new FirestoreRecyclerOptions.Builder<Video>()
                     .setQuery(query, Video.class)
@@ -77,6 +73,11 @@ public class PublicSearchActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This methods displays the adapter on screen and causes it to listen if
+     * there are any changes in the database. If no search results are found the adapter
+     * is not displayed.
+     */
     @Override
     public void onStart() {
         super.onStart();
@@ -85,6 +86,11 @@ public class PublicSearchActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This methods ceases to display the adapter on screen and causes it to stop listening
+     * for any changes in the database. If no search results are found adapter.stopListening() is
+     * not executed since adapter.startListening() was not executed before it.
+     */
     @Override
     public void onStop() {
         super.onStop();

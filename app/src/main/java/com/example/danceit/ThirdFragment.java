@@ -53,11 +53,10 @@ public class ThirdFragment extends Fragment {
                             public Video parseSnapshot(@NonNull DocumentSnapshot snapshot) {
                                 Video video = snapshot.toObject(Video.class);
                                 assert video != null;
-                                Video videoCopy = new Video (video.getVideoUploader(), video.getVideoId(), video.getParseId(), video.getUrl(), video.getTags(), video.getPrivacy(), video.getBeingShared());
-                                allVideos.add(videoCopy);
-                                autoCompletion.addAll(videoCopy.getTags());
-                                ((MainActivity) getActivity()).setAutocompletion(autoCompletion.toArray(new String [0]));
                                 video.setParseId(snapshot.getId());
+                                allVideos.add(video);
+                                autoCompletion.addAll(video.getTags());
+                                ((MainActivity) getActivity()).setAutocompletion(autoCompletion.toArray(new String [0]));
                                 return video;
                             }
                         })

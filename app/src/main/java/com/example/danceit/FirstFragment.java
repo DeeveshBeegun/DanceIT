@@ -28,8 +28,10 @@ import java.util.ArrayList;
 public class FirstFragment extends Fragment {
         RecyclerView recyclerView;
         Firebase_RecyclerViewAdapter adapter;
+
         ArrayList<Video> allVideos = new ArrayList<Video>(); // stores video objects
         ArrayList<String> autoCompletion = new ArrayList<String>(); // used for search autocompletion
+
         FirebaseManager firebaseManager = new FirebaseManager();
 
     @Override
@@ -50,11 +52,11 @@ public class FirstFragment extends Fragment {
                         public Video parseSnapshot(@NonNull DocumentSnapshot snapshot) {
                             Video video = snapshot.toObject(Video.class);
                             assert video != null;
-                            Video videoCopy = new Video (video.getVideoUploader(), video.getVideoId(), video.getParseId(), video.getUrl(), video.getTags(), video.getPrivacy(), video.getBeingShared());
-                            allVideos.add(videoCopy);
-                            autoCompletion.addAll(videoCopy.getTags());
                             ((MainActivity) getActivity()).setAutocompletion(autoCompletion.toArray(new String [0]));
                             video.setParseId(snapshot.getId());
+                            allVideos.add(video);
+                            autoCompletion.addAll(video.getTags());
+                            ((MainActivity) getActivity()).setAutocompletion(autoCompletion.toArray(new String [0]));
                             return video;
                         }
                     })
