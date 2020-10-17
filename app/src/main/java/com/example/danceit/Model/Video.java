@@ -1,28 +1,17 @@
-/**
- * This class represents the model for the Video Object.
- * @author Bohlale Motsieloa (MTSBOH002)
- * @date: 24/08/2020
- * @version: 0.0 (Prototype)
- */
- 
 package com.example.danceit.Model;
 
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import androidx.annotation.RequiresApi;
-import androidx.room.Entity;
-import androidx.room.Ignore;
-import androidx.room.PrimaryKey;
-
-import com.google.firebase.firestore.Exclude;
-
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
-//@Entity(tableName="video_table")
+/**
+ * This class represents the Video Object and implements Parcelable to
+ * allow Video objects to be passed between Activities.
+ */
+
 public class Video implements Parcelable {
     private String videoUploader;
     private String videoId;
@@ -32,16 +21,13 @@ public class Video implements Parcelable {
     public String privacy;
     public String beingShared;
 
-
-//
-//    /*Constructor*/
-//    public Video(User videoUploader, String url, ArrayList<Tag> tag_list, boolean privacy) {
-//        this.videoUploader = videoUploader;
-//        this.url = url;
-//        this.tag_list = tag_list;
-//        this.privacy = privacy;
-//    }
-
+    /**
+     * Constructor
+     *@param videoId unique identifier in the database.
+     *@param parseId documentID which contains this Video,
+     * used by Firebase_RecyclerViewAdapter to display video.
+     *@param beingShared is the video in a shared status or not.
+     */
     public Video(String videoUploader, String videoId , String parseId, String url, List<String> tags,
                  String privacy, String beingShared) {
         this.videoUploader = videoUploader;
@@ -53,10 +39,15 @@ public class Video implements Parcelable {
         this.beingShared = beingShared;
     }
 
-
+    /**
+     * Default constructor needed for the FirebaseManger to function
+     */
     public Video() {}
 
 
+    /**
+     * Instructions on how the Video Object will be read into a Parcel
+     */
     @RequiresApi(api = Build.VERSION_CODES.Q)
     protected Video(Parcel in) {
         videoUploader = in.readString();
@@ -68,7 +59,10 @@ public class Video implements Parcelable {
         tags = in.createStringArrayList();
     }
 
-
+    /**
+     * Instructions on how the Video Object will be created from a Parcel and
+     * how an Array of Videos will be instantiated
+     */
     public static final Creator<Video> CREATOR = new Creator<Video>() {
         @RequiresApi(api = Build.VERSION_CODES.Q)
         @Override
@@ -82,7 +76,9 @@ public class Video implements Parcelable {
         }
     };
 
-    /*Get and Set Methods*/
+    /**
+     * Get and Set Methods
+     */
     public String getVideoId() { return videoId; }
 
     public void setVideoId(String id) { this.videoId = id; }
@@ -106,14 +102,6 @@ public class Video implements Parcelable {
     public void setUrl(String url) {
         this.url = url;
     }
-
-//    public ArrayList<Tag> getTag_list() {
-//        return tag_list;
-//    }
-//
-//    public void setTag_list(ArrayList<Tag> tag_list) {
-//        this.tag_list = tag_list;
-//    }
 
     public ArrayList<String> getTags() {
         return tags;
@@ -139,7 +127,9 @@ public class Video implements Parcelable {
         return url;
     }
 
-    /*Overriding equals method to allow correct Video object comparison*/
+    /**
+     * Overriding equals method to allow correct comparison between Video objects
+     */
     @Override
     public boolean equals(Object object)
     {
@@ -163,11 +153,13 @@ public class Video implements Parcelable {
         return false;
     }
 
-    /*Overriding hashCode method to allow correct Video object comparison*/
+    /**
+     * Overriding hashCode method to allow correct comparison between Video objects
+     */
     @Override
     public int hashCode()
     {
-        return this.url.hashCode() * this.videoUploader.hashCode() * this.videoId.hashCode() * 19;
+        return this.url.hashCode() * this.videoUploader.hashCode() * this.videoId.hashCode() * this.parseId.hashCode() * 19;
     }
 
 
@@ -176,6 +168,9 @@ public class Video implements Parcelable {
         return 0;
     }
 
+    /**
+     * Instructions on how the Video Object will be written into a Parcel
+     */
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     public void writeToParcel(Parcel parcel, int i) {
