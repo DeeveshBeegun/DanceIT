@@ -32,6 +32,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Objects;
 
+/*
+ Class shows the register activity
+ */
+
 public class RegisterActivity extends AppCompatActivity {
 
     private static final String TAG = "EmailPassword";
@@ -39,6 +43,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText editTextUsername;
     private ProgressBar loadingProgressBar;
     private SignupViewModel signup;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
