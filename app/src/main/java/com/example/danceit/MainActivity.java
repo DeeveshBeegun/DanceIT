@@ -156,8 +156,9 @@ public class MainActivity extends AppCompatActivity {
 
         else {
             super.onBackPressed();
+            finish();
         }
-        finish();
+
         moveTaskToBack(true);
 
     }
