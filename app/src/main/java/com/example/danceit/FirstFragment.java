@@ -20,12 +20,18 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
-
+/**
+ * This fragment is used to display private videos on the "Your Library" tab.
+ * This class uses an instance of the FirebaseManager class to make appropriate
+ * changes on the video object on the database.
+ */
 public class FirstFragment extends Fragment {
         RecyclerView recyclerView;
         Firebase_RecyclerViewAdapter adapter;
-        ArrayList<Video> allVideos = new ArrayList<Video>();
-        ArrayList<String> autoCompletion = new ArrayList<String>();
+
+        ArrayList<Video> allVideos = new ArrayList<Video>(); // stores video objects
+        ArrayList<String> autoCompletion = new ArrayList<String>(); // used for search autocompletion
+
         FirebaseManager firebaseManager = new FirebaseManager();
 
     @Override

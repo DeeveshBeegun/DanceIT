@@ -20,9 +20,15 @@ import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
 
+/**
+ * This fragment is used to display private videos on the "Received" tab.
+ * This class uses an instance of the FirebaseManager class to make appropriate
+ * changes on the video object on the database.
+ */
 public class ThirdFragment extends Fragment {
     RecyclerView recyclerView;
     Firebase_RecyclerViewAdapter adapter;
+
     ArrayList<Video> allVideos = new ArrayList<Video>();
     ArrayList<String> autoCompletion = new ArrayList<String>();
 
