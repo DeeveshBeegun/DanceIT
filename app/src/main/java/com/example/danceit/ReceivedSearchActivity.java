@@ -16,7 +16,6 @@ import com.example.danceit.Model.Video;
 import com.example.danceit.RecyclerViewComponents.Firebase_RecyclerViewAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.firebase.ui.firestore.SnapshotParser;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
 
@@ -29,8 +28,8 @@ import java.util.ArrayList;
 public class ReceivedSearchActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     Firebase_RecyclerViewAdapter adapter;
-    private FirebaseAuth mAuth;
     ArrayList<String> searchResults = new ArrayList<>();
+    FirebaseManager firebaseManager = new FirebaseManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +37,6 @@ public class ReceivedSearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_received_search);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FirebaseManager firebaseManager = new FirebaseManager();
 
         // Getting intent, user search query and all the videos in the received database from the Main Activity
         Intent intent = getIntent();

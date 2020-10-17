@@ -21,7 +21,6 @@ import android.view.View;
 
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -180,27 +179,18 @@ public class MainActivity extends AppCompatActivity {
                     intent.putExtras(bundle);
                     intent.putExtras(bundle1);
                     startActivity(intent);
-                    System.out.println("Fragment 1");
-                    System.out.println("Search Keywords "+ searchKeywords.toString());
-                    System.out.println("Videos "+ allVideos.toString());
                 }
                 else if(Fragment==2){
                     Intent intent = new Intent(MainActivity.this, PublicSearchActivity.class);
                     intent.putExtras(bundle);
                     intent.putExtras(bundle1);
                     startActivity(intent);
-                    System.out.println("Fragment 2");
-                    System.out.println("Search Keywords "+ searchKeywords.toString());
-                    System.out.println("Videos "+ allVideos.toString());
                 }
                 else if(Fragment==3){
                     Intent intent = new Intent(MainActivity.this, ReceivedSearchActivity.class);
                     intent.putExtras(bundle);
                     intent.putExtras(bundle1);
                     startActivity(intent);
-                    System.out.println("Fragment 3");
-                    System.out.println("Search Keywords "+ searchKeywords.toString());
-                    System.out.println("Videos "+ allVideos.toString());
                 }
                 return false;
             }
