@@ -14,6 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.os.Parcelable;
+
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -23,6 +25,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -148,9 +151,13 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (searchView.isSearchOpen()) {
             searchView.closeSearch();
-        } else {
-            super.onBackPressed();
         }
+
+        else {
+            super.onBackPressed();
+            finish();
+        }
+
         moveTaskToBack(true);
 
     }

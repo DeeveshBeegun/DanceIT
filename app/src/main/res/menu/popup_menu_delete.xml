@@ -3,8 +3,5 @@
     <item
        android:id="@+id/delete_tag"
         android:title="@string/delete" />
-    <item
-      android:id="@+id/update_tag"
-        android:title="@string/update"/>
 
 </menu>

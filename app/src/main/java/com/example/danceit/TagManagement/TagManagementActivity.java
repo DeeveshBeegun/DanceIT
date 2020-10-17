@@ -99,7 +99,7 @@ public class TagManagementActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
-                    popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
+                    popupMenu.getMenuInflater().inflate(R.menu.popup_menu_delete, popupMenu.getMenu());
                     popupMenu.show();
                     popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override

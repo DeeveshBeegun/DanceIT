@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,8 +19,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.danceit.AddTagActivity;
@@ -29,12 +26,10 @@ import com.example.danceit.Model.FirebaseManager;
 import com.example.danceit.Model.Video;
 import com.example.danceit.R;
 import com.example.danceit.Sharing.SharingVideoActivity;
-import com.example.danceit.UpdateTagActivity;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -43,11 +38,7 @@ import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubeStandalonePlayer;
 import com.google.android.youtube.player.YouTubeThumbnailLoader;
 import com.google.android.youtube.player.YouTubeThumbnailView;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -57,23 +48,22 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * This class is used to update the recyclerview for the "Your Library" fragment.
- * It contains a List which is observed by the videoViewModel which is an abstraction of
- * the room database operations. Any changes made to the dataset List will be reflected to the
- * recyclerview in "Your Library" fragment.
+ * This class is used to update the recyclerview for all the fragments in the class.
+ * The FirestoreRecyclerAdapter is used to listen to changes on the database and update the
+ * Recyclerview accordingly. It it used to manage all the information
+ * displayed on these fragments. These information include: the card view displaying the video.
+ * This class also make use of the firebaseManager class to perform various operations on the video
+ * object stored in the database.
  */
 public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video, Firebase_RecyclerViewAdapter.MyViewHolder> {
 
     Activity activity;
-    List<Video> video_list = new ArrayList<>();
-    HashMap<Integer, Video> videoHashMap= new HashMap<>();
-
-    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    List<Video> video_list = new ArrayList<>(); // store a list of video objects
+    HashMap<Integer, Video> videoHashMap= new HashMap<>(); // used for sending the video object to other activities
 
     FirebaseManager firebaseManager = new FirebaseManager();
 
-    public static boolean selection=false;
-    public static List<Integer> selected=new ArrayList<>();
+    public static boolean selection=false; // check if checkbox is selected
     public ArrayList<MyViewHolder> myViewHolders=new ArrayList<>();
 
     private String YOUTUBEAPI="AIzaSyAfKidnnKiL3B0yRHR_FRqgMKXg6Z8lT-8";
@@ -81,7 +71,7 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
     /**
      * Constructor of the recyclerview adapter
      * @param options query options
-     * @param activity
+     * @param activity is the calling activity
      */
     public Firebase_RecyclerViewAdapter(@NonNull FirestoreRecyclerOptions<Video> options, Activity activity) {
         super(options);
@@ -89,6 +79,10 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
         selection=false;
     }
 
+    /**
+     * This method is used to display all the information from the firebase database to the recycler
+     * view. It also listens to changes made to the UI and updates the database a
+     */
     @Override
     protected void onBindViewHolder(@NonNull final MyViewHolder holder, final int position, @NonNull final Video model) {
         //holder.textView.setText(model.getUrl());
@@ -108,6 +102,11 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
 
     }
 
+    /**
+     * This method listens if a partivideo is selected for sharing to other users.
+     * @param holder MyViewHolder
+     * @param position is the position of the video
+     */
     public void checkBox_listener(MyViewHolder holder, final int position) {
         holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -122,9 +121,10 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                                 DocumentSnapshot document = task.getResult();
                                 if (document != null) {
                                     Video video = task.getResult().toObject(Video.class);
+                                    assert video != null;
                                     video.setBeingShared("no");
                                     video.setPrivacy("received");
-                                    videoHashMap.put(position, video);
+                                    videoHashMap.put(position, video); // store video position on a hashmap
                                 }
 
                             }
@@ -134,21 +134,30 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                 }
                 else
                     if(videoHashMap.size() > 0)
-                        videoHashMap.remove(position);
+                        videoHashMap.remove(position); // remove the position of the video from the hashmap
             }
         });
 
     }
 
+    /**
+     * This method sets the textview corresponding to the privacy of the video.
+     * If the video is private, private is displayed and if the video is public,
+     * public is displayed. It also display which user shared or send a particular video.
+     * @param model
+     * @param holder
+     */
     public void setPrivacyTextView(Video model, MyViewHolder holder) {
         if(model.getPrivacy().equals("received"))
             holder.privacyTextView.setText("video shared by " + model.getVideoUploader());
-
-        if (model.getBeingShared().equals("yes"))
+        if (model.getBeingShared().equals("yes") && model.getPrivacy().equals("private"))
             holder.privacyTextView.setText("public");
-        else
+        else if (model.getBeingShared().equals("no") && model.getPrivacy().equals("private"))
             holder.privacyTextView.setText("private");
-
+        else if (model.getBeingShared().equals("yes") && model.getPrivacy().equals("public"))
+            holder.privacyTextView.setText("Video shared by " + model.getVideoUploader());
+        else if (model.getBeingShared().equals("no") && model.getPrivacy().equals("received"))
+            holder.privacyTextView.setText("Video sent by " + model.getVideoUploader());
     }
 
 
@@ -174,7 +183,7 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                 @Override
                 public void onClick(final View view) {
                     PopupMenu popupMenu = new PopupMenu(holder.context, view);
-                    popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
+                    popupMenu.getMenuInflater().inflate(R.menu.popup_menu_delete, popupMenu.getMenu());
                     popupMenu.show();
                     popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
@@ -226,15 +235,15 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                                         firebaseManager.deleteTag(videoID, model.getTags().get(finalJ), model.getPrivacy());
                                     break;
 
-                                case R.id.update_tag:
-                                    Intent intent = new Intent(view.getContext(), UpdateTagActivity.class);
-                                    Bundle bundle = new Bundle();
-                                    bundle.putParcelable("video_update", model);
-                                    bundle.putString("video_id", getSnapshots().getSnapshot(position).getReference().getId());
-                                    bundle.putString("tag_descp", model.getTags().get(finalJ));
-                                    intent.putExtras(bundle);
-                                    view.getContext().startActivity(intent);
-                                    break;
+//                                case R.id.update_tag:
+//                                    Intent intent = new Intent(view.getContext(), UpdateTagActivity.class);
+//                                    Bundle bundle = new Bundle();
+//                                    bundle.putParcelable("video_update", model);
+//                                    bundle.putString("video_id", getSnapshots().getSnapshot(position).getReference().getId());
+//                                    bundle.putString("tag_descp", model.getTags().get(finalJ));
+//                                    intent.putExtras(bundle);
+//                                    view.getContext().startActivity(intent);
+//                                    break;
 
                             }
 
@@ -288,19 +297,6 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
      */
     public void setVideoThumbnail(final MyViewHolder myViewHolder, final String videoID, final Video model) {
 
-
-         /* MaterialCardView materialCardView=(MaterialCardView) myViewHolder.itemView.getRootView().findViewById(R.id.materialCardView);
-        materialCardView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                selection=true;
-                myViewHolder.checkBox.setChecked(true);
-                myViewHolder.checkBox.setVisibility(View.VISIBLE);
-                //notifyDataSetChanged();
-                return true;
-            }
-        });*/
-
         //implementing thumbnail on click to listen for clicks and play video
         YouTubeThumbnailView thumbnailView = (YouTubeThumbnailView) myViewHolder.itemView.getRootView().findViewById(R.id.thumbnail);
         thumbnailView.setOnClickListener(new View.OnClickListener() {
@@ -329,8 +325,6 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
             public void onInitializationSuccess(YouTubeThumbnailView youTubeThumbnailView, final YouTubeThumbnailLoader youTubeThumbnailLoader) {
 
                 youTubeThumbnailLoader.setVideo(videoID);//set video id
-
-                //youTubeThumbnailView.animate();
 
             }
 
@@ -387,7 +381,7 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                 }
 
                 if(model.getPrivacy().equals("public") ) {
-                    if (mAuth.getCurrentUser().getEmail().equals(model.getVideoUploader()))
+
                         popupMenu.getMenu().findItem(R.id.delete_video).setVisible(true);
                     popupMenu.getMenu().findItem(R.id.select_vid).setVisible(false);
                     popupMenu.getMenu().findItem(R.id.send_info).setVisible(false);
@@ -476,10 +470,13 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
 
                             case R.id.make_public:
                                 model.setBeingShared("yes");
+                                model.setVideoUploader(firebaseManager.getUsername());
                                 firebaseManager.getPrivate_videoReference()
                                         .document(getSnapshots().getSnapshot(position).getId()).set(model); // update private video
 
                                 model.setPrivacy("public");
+                                model.setVideoId(model.getVideoId());
+
                                 firebaseManager.addPublic_video(model);
                                 setPrivacyTextView(model, myViewHolder);
                                 Toast toast = Toast.makeText(activity, "Video made public.", Toast.LENGTH_SHORT);
@@ -512,7 +509,7 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                                 if(model.getPrivacy().equals("private"))
                                     firebaseManager.addPrivate_video(model);
                                 else {
-                                    model.setVideoId(model.getVideoId()+"1");
+                                    model.setVideoId(model.getVideoId()+firebaseManager.getUsername());
                                     model.setPrivacy("private");
                                     model.setBeingShared("no");
                                     firebaseManager.addPrivate_video(model);
