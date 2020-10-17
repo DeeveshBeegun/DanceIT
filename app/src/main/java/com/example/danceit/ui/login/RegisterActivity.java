@@ -171,13 +171,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void createAccount(String email, String password) {
         Log.d(TAG, "createAccount:" + email);
-        /*if (!validateForm()) {
-            return;
-        }
 
-        showProgressBar();
-
-         */
 
         // [START create_user_with_email]
         loading(true);
@@ -209,6 +203,8 @@ public class RegisterActivity extends AppCompatActivity {
 
 
                         } else {
+                            https:
+//www.youtube.com/watch?v=LRqlPDdFxR0
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
                             loading(false);
