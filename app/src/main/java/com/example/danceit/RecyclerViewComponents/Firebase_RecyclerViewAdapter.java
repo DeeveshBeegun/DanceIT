@@ -26,7 +26,6 @@ import com.example.danceit.Model.FirebaseManager;
 import com.example.danceit.Model.Video;
 import com.example.danceit.R;
 import com.example.danceit.Sharing.SharingVideoActivity;
-import com.example.danceit.UpdateTagActivity;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -39,7 +38,6 @@ import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubeStandalonePlayer;
 import com.google.android.youtube.player.YouTubeThumbnailLoader;
 import com.google.android.youtube.player.YouTubeThumbnailView;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -185,7 +183,7 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                 @Override
                 public void onClick(final View view) {
                     PopupMenu popupMenu = new PopupMenu(holder.context, view);
-                    popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
+                    popupMenu.getMenuInflater().inflate(R.menu.popup_menu_delete, popupMenu.getMenu());
                     popupMenu.show();
                     popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
@@ -237,15 +235,15 @@ public class Firebase_RecyclerViewAdapter extends FirestoreRecyclerAdapter<Video
                                         firebaseManager.deleteTag(videoID, model.getTags().get(finalJ), model.getPrivacy());
                                     break;
 
-                                case R.id.update_tag:
-                                    Intent intent = new Intent(view.getContext(), UpdateTagActivity.class);
-                                    Bundle bundle = new Bundle();
-                                    bundle.putParcelable("video_update", model);
-                                    bundle.putString("video_id", getSnapshots().getSnapshot(position).getReference().getId());
-                                    bundle.putString("tag_descp", model.getTags().get(finalJ));
-                                    intent.putExtras(bundle);
-                                    view.getContext().startActivity(intent);
-                                    break;
+//                                case R.id.update_tag:
+//                                    Intent intent = new Intent(view.getContext(), UpdateTagActivity.class);
+//                                    Bundle bundle = new Bundle();
+//                                    bundle.putParcelable("video_update", model);
+//                                    bundle.putString("video_id", getSnapshots().getSnapshot(position).getReference().getId());
+//                                    bundle.putString("tag_descp", model.getTags().get(finalJ));
+//                                    intent.putExtras(bundle);
+//                                    view.getContext().startActivity(intent);
+//                                    break;
 
                             }
 

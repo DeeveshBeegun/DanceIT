@@ -43,9 +43,7 @@
         <activity
             android:name=".AddTagActivity"
             android:theme="@style/Theme.AppCompat.DayNight.Dialog" />
-        <activity
-            android:name=".UpdateTagActivity"
-            android:theme="@style/Theme.AppCompat.DayNight.Dialog" />
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
