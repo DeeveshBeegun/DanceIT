@@ -15,20 +15,20 @@ import com.example.danceit.Model.Video;
 import com.example.danceit.RecyclerViewComponents.Firebase_RecyclerViewAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.firebase.ui.firestore.SnapshotParser;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
+/**
+ * This fragment is used to display private videos on the "Received" tab.
+ * This class uses an instance of the FirebaseManager class to make appropriate
+ * changes on the video object on the database.
+ */
 public class ThirdFragment extends Fragment {
     RecyclerView recyclerView;
     Firebase_RecyclerViewAdapter adapter;
 
-    private FirebaseAuth mAuth;
     ArrayList<Video> allVideos = new ArrayList<Video>();
     ArrayList<String> autoCompletion = new ArrayList<String>();
 

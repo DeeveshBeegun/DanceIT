@@ -22,6 +22,11 @@ import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
 
+/**
+ * This fragment is used to display public videos on the DanceIT tab.
+ * This class uses an instance of the FirebaseManager class to make appropriate
+ * changes on the video object on the database.
+ */
 public class SecondFragment extends Fragment {
     RecyclerView recyclerView;
     Firebase_RecyclerViewAdapter adapter;
